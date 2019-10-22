@@ -1,9 +1,13 @@
 import { Service } from "@kronos-integration/service";
 import { notify } from "sd-daemon";
 
-export class ServiceKOA extends Service {
+export class ServiceSystemd extends Service {
   static get name() {
     return "systemd";
+  }
+  
+  get autostart() {
+    return true;
   }
 
   stateChanged(oldState, newState) {
@@ -21,3 +25,5 @@ export class ServiceKOA extends Service {
     }
   }
 }
+
+export default ServiceSystemd;
