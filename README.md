@@ -1,5 +1,7 @@
 # @kronos-integration/service-systemd
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Kronos-Integration/kronos-service-systemd.svg)](https://greenkeeper.io/)
+
 kronos systemd integration
 
 # usage
