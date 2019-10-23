@@ -1,6 +1,7 @@
 import { Service } from "@kronos-integration/service";
+import { notify } from "../systemd";
 
-const systemd = require('./systemd');
+//const systemd = require('./systemd');
 
 /**
  * sync node state to systemd with notify
