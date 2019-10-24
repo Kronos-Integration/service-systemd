@@ -1,7 +1,9 @@
-import { Service } from "@kronos-integration/service";
-import { notify } from "../systemd";
+//import { Service } from "@kronos-integration/service";
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { notify } = require('../systemd.node');
 
-//const systemd = require('./systemd');
+notify("ABC");
 
 /**
  * sync node state to systemd with notify
@@ -9,7 +11,7 @@ import { notify } from "../systemd";
  * propagate socket activations into kronos
  * start / stop / restart / reload initiated from systemd
  */
-export class ServiceSystemd extends Service {
+export class ServiceSystemd /*extends Service*/ {
   static get name() {
     return "systemd";
   }
@@ -19,13 +21,13 @@ export class ServiceSystemd extends Service {
   }
 
   stateChanged(oldState, newState) {
-    super.stateChanged(oldState, newState);
+    //super.stateChanged(oldState, newState);
     switch (newState) {
       case "starting":
-        systemd.notify("READY=1\nSTATUS=starting");
+        notify("READY=1\nSTATUS=starting");
         break;
       case "running":
-        systemd.notify("READY=1\nSTATUS=running");
+        notify("READY=1\nSTATUS=running");
         break;
 
       case "stopped":

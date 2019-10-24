@@ -1,4 +1,4 @@
-#define NAPI_VERSION 5
+#define NAPI_VERSION 6
 #include <node_api.h>
 #include <systemd/sd-daemon.h>
 
