@@ -1,4 +1,9 @@
 language: node_js
+addons:
+  apt:
+    update: true
+    packages:
+      - libsystemd-dev
 branches:
   only:
     - master
