@@ -1,0 +1,8 @@
+[Unit]
+Description=notifying service test
+
+[Service]
+Type=notify
+ExecStart=node build/notify-test
+TimeoutStartSec=30
+Restart=always
