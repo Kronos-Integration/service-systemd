@@ -5,7 +5,7 @@
     "targets": [
         {
             "target_name": "systemd",
-            "defines": [ 'NAPI_DISABLE_CPP_EXCEPTIONS' ],
+            "defines": [ "NAPI_DISABLE_CPP_EXCEPTIONS" ],
             "sources": [ "src/systemd.cpp" ],
             "include_dirs": [
                 "<!(<(NODEJS) -p \"require('node-addon-api').include\")"
