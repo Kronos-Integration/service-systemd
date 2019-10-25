@@ -1,20 +1,21 @@
-import { createRequire } from 'module';
+import { createRequire } from "module";
 import { Service } from "@kronos-integration/service";
 
 const require = createRequire(import.meta.url);
-const { notify } = require('../systemd.node');
+const { notify } = require("../systemd.node");
 
 /**
- * sync node state to systemd with notify
- * propagate config into kronos world
- * propagate socket activations into kronos
- * start / stop / restart / reload initiated from systemd
+ * Kronos bridge to systemd
+ * - sync node state to systemd with notify
+ * - propagate config into kronos world
+ * - propagate socket activations into kronos
+ * - start / stop / restart / reload initiated from systemd
  */
 export class ServiceSystemd extends Service {
   static get name() {
     return "systemd";
   }
-  
+
   get autostart() {
     return true;
   }
