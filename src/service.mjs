@@ -19,6 +19,10 @@ export class ServiceSystemd extends Service {
     return true;
   }
 
+  get owner() {
+    return this;
+  }
+
   stateChanged(oldState, newState) {
     super.stateChanged(oldState, newState);
     switch (newState) {

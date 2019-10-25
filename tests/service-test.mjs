@@ -8,5 +8,5 @@ test('service states', async t => {
   
   await ssd.start();
 
-  t.is(ssg.state === 'running')
+  t.is(ssd.state,'running')
 });
