@@ -1,5 +1,5 @@
 import { createRequire } from "module";
-import { Service } from "@kronos-integration/service";
+import { ServiceProviderMixin, Service } from "@kronos-integration/service";
 
 const require = createRequire(import.meta.url);
 const { notify } = require("../systemd.node");
@@ -11,17 +11,13 @@ const { notify } = require("../systemd.node");
  * - propagate socket activations into kronos
  * - start / stop / restart / reload initiated from systemd
  */
-export class ServiceSystemd extends Service {
+export class ServiceSystemd extends ServiceProviderMixin(Service) {
   static get name() {
     return "systemd";
   }
 
   get autostart() {
     return true;
-  }
-
-  get owner() {
-    return this;
   }
 
   stateChanged(oldState, newState) {
