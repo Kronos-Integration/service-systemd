@@ -1,6 +1,7 @@
 #define NAPI_VERSION 6
 #include <node_api.h>
 #include <systemd/sd-daemon.h>
+#include <systemd/sd-journal.h>
 
 namespace daemon
 {
@@ -95,7 +96,7 @@ napi_value init(napi_env env, napi_value exports)
         {"booted", nullptr, daemon::booted, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"notify", nullptr, daemon::notify, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"journal_print", nullptr, daemon::notify, nullptr, nullptr, nullptr, napi_default, nullptr}};
-    status = napi_define_properties(env, exports, 3, desc);
+    status = napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
     if (status != napi_ok)
         return nullptr;
     return exports;
