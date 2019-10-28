@@ -9,4 +9,7 @@ test("service states", async t => {
   await ssd.start();
 
   t.is(ssd.state, "running");
+
+  await ssd.stop();
+  t.is(ssd.state, "stopped");
 });
