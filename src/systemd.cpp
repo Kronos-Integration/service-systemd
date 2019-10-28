@@ -47,7 +47,7 @@ napi_value journal_print(napi_env env, napi_callback_info info)
     if (status != napi_ok)
         return nullptr;
 
-    if (argc != 1)
+    if (argc != 2)
     {
         napi_throw_error(env, nullptr, "Wrong arguments");
     }
@@ -57,11 +57,42 @@ napi_value journal_print(napi_env env, napi_callback_info info)
     if (status != napi_ok)
         return nullptr;
 
+    char *severity = new char[len + 1];
+    status = napi_get_value_string_utf8(env, args[0], severity, len + 1, nullptr);
+
+    int priority = LOG_INFO;
+
+    if (strcmp(severity, "error") == 0)
+    {
+        priority = LOG_ERR;
+    }
+    else if (strcmp(severity, "warning") == 0)
+    {
+        priority = LOG_WARNING;
+    }
+    else if (strcmp(severity, "debug") == 0)
+    {
+        priority = LOG_DEBUG;
+    }
+    else if (strcmp(severity, "info") == 0)
+    {
+        priority = LOG_INFO;
+    }
+
+    //LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_NOTICE
+
+    delete[] severity;
+
+    size_t len;
+    status = napi_get_value_string_utf8(env, args[1], nullptr, 0, &len);
+    if (status != napi_ok)
+        return nullptr;
+
     char *message = new char[len + 1];
-    status = napi_get_value_string_utf8(env, args[0], message, len + 1, nullptr);
-    int res = sd_journal_print(LOG_INFO, message);
+    status = napi_get_value_string_utf8(env, args[1], message, len + 1, nullptr);
+    int res = sd_journal_print(priority, message);
     delete[] message;
- 
+
     napi_value value;
     status = napi_create_int32(env, res, &value);
     if (status != napi_ok)
@@ -70,7 +101,7 @@ napi_value journal_print(napi_env env, napi_callback_info info)
     return value;
 }
 
-}
+} // namespace daemon
 
 napi_value init(napi_env env, napi_value exports)
 {

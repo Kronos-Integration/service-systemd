@@ -10,7 +10,9 @@ class JournalLogger extends ServiceLogger {
     super(config, owner);
 
     this.endpoints.log.receive = async entry => {
-      journal_print(entry.severity + ":" + JSON.stringify(entry));
+      const severity = entry.severity;
+      delete entry.severity;
+      journal_print(severity, JSON.stringify(entry));
     };
   }
 }
@@ -26,7 +28,8 @@ export class ServiceSystemd extends ServiceProviderMixin(Service, JournalLogger)
 
   constructor(...args) {
     super(...args);
-    journal_print("Message to the journal");
+    journal_print("info", "Message to the journal");
+    journal_print("error", "Error Message to the journal");
   }
 
   static get name() {
