@@ -38,6 +38,36 @@ napi_value notify(napi_env env, napi_callback_info info)
     return value;
 }
 
+typedef struct
+{
+    char *name;
+    int priority;
+} NamedPriority;
+
+const static NamedPriority priorities[] = {
+    //'trace',
+    {"debug", LOG_DEBUG},
+    {"info", LOG_INFO},
+    {"notice", LOG_NOTICE},
+    {"warn", LOG_WARNING},
+    {"error", LOG_ERR},
+    {"crit", LOG_CRIT},
+    {"alert", LOG_ALERT}};
+
+int priorityForName(char *name)
+{
+
+    for (int i = 0; i < sizeof(priorities) / sizeof(priorities[0]); i++)
+    {
+        if (strcmp(priorities[i].name, name) == 0)
+        {
+            return priorities[i].priority;
+        }
+    }
+
+    return LOG_INFO;
+}
+
 napi_value journal_print(napi_env env, napi_callback_info info)
 {
     napi_status status;
@@ -62,8 +92,9 @@ napi_value journal_print(napi_env env, napi_callback_info info)
     char *severity = new char[len + 1];
     status = napi_get_value_string_utf8(env, args[0], severity, len + 1, nullptr);
 
-    int priority = LOG_INFO;
+    int priority = priorityForName(severity);
 
+/*
     if (strcmp(severity, "error") == 0)
     {
         priority = LOG_ERR;
@@ -80,8 +111,7 @@ napi_value journal_print(napi_env env, napi_callback_info info)
     {
         priority = LOG_INFO;
     }
-
-    //LOG_EMERG, LOG_ALERT, LOG_CRIT, LOG_NOTICE
+*/
 
     delete[] severity;
 
