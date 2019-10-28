@@ -6,18 +6,6 @@
 namespace daemon
 {
 
-napi_value booted(napi_env env, napi_callback_info)
-{
-    napi_status status;
-    napi_value value;
-
-    status = napi_create_int32(env, sd_booted(), &value);
-    if (status != napi_ok)
-        return nullptr;
-
-    return value;
-}
-
 napi_value notify(napi_env env, napi_callback_info info)
 {
     napi_status status;
@@ -93,9 +81,8 @@ napi_value init(napi_env env, napi_value exports)
         return nullptr;
     napi_property_descriptor desc[] = {
         {"LISTEN_FDS_START", nullptr, nullptr, nullptr, nullptr, listenFdsStart, napi_default, nullptr},
-        {"booted", nullptr, daemon::booted, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"notify", nullptr, daemon::notify, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"journal_print", nullptr, daemon::notify, nullptr, nullptr, nullptr, napi_default, nullptr}};
+        {"journal_print", nullptr, daemon::journal_print, nullptr, nullptr, nullptr, napi_default, nullptr}};
     status = napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
     if (status != napi_ok)
         return nullptr;
