@@ -40,7 +40,7 @@ napi_value notify(napi_env env, napi_callback_info info)
 
 typedef struct
 {
-    char *name;
+    const char *name;
     int priority;
 } NamedPriority;
 
@@ -56,8 +56,7 @@ const static NamedPriority priorities[] = {
 
 int priorityForName(char *name)
 {
-
-    for (int i = 0; i < sizeof(priorities) / sizeof(priorities[0]); i++)
+    for (size_t i = 0; i < sizeof(priorities) / sizeof(priorities[0]); i++)
     {
         if (strcmp(priorities[i].name, name) == 0)
         {
@@ -92,26 +91,7 @@ napi_value journal_print(napi_env env, napi_callback_info info)
     char *severity = new char[len + 1];
     status = napi_get_value_string_utf8(env, args[0], severity, len + 1, nullptr);
 
-    int priority = priorityForName(severity);
-
-/*
-    if (strcmp(severity, "error") == 0)
-    {
-        priority = LOG_ERR;
-    }
-    else if (strcmp(severity, "warning") == 0)
-    {
-        priority = LOG_WARNING;
-    }
-    else if (strcmp(severity, "debug") == 0)
-    {
-        priority = LOG_DEBUG;
-    }
-    else if (strcmp(severity, "info") == 0)
-    {
-        priority = LOG_INFO;
-    }
-*/
+    const int priority = priorityForName(severity);
 
     delete[] severity;
 
