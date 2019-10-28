@@ -28,7 +28,7 @@ export class ServiceSystemd extends ServiceProviderMixin(Service, JournalLogger)
 
   constructor(...args) {
     super(...args);
-    journal_print("info", "Message to the journal");
+    journal_print("info", "Info Message to the journal");
     journal_print("error", "Error Message to the journal");
   }
 
