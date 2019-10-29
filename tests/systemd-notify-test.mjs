@@ -70,7 +70,7 @@ test("service states", async t => {
 
   await start;
 
-  await wait(6000);
+  await wait(3000);
 
   t.is(status, "running");
   t.is(active, "active");
