@@ -7,7 +7,6 @@ test("service states", async t => {
   t.truthy(ssd);
 
   await ssd.start();
-
   t.is(ssd.state, "running");
 
   await ssd.stop();
