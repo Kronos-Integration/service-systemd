@@ -7,7 +7,11 @@ test('service states', async t => {
   const wd = process.cwd();
 
   await execa('rollup', ['-c', 'tests/rollup.config.js']);
-  const run = execa('systemd-run', ['--user', '-t', 'node', join(wd, 'build/notify-test-cli')]);
+  //const run = execa('systemd-run', ['--user', '-t', 'node', join(wd, 'build/notify-test-cli')]);
+
+  await execa('systemctl', ['--user', 'link', join(wd, 'tests/fixtures/notify-test.service')]);
+  
+  const run = execa('systemctl', ['--user', 'start', 'notify-test']); 
 
   run.stdout.on('data', data => {
     console.log(`stdout: ${data}`);

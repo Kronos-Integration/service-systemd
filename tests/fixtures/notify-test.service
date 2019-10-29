@@ -3,6 +3,6 @@ Description=notifying service test
 
 [Service]
 Type=notify
-ExecStart=node build/notify-test
+ExecStart=node /workspace/markus/kronos-service-systemd/build/notify-test-cli
 TimeoutStartSec=30
 Restart=always
