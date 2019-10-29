@@ -1,4 +1,5 @@
 import { createRequire } from "module";
+import { expand } from "config-expander";
 import {
   ServiceProviderMixin,
   Service,
@@ -35,19 +36,30 @@ class SystemdConfig extends ServiceConfig {
   constructor(config, owner) {
     super(config, owner);
 
-    const dir = process.env.CONFIGURATION_DIRECTORY;
-    if(dir) {
-    }
+    Object.definedProperties(this, {
+      configurationDirectory: { value: process.env.CONFIGURATION_DIRECTORY }
+    });
+  }
+
+  async loadConfig() {
+    const config = await expand("${include('config.json')}", {
+      constants: {
+        basedir: this.configurationDirectory
+      },
+      default: {}
+    });
+
+    return config;
   }
 }
 
 /**
  * Kronos bridge to systemd
- * - sync node state to systemd with notify
+ * - sync node state to systemd with notify (partly)
  * - propagate config into kronos world
  * - propagate socket activations into kronos
  * - start / stop / restart / reload initiated from systemd
- * - log into journal
+ * - log into journal (done)
  */
 export class ServiceSystemd extends ServiceProviderMixin(
   Service,
