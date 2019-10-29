@@ -45,7 +45,6 @@ test("service states", async t => {
     active = undefined;
     try { 
     const systemctl = execa("systemctl", ["--user", "status", unitName]);
-    //t.log("systemctl", systemctl);
     systemctl.stdout.on("data", data => {
       let m = String(data).match(/Status:\s*"([^"]+)/);
       if (m) {
