@@ -9,7 +9,7 @@ async function actions()
   ssd.info('started...');
   ssd.error('error test after start');
 
-  await wait(5000);
+  await wait(10000);
   ssd.info('stopping...');
   await ssd.stop();
   ssd.info('stopped...');

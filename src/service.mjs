@@ -2,7 +2,8 @@ import { createRequire } from "module";
 import {
   ServiceProviderMixin,
   Service,
-  ServiceLogger
+  ServiceLogger,
+  ServiceConfig
 } from "@kronos-integration/service";
 
 const require = createRequire(import.meta.url);
@@ -12,7 +13,6 @@ const { notify, journal_print } = require("../systemd.node");
 const configDir = process.env.CONFIGURATION_DIRECTORY || program.config;
     const listeners = sd.listeners();
     if (listeners.length > 0) config.http.port = listeners[0];
-
 
     FDSTORE=1
     FDNAME
@@ -31,6 +31,16 @@ class JournalLogger extends ServiceLogger {
   }
 }
 
+class SystemdConfig extends ServiceConfig {
+  constructor(config, owner) {
+    super(config, owner);
+
+    const dir = process.env.CONFIGURATION_DIRECTORY;
+    if(dir) {
+    }
+  }
+}
+
 /**
  * Kronos bridge to systemd
  * - sync node state to systemd with notify
@@ -41,16 +51,9 @@ class JournalLogger extends ServiceLogger {
  */
 export class ServiceSystemd extends ServiceProviderMixin(
   Service,
-  JournalLogger
+  JournalLogger,
+  SystemdConfig
 ) {
-  /*
-  constructor(...args) {
-    super(...args);
-    journal_print("info", "Info Message to the journal");
-    journal_print("error", "Error Message to the journal");
-  }
-*/
-
   static get name() {
     return "systemd";
   }
