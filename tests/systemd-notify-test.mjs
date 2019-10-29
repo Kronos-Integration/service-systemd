@@ -1,38 +1,65 @@
-import test from 'ava';
+import test from "ava";
 import { join } from "path";
 import execa from "execa";
-import ServiceSystemd from '../src/service.mjs';
+import fs from "fs";
 
-test('service states', async t => {
+async function writeServiceDefinition(serviceDefinitionFileName, wd) {
+  return fs.promises.writeFile(
+    serviceDefinitionFileName,
+    `[Unit]
+Description=notifying service test
+[Service]
+Type=notify
+ExecStart=node ${wd}/build/notify-test-cli
+`,
+    { encoding: "utf8" }
+  );
+}
+
+test("service states", async t => {
   const wd = process.cwd();
 
-  await execa('rollup', ['-c', 'tests/rollup.config.js']);
-  //const run = execa('systemd-run', ['--user', '-t', 'node', join(wd, 'build/notify-test-cli')]);
+  await execa("rollup", ["-c", "tests/rollup.config.js"]);
 
-  await execa('systemctl', ['--user', 'link', join(wd, 'tests/fixtures/notify-test.service')]);
-  
-  const run = execa('systemctl', ['--user', 'start', 'notify-test']); 
+  const unitName = "notify-test";
+  const serviceDefinitionFileName = join(wd, `build/${unitName}.service`);
 
-  run.stdout.on('data', data => {
-    console.log(`stdout: ${data}`);
+  await writeServiceDefinition(serviceDefinitionFileName, wd);
+  await execa("systemctl", ["--user", "link", serviceDefinitionFileName]);
+
+  const run = execa("systemctl", ["--user", "start", unitName]);
+
+  run.stdout.on("data", data => {
+    console.log(`systemctl start stdout: ${data}`);
   });
 
-  let unit;
-  run.stderr.on('data', data => {
-    const m = data.toString('utf8').match(/as unit:\s+(.*)/);
-    if (m) {
-      unit = m[1];
-      console.log("unit", unit);
-      const systemctl = execa('systemctl', ['status', unit]);
-      systemctl.stdout.on('data', data => { console.log(`stdout: ${data}`); });
-      systemctl.stderr.on('data', data => { console.log(`stderr: ${data}`); });
-    }
-    console.log(`stderr: ${data}`);
+  run.stderr.on("data", data => {
+    console.log(`systemctl start stderr: ${data}`);
   });
+
+  let status;
+
+  const statusInterval = setInterval(() => {
+    const systemctl = execa("systemctl", ["status", unitName]);
+    systemctl.stdout.on("data", data => {
+      // Status: "running"
+      const m = String(data).match(/Status:\s"([^"]+)/);
+      if (m) {
+        status = m[1];
+      }
+
+      console.log(`systemctl status stdout: ${data}`);
+    });
+    systemctl.stderr.on("data", data => {
+      console.log(`systemctl status stderr: ${data}`);
+    });
+  }, 1000);
 
   await run;
 
-  t.truthy(unit);
+  t.is(status, "running");
 
-  await execa('systemctl', ['--user', 'disable', 'notify-test']);
+  clearInterval(statusInterval);
+
+  await execa("systemctl", ["--user", "disable", unitName]);
 });
