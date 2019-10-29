@@ -65,6 +65,13 @@ test("service states", async t => {
 
   t.is(status, "running");
 
+  const stop = execa("systemctl", ["--user", "stop", unitName]);
+  await stop;
+
+  await wait(6000);
+
+  t.is(status, "stoped");
+
   clearInterval(statusInterval);
 
   await execa("systemctl", ["--user", "disable", unitName]);
