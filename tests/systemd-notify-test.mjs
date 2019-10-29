@@ -38,16 +38,22 @@ test("service states", async t => {
   start.stdout.pipe(process.stdout);
   start.stderr.pipe(process.stderr);
 
-  let status;
+  let status,active;
 
   const statusInterval = setInterval(async () => {
+    status = undefined;
+    active = undefined;
+    try { 
     const systemctl = execa("systemctl", ["--user", "status", unitName]);
-    t.log("systemctl", systemctl);
+    //t.log("systemctl", systemctl);
     systemctl.stdout.on("data", data => {
-      // Status: "running"
-      const m = String(data).match(/Status:\s*"([^"]+)/);
+      let m = String(data).match(/Status:\s*"([^"]+)/);
       if (m) {
         status = m[1];
+      }
+      m = String(data).match(/Active:\s*(\w+)/);
+      if (m) {
+        active = m[1];
       }
 
       t.log(`systemctl status stdout: ${data}`);
@@ -57,6 +63,10 @@ test("service states", async t => {
     });
 
     const p = await systemctl;
+    }
+    catch(e) {
+      t.log(e);
+    }
   }, 1000);
 
   await start;
@@ -64,13 +74,14 @@ test("service states", async t => {
   await wait(6000);
 
   t.is(status, "running");
+  t.is(active, "active");
 
   const stop = execa("systemctl", ["--user", "stop", unitName]);
   await stop;
 
-  await wait(6000);
+  await wait(4000);
 
-  t.is(status, "stoped");
+  t.is(active, "inactive");
 
   clearInterval(statusInterval);
 
