@@ -12,6 +12,11 @@ const { notify, journal_print } = require("../systemd.node");
 const configDir = process.env.CONFIGURATION_DIRECTORY || program.config;
     const listeners = sd.listeners();
     if (listeners.length > 0) config.http.port = listeners[0];
+
+
+    FDSTORE=1
+    FDNAME
+    RELOADING=1
 */
 
 class JournalLogger extends ServiceLogger {
@@ -38,7 +43,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
   Service,
   JournalLogger
 ) {
-/*
+  /*
   constructor(...args) {
     super(...args);
     journal_print("info", "Info Message to the journal");
@@ -57,15 +62,18 @@ export class ServiceSystemd extends ServiceProviderMixin(
   stateChanged(oldState, newState) {
     super.stateChanged(oldState, newState);
     switch (newState) {
-      case "starting":
-        notify("READY=1\nSTATUS=starting");
-        break;
       case "running":
         notify("READY=1\nSTATUS=running");
         break;
 
-      case "stopped":
+      case "stopping":
+        notify("STOPPING=1\nSTATUS=stopping");
         break;
+
+      // case "stopped":
+      // case "starting":
+      default:
+        notify(`STATUS=${newState}`);
     }
   }
 
