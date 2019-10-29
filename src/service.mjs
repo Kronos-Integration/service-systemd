@@ -24,9 +24,9 @@ class JournalLogger extends ServiceLogger {
     super(config, owner);
 
     this.endpoints.log.receive = async entry => {
-      const severity = entry.severity;
-      delete entry.severity;
-      journal_print(severity, JSON.stringify(entry));
+      const level = entry.level;
+      delete entry.level;
+      journal_print(level, JSON.stringify(entry));
     };
   }
 }
@@ -34,8 +34,6 @@ class JournalLogger extends ServiceLogger {
 class SystemdConfig extends ServiceConfig {
   constructor(config, owner) {
     super(config, owner);
-
-    console.log("CONFIGURATION_DIRECTORY",process.env.CONFIGURATION_DIRECTORY);
 
     const dir = process.env.CONFIGURATION_DIRECTORY;
     if(dir) {
