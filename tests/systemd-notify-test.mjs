@@ -3,6 +3,13 @@ import { join } from "path";
 import execa from "execa";
 import fs from "fs";
 
+
+async function journal(unitName) {
+  const jounralctl = execa('journalctl', ['--user', '-u', unitName, '-f']);
+
+  jounralctl.stdout.pipe(process.stdout);
+}
+
 async function wait(msecs = 1000) {
   return new Promise((resolve, reject) => {
     setTimeout(resolve, msecs);
@@ -35,8 +42,10 @@ test("service states", async t => {
 
   const start = execa("systemctl", ["--user", "start", unitName]);
 
-  start.stdout.pipe(process.stdout);
-  start.stderr.pipe(process.stderr);
+  //start.stdout.pipe(process.stdout);
+  //start.stderr.pipe(process.stderr);
+
+  journal(unitName);
 
   let status, active;
 
