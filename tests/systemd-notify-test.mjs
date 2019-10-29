@@ -3,6 +3,12 @@ import { join } from "path";
 import execa from "execa";
 import fs from "fs";
 
+async function wait(msecs=1000) {
+  return new Promise((resolve,reject) => {
+    setTimeout(resolve,msecs);
+  });
+}
+
 async function writeServiceDefinition(serviceDefinitionFileName, wd) {
   return fs.promises.writeFile(
     serviceDefinitionFileName,
@@ -56,6 +62,8 @@ test("service states", async t => {
   }, 1000);
 
   await run;
+
+  await wait(5000);
 
   t.is(status, "running");
 
