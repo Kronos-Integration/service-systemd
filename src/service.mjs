@@ -35,6 +35,8 @@ class SystemdConfig extends ServiceConfig {
   constructor(config, owner) {
     super(config, owner);
 
+    console.log("CONFIGURATION_DIRECTORY",process.env.CONFIGURATION_DIRECTORY);
+
     const dir = process.env.CONFIGURATION_DIRECTORY;
     if(dir) {
     }
