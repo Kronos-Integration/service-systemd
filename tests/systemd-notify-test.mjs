@@ -16,7 +16,7 @@ async function wait(msecs = 1000) {
   });
 }
 
-async function writeServiceDefinition(serviceDefinitionFileName, wd) {
+async function writeServiceDefinition(serviceDefinitionFileName, unitName, wd) {
   return fs.promises.writeFile(
     serviceDefinitionFileName,
     `[Unit]
@@ -24,6 +24,11 @@ Description=notifying service test
 [Service]
 Type=notify
 ExecStart=node ${wd}/build/notify-test-cli
+
+RuntimeDirectory=${unitName}
+StateDirectory=${unitName}
+ConfigurationDirectory=${unitName}
+
 `,
     { encoding: "utf8" }
   );
@@ -37,7 +42,7 @@ test("service states", async t => {
   const unitName = "notify-test";
   const serviceDefinitionFileName = join(wd, `build/${unitName}.service`);
 
-  await writeServiceDefinition(serviceDefinitionFileName, wd);
+  await writeServiceDefinition(serviceDefinitionFileName, unitName, wd);
   await execa("systemctl", ["--user", "link", serviceDefinitionFileName]);
 
   const start = execa("systemctl", ["--user", "start", unitName]);
