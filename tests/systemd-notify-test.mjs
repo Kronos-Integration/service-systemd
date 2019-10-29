@@ -33,4 +33,6 @@ test('service states', async t => {
   await run;
 
   t.truthy(unit);
+
+  await execa('systemctl', ['--user', 'disable', 'notify-test']);
 });
