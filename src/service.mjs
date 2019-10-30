@@ -36,7 +36,7 @@ class SystemdConfig extends ServiceConfig {
   constructor(config, owner) {
     super(config, owner);
 
-    Object.definedProperties(this, {
+    Object.defineProperties(this, {
       configurationDirectory: { value: process.env.CONFIGURATION_DIRECTORY }
     });
   }
