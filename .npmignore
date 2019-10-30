@@ -1,4 +1,5 @@
-
+binding.gyp
+src/*.cpp
 build
 tests
 doc
