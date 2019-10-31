@@ -24,10 +24,10 @@ class JournalLogger extends ServiceLogger {
   constructor(config, owner) {
     super(config, owner);
 
-    this.endpoints.log.receive = async entry => {
-      const level = entry.level;
-      delete entry.level;
-      journal_print(level, JSON.stringify(entry));
+    this.endpoints.log.receive = entry => {
+      const severity = entry.severity;
+      delete entry.severity;
+      journal_print(severity, JSON.stringify(entry));
     };
   }
 }
