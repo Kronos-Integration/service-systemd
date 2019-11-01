@@ -26,7 +26,7 @@
                     "outputs": [
                         "systemd.node"
                     ],
-                    "action": ["cp", "<@(PRODUCT_DIR)/systemd.node", "systemd.node"]
+                    "action": ["cp", "<@(PRODUCT_DIR)/systemd.node", "systemd-<(OS)-<!(uname -m).node"]
                 }
             ]
         }

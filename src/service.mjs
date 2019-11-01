@@ -1,5 +1,6 @@
 import { createRequire } from "module";
 import { expand } from "config-expander";
+import { arch } from "os";
 import {
   ServiceProviderMixin,
   Service,
@@ -7,8 +8,9 @@ import {
   ServiceConfig
 } from "@kronos-integration/service";
 
+const archs={'x64':'x86_64'};
 const require = createRequire(import.meta.url);
-const { notify, journal_print } = require("../systemd.node");
+const { notify, journal_print } = require(`../systemd-linux-${archs[arch()]}.node`);
 
 /*
 const configDir = process.env.CONFIGURATION_DIRECTORY || program.config;
