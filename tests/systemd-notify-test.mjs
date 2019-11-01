@@ -17,6 +17,9 @@ async function wait(msecs = 1000) {
 }
 
 async function writeServiceDefinition(serviceDefinitionFileName, unitName, wd) {
+  const which = await await execa("which", ["node"]);
+  console.log(which.stdout);
+
   return fs.promises.writeFile(
     serviceDefinitionFileName,
     `[Unit]
