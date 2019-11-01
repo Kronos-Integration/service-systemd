@@ -1,6 +1,6 @@
 {
   "name": "@kronos-integration/service-systemd",
-  "version": "0.0.0-semantic-release",
+  "version": "1.3.0",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -48,7 +48,6 @@
   "os": [
     "linux"
   ],
-  "cpu": ["x86","arm"],
   "repository": {
     "type": "git",
     "url": "https://github.com/Kronos-Integration/kronos-service-systemd.git"
