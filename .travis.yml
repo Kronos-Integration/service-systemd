@@ -2,7 +2,7 @@ dist: bionic
 language: node_js
 addons:
   apt:
-    update: true
+    update: 'true'
     packages:
       - libsystemd-dev
 branches:
@@ -16,7 +16,7 @@ jobs:
     - stage: test
       node_js:
         - 12.13.0
-        - 13.0.0
+        - 13.0.1
       script:
         - npm run cover
         - npx codecov
