@@ -18,7 +18,7 @@ async function wait(msecs = 1000) {
 
 async function writeServiceDefinition(serviceDefinitionFileName, unitName, wd) {
   const which = await await execa("which", ["node"]);
-  console.log(which.stdout);
+  const node = which.stdout.trim(); 
 
   return fs.promises.writeFile(
     serviceDefinitionFileName,
@@ -26,7 +26,7 @@ async function writeServiceDefinition(serviceDefinitionFileName, unitName, wd) {
 Description=notifying service test
 [Service]
 Type=notify
-ExecStart=/usr/bin/env node ${wd}/build/notify-test-cli
+ExecStart=${node} ${wd}/build/notify-test-cli
 
 RuntimeDirectory=${unitName}
 StateDirectory=${unitName}
