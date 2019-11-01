@@ -23,7 +23,7 @@ async function writeServiceDefinition(serviceDefinitionFileName, unitName, wd) {
 Description=notifying service test
 [Service]
 Type=notify
-ExecStart=node ${wd}/build/notify-test-cli
+ExecStart=/usr/bin/env node ${wd}/build/notify-test-cli
 
 RuntimeDirectory=${unitName}
 StateDirectory=${unitName}
