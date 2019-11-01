@@ -48,6 +48,7 @@
   "os": [
     "linux"
   ],
+  "cpu": ["x86","arm"],
   "repository": {
     "type": "git",
     "url": "https://github.com/Kronos-Integration/kronos-service-systemd.git"
