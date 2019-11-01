@@ -8,9 +8,9 @@ import {
   ServiceConfig
 } from "@kronos-integration/service";
 
-const archs={'x64':'x86_64'};
+//const archs={'x64':'x86_64','arm':'armv7l'};
 const require = createRequire(import.meta.url);
-const { notify, journal_print } = require(`../systemd-linux-${archs[arch()]}.node`);
+const { notify, journal_print } = require(`../systemd-linux-${arch()}.node`);
 
 /*
 const configDir = process.env.CONFIGURATION_DIRECTORY || program.config;
