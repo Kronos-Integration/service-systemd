@@ -53,6 +53,16 @@ class SystemdConfig extends ServiceConfig {
 
     return config;
   }
+
+  async _start() {
+    try {
+      const config = await this.loadConfig();
+      return this.configure(config);
+    }
+    catch(e) {
+      this.warn(e);
+    }
+  }
 }
 
 /**
