@@ -29,6 +29,7 @@ Description=notifying service test
 [Service]
 Type=notify
 ExecStart=${node} ${wd}/build/notify-test-cli
+ENV=DEBUG=true
 
 RuntimeDirectory=${unitName}
 StateDirectory=${unitName}
