@@ -6,8 +6,8 @@ import fs from "fs";
 
 async function journal(unitName) {
   const jounralctl = execa('journalctl', ['--user', '-u', unitName, '-f']);
-
   jounralctl.stdout.pipe(process.stdout);
+  return journalctl;
 }
 
 async function wait(msecs = 1000) {
@@ -53,7 +53,7 @@ test("service states", async t => {
   //start.stdout.pipe(process.stdout);
   //start.stderr.pipe(process.stderr);
 
-  journal(unitName);
+  const j = journal(unitName);
 
   let status, active;
 
@@ -100,6 +100,9 @@ test("service states", async t => {
   t.is(active, "inactive");
 
   clearInterval(statusInterval);
+
+  //t.log(j);
+  //j.cancel();
 
   await execa("systemctl", ["--user", "disable", unitName]);
 });
