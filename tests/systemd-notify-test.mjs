@@ -10,6 +10,11 @@ async function journalctl(unitName) {
   return journalctl;
 }
 
+async function systemctl(...args) {
+  const systemctl = execa("systemctl", ["--user", ...args]);
+  return systemctl;
+}
+
 async function wait(msecs = 1000) {
   return new Promise((resolve, reject) => {
     setTimeout(resolve, msecs);
@@ -46,9 +51,9 @@ test("service states", async t => {
   const serviceDefinitionFileName = join(wd, `build/${unitName}.service`);
 
   await writeServiceDefinition(serviceDefinitionFileName, unitName, wd);
-  await execa("systemctl", ["--user", "link", serviceDefinitionFileName]);
+  await systemctl( "link", serviceDefinitionFileName);
 
-  const start = execa("systemctl", ["--user", "start", unitName]);
+  const start = systemctl( "start", unitName);
 
   //start.stdout.pipe(process.stdout);
   //start.stderr.pipe(process.stderr);
@@ -61,8 +66,8 @@ test("service states", async t => {
     status = undefined;
     active = undefined;
     try {
-      const systemctl = execa("systemctl", ["--user", "status", unitName]);
-      systemctl.stdout.on("data", data => {
+      const sysctl = execa("systemctl", ["--user", "status", unitName]);
+      sysctl.stdout.on("data", data => {
         let m = String(data).match(/Status:\s*"([^"]+)/);
         if (m) {
           status = m[1];
@@ -74,11 +79,11 @@ test("service states", async t => {
 
         t.log(`systemctl status stdout: ${data}`);
       });
-      systemctl.stderr.on("data", data => {
+      sysctl.stderr.on("data", data => {
         t.log(`systemctl status stderr: ${data}`);
       });
 
-      const p = await systemctl;
+      const p = await status;
     }
     catch (e) {
       t.log(e);
@@ -92,8 +97,7 @@ test("service states", async t => {
   t.is(status, "running");
   t.is(active, "active");
 
-  const stop = execa("systemctl", ["--user", "stop", unitName]);
-  await stop;
+  await systemctl( "stop", unitName);
 
   await wait(4000);
 
@@ -104,5 +108,5 @@ test("service states", async t => {
   //t.log(j);
   //j.cancel();
 
-  await execa("systemctl", ["--user", "disable", unitName]);
+  await systemctl( "disable", unitName);
 });
