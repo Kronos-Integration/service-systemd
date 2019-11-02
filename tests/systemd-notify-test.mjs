@@ -4,9 +4,9 @@ import execa from "execa";
 import fs from "fs";
 
 
-async function journal(unitName) {
-  const jounralctl = execa('journalctl', ['--user', '-u', unitName, '-f']);
-  jounralctl.stdout.pipe(process.stdout);
+async function journalctl(unitName) {
+  const journalctl = execa('journalctl', ['--user', '-u', unitName, '-f']);
+ // journalctl.stdout.pipe(process.stdout);
   return journalctl;
 }
 
@@ -53,7 +53,7 @@ test("service states", async t => {
   //start.stdout.pipe(process.stdout);
   //start.stderr.pipe(process.stderr);
 
-  const j = journal(unitName);
+  const j = journalctl(unitName);
 
   let status, active;
 
