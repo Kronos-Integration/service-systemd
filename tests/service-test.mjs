@@ -9,13 +9,13 @@ test("service states", async t => {
   await ssd.start();
   t.is(ssd.state, "running");
 
-//  t.log(ssd.services);
-
-//  t.is(ssd.services.logger.state, "running");
-//  t.is(ssd.services.config.state, "running");
+  t.is(ssd.services.logger.state, "running");
+  t.is(ssd.services.config.state, "running");
 
   await ssd.stop();
   t.is(ssd.state, "stopped");
+  t.is(ssd.services.logger.state, "stopped");
+  t.is(ssd.services.config.state, "stopped");
 });
 
 
