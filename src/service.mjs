@@ -18,7 +18,6 @@ const { notify, journal_print } = require(`../systemd-linux-${arch()}.node`);
 
     FDSTORE=1
     FDNAME
-    RELOADING=1
 */
 
 class JournalLogger extends ServiceLogger {
@@ -58,6 +57,7 @@ class SystemdConfig extends ServiceConfig {
     
     try {
       const config = await this.loadConfig();
+      notify("RELOADING=1");
       await this.configure(config);
     }
     catch(e) {
