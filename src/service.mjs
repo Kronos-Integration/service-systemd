@@ -13,7 +13,6 @@ const require = createRequire(import.meta.url);
 const { notify, journal_print } = require(`../systemd-linux-${arch()}.node`);
 
 /*
-const configDir = process.env.CONFIGURATION_DIRECTORY || program.config;
     const listeners = sd.listeners();
     if (listeners.length > 0) config.http.port = listeners[0];
 
@@ -57,11 +56,13 @@ class SystemdConfig extends ServiceConfig {
   async _start() {
     try {
       const config = await this.loadConfig();
-      return this.configure(config);
+      await this.configure(config);
     }
     catch(e) {
       this.warn(e);
     }
+
+    return super._start();
   }
 }
 
