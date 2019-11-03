@@ -54,6 +54,8 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async _start() {
+    process.on('beforeExit', code => this.stop());
+    
     try {
       const config = await this.loadConfig();
       await this.configure(config);
