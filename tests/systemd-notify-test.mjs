@@ -1,62 +1,21 @@
 import test from "ava";
 import { join } from "path";
 import execa from "execa";
-import fs from "fs";
-
-
-async function journalctl(unitName) {
-  const journalctl = execa('journalctl', ['--user', '-u', unitName, '-f']);
- // journalctl.stdout.pipe(process.stdout);
-  return journalctl;
-}
-
-async function systemctl(...args) {
-  const systemctl = execa("systemctl", ["--user", ...args]);
-  return systemctl;
-}
-
-async function wait(msecs = 1000) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, msecs);
-  });
-}
-
-async function writeServiceDefinition(serviceDefinitionFileName, unitName, wd) {
-  const which = await await execa("which", ["node"]);
-  const node = which.stdout.trim(); 
-
-  return fs.promises.writeFile(
-    serviceDefinitionFileName,
-    `[Unit]
-Description=notifying service test
-[Service]
-Type=notify
-ExecStart=${node} ${wd}/build/notify-test-cli
-
-RuntimeDirectory=${unitName}
-StateDirectory=${unitName}
-ConfigurationDirectory=${unitName}
-
-`,
-    { encoding: "utf8" }
-  );
-}
+import { journalctl, systemctl, wait, writeUnitDefinition } from "./util.mjs";
 
 test("service states", async t => {
-  const wd = process.cwd();
 
   await execa("rollup", ["-c", "tests/rollup.config.js"]);
 
   const unitName = "notify-test";
+  const wd = process.cwd();
+
   const serviceDefinitionFileName = join(wd, `build/${unitName}.service`);
 
-  await writeServiceDefinition(serviceDefinitionFileName, unitName, wd);
-  await systemctl( "link", serviceDefinitionFileName);
+  await writeUnitDefinition(serviceDefinitionFileName, unitName, wd);
+  await systemctl("link", serviceDefinitionFileName);
 
-  const start = systemctl( "start", unitName);
-
-  //start.stdout.pipe(process.stdout);
-  //start.stderr.pipe(process.stderr);
+  const start = systemctl("start", unitName);
 
   const j = journalctl(unitName);
 
@@ -84,8 +43,7 @@ test("service states", async t => {
       });
 
       const p = await status;
-    }
-    catch (e) {
+    } catch (e) {
       t.log(e);
     }
   }, 1000);
@@ -97,7 +55,7 @@ test("service states", async t => {
   t.is(status, "running");
   t.is(active, "active");
 
-  await systemctl( "stop", unitName);
+  await systemctl("stop", unitName);
 
   await wait(4000);
 
@@ -108,5 +66,5 @@ test("service states", async t => {
   //t.log(j);
   //j.cancel();
 
-  await systemctl( "disable", unitName);
+  await systemctl("disable", unitName);
 });
