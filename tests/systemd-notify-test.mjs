@@ -10,10 +10,10 @@ test("service states", async t => {
   const unitName = "notify-test";
   const wd = process.cwd();
 
-  const serviceDefinitionFileName = join(wd, `build/${unitName}.service`);
+  const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
 
-  await writeUnitDefinition(serviceDefinitionFileName, unitName, wd);
-  await systemctl("link", serviceDefinitionFileName);
+  await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
+  await systemctl("link", unitDefinitionFileName);
 
   const start = systemctl("start", unitName);
 
@@ -36,10 +36,7 @@ test("service states", async t => {
           active = m[1];
         }
 
-        t.log(`systemctl status stdout: ${data}`);
-      });
-      sysctl.stderr.on("data", data => {
-        t.log(`systemctl status stderr: ${data}`);
+        //t.log(`systemctl status stdout: ${data}`);
       });
 
       const p = await status;
