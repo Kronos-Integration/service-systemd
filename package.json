@@ -9,7 +9,8 @@
   "module": "src/service.mjs",
   "description": "kronos systemd integration",
   "keywords": [
-    "systemd"
+    "systemd",
+    "journal"
   ],
   "contributors": [
     {

@@ -10,7 +10,7 @@ import {
 
 //const archs={'x64':'x86_64','arm':'armv7l'};
 const require = createRequire(import.meta.url);
-const { notify, journal_print } = require(`../systemd-linux-${arch()}.node`);
+const { notify, journal_print_object } = require(`../systemd-linux-${arch()}.node`);
 
 /*
     const listeners = sd.listeners();
@@ -22,9 +22,12 @@ const { notify, journal_print } = require(`../systemd-linux-${arch()}.node`);
 
 class JournalLogger extends ServiceLogger {
   logEntry(entry) {
+    journal_print_object(entry);
+    /*
     const severity = entry.severity;
     delete entry.severity;
     journal_print(severity, JSON.stringify(entry));
+    */
   }
 }
 

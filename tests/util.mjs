@@ -3,7 +3,7 @@ import fs from "fs";
 
 export async function journalctl(unitName) {
   const journalctl = execa('journalctl', ['--user', '-u', unitName, '-f']);
- // journalctl.stdout.pipe(process.stdout);
+  journalctl.stdout.pipe(process.stdout);
   return journalctl;
 }
 
@@ -29,7 +29,7 @@ Description=notifying service test
 [Service]
 Type=notify
 ExecStart=${node} ${wd}/build/notify-test-cli
-ENV=DEBUG=true
+Environment=LOGLEVEL=trace
 
 RuntimeDirectory=${unitName}
 StateDirectory=${unitName}
