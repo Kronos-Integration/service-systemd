@@ -12,7 +12,8 @@ import {
 const require = createRequire(import.meta.url);
 const {
   notify,
-  journal_print_object
+  journal_print_object,
+  LISTEN_FDS_START
 } = require(`../systemd-linux-${arch()}.node`);
 
 /**
@@ -48,7 +49,7 @@ class SystemdConfig extends ServiceConfig {
     const arr = new Array(count);
     for (let i = 0; i < count; i++) {
       arr[i] = {
-        fd: binding.LISTEN_FDS_START + i
+        fd: LISTEN_FDS_START + i
       };
       if (fdNames[i]) {
         arr[i].name = fdNames[i];
