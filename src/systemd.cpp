@@ -143,7 +143,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
     if (status != napi_ok)
         return nullptr;
 
-    size_t number;
+    unsigned int number;
     napi_get_array_length(env, property_names, &number);
 
     for (size_t i = 0; i < number; i++)
