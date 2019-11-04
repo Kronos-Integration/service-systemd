@@ -71,8 +71,26 @@ class SystemdConfig extends ServiceConfig {
 
   async _start() {
     try {
-      console.log("LISTENERS", this.listeners);
       const config = await this.loadConfig();
+
+      for(const listener of this.listeners) {
+        if(listener.name) {
+          console.log("SET listener", listener.name);
+          const path = listener.name.split(/\./);
+          let c = config;
+
+          do {
+            let slot = path.shift();
+            if(path.length === 0) {
+              c[slot] = listener.fd;
+              break;
+            }
+            c = c[slot];
+          }
+          while(true);
+        }
+      }
+
       notify("RELOADING=1");
       await this.configure(config);
     } catch (e) {
