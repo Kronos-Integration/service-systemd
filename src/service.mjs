@@ -21,14 +21,10 @@ const { notify, journal_print } = require(`../systemd-linux-${arch()}.node`);
 */
 
 class JournalLogger extends ServiceLogger {
-  constructor(config, owner) {
-    super(config, owner);
-
-    this.endpoints.log.receive = entry => {
-      const severity = entry.severity;
-      delete entry.severity;
-      journal_print(severity, JSON.stringify(entry));
-    };
+  logEntry(entry) {
+    const severity = entry.severity;
+    delete entry.severity;
+    journal_print(severity, JSON.stringify(entry));
   }
 }
 
