@@ -85,13 +85,14 @@ ConfigurationDirectory=${unitName}
 export async function writeSocketUnitDefinition(
   serviceDefinitionFileName,
   unitName,
+  fileDescriptorName,
   socket
 ) {
   return fs.promises.writeFile(
     serviceDefinitionFileName,
     `[Socket]
 ListenStream=${socket}
-
+FileDescriptorName=${fileDescriptorName}
 [Install]
 RequiredBy=${unitName}.service
 `,

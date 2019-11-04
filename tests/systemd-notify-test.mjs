@@ -22,7 +22,8 @@ test("service states", async t => {
   await systemctl("link", unitDefinitionFileName);
 
   const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
-  await writeSocketUnitDefinition(socketUnitDefinitionFileName, unitName, wd);
+  const domainSocket = join(wd, `build/socket`);
+  await writeSocketUnitDefinition(socketUnitDefinitionFileName, unitName, "main", domainSocket);
   await systemctl("link", socketUnitDefinitionFileName);
 
   const start = systemctl("start", unitName);
