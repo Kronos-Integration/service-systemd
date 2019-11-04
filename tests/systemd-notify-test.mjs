@@ -1,7 +1,7 @@
 import test from "ava";
 import { join } from "path";
 import execa from "execa";
-import { journalctl, systemctl, wait, writeUnitDefinition } from "./util.mjs";
+import { clearMonitorUnit, monitorUnit, journalctl, systemctl, wait, writeUnitDefinition } from "./util.mjs";
 
 test("service states", async t => {
 
@@ -20,30 +20,11 @@ test("service states", async t => {
   const j = journalctl(unitName);
 
   let status, active;
-
-  const statusInterval = setInterval(async () => {
-    status = undefined;
-    active = undefined;
-    try {
-      const sysctl = execa("systemctl", ["--user", "status", unitName]);
-      sysctl.stdout.on("data", data => {
-        let m = String(data).match(/Status:\s*"([^"]+)/);
-        if (m) {
-          status = m[1];
-        }
-        m = String(data).match(/Active:\s*(\w+)/);
-        if (m) {
-          active = m[1];
-        }
-
-        //t.log(`systemctl status stdout: ${data}`);
-      });
-
-      const p = await status;
-    } catch (e) {
-      t.log(e);
-    }
-  }, 1000);
+  const m = monitorUnit(unitName,unit => {
+    t.log(unit);
+    active = unit.active;
+    status = unit.status;
+  });
 
   await start;
 
@@ -58,7 +39,7 @@ test("service states", async t => {
 
   t.is(active, "inactive");
 
-  clearInterval(statusInterval);
+  clearMonitorUnit(m);
 
   //t.log(j);
   //j.cancel();
