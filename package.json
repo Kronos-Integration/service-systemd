@@ -1,6 +1,6 @@
 {
   "name": "@kronos-integration/service-systemd",
-  "version": "0.0.0-semantic-release",
+  "version": "1.5.0",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -26,7 +26,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "@kronos-integration/service": "^5.4.1",
+    "@kronos-integration/service": "^5.5.0",
     "config-expander": "^11.0.6"
   },
   "devDependencies": {
