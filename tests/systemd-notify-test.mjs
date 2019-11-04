@@ -22,11 +22,12 @@ test("service states", async t => {
   await systemctl("link", unitDefinitionFileName);
 
   const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
-  const domainSocket = join(wd, `build/socket`);
-  await writeSocketUnitDefinition(socketUnitDefinitionFileName, unitName, "main", domainSocket);
+  const port = 8080;
+  await writeSocketUnitDefinition(socketUnitDefinitionFileName, unitName, "main", port);
   await systemctl("link", socketUnitDefinitionFileName);
 
   const start = systemctl("start", unitName);
+  systemctl("start", unitName + '.socket');
 
   const j = journalctl(unitName);
 
