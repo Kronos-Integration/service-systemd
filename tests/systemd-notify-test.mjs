@@ -1,26 +1,36 @@
 import test from "ava";
 import { join } from "path";
 import execa from "execa";
-import { clearMonitorUnit, monitorUnit, journalctl, systemctl, wait, writeUnitDefinition } from "./util.mjs";
+import {
+  clearMonitorUnit,
+  monitorUnit,
+  journalctl,
+  systemctl,
+  wait,
+  writeUnitDefinition,
+  writeSocketUnitDefinition
+} from "./util.mjs";
 
 test("service states", async t => {
-
   await execa("rollup", ["-c", "tests/rollup.config.js"]);
 
   const unitName = "notify-test";
   const wd = process.cwd();
 
   const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
-
   await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
   await systemctl("link", unitDefinitionFileName);
+
+  const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
+  await writeSocketUnitDefinition(socketUnitDefinitionFileName, unitName, wd);
+  await systemctl("link", socketUnitDefinitionFileName);
 
   const start = systemctl("start", unitName);
 
   const j = journalctl(unitName);
 
   let status, active;
-  const m = monitorUnit(unitName,unit => {
+  const m = monitorUnit(unitName, unit => {
     t.log(unit);
     active = unit.active;
     status = unit.status;

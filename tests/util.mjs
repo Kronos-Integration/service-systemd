@@ -1,16 +1,15 @@
 import execa from "execa";
 import fs from "fs";
 
-export function monitorUnit(unitName,cb)
-{
-  let status,active;
+export function monitorUnit(unitName, cb) {
+  let status, active;
 
   const statusInterval = setInterval(async () => {
     status = undefined;
     active = undefined;
     try {
       //const sysctl = systemctl("status",unitName);
-      const sysctl = execa("systemctl",["--user","status",unitName]);
+      const sysctl = execa("systemctl", ["--user", "status", unitName]);
       sysctl.stderr.pipe(process.stderr);
 
       sysctl.stdout.on("data", data => {
@@ -26,8 +25,8 @@ export function monitorUnit(unitName,cb)
           active = m[1];
         }
 
-	if(changed) {
-          cb({name:unitName,status,active});
+        if (changed) {
+          cb({ name: unitName, status, active });
         }
       });
 
@@ -44,26 +43,26 @@ export function clearMonitorUnit(handle) {
   clearInterval(handle);
 }
 
-export async function journalctl(unitName) {
-  const journalctl = execa('journalctl', ['--user', '-u', unitName, '-f']);
-//  journalctl.stdout.pipe(process.stdout);
-  return journalctl;
+export function journalctl(unitName) {
+  return execa("journalctl", ["--user", "-u", unitName, "-f"]);
+  //  journalctl.stdout.pipe(process.stdout);
 }
 
-export async function systemctl(...args) {
-  const systemctl = execa("systemctl", ["--user", ...args]);
-  return systemctl;
+export function systemctl(...args) {
+  return execa("systemctl", ["--user", ...args]);
 }
 
 export async function wait(msecs = 1000) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, msecs);
-  });
+  return new Promise(resolve => setTimeout(resolve, msecs));
 }
 
-export async function writeUnitDefinition(serviceDefinitionFileName, unitName, wd) {
+export async function writeUnitDefinition(
+  serviceDefinitionFileName,
+  unitName,
+  wd
+) {
   const which = await await execa("which", ["node"]);
-  const node = which.stdout.trim(); 
+  const node = which.stdout.trim();
 
   return fs.promises.writeFile(
     serviceDefinitionFileName,
@@ -78,6 +77,23 @@ RuntimeDirectory=${unitName}
 StateDirectory=${unitName}
 ConfigurationDirectory=${unitName}
 
+`,
+    { encoding: "utf8" }
+  );
+}
+
+export async function writeSocketUnitDefinition(
+  serviceDefinitionFileName,
+  unitName,
+  socket
+) {
+  return fs.promises.writeFile(
+    serviceDefinitionFileName,
+    `[Socket]
+ListenStream=${socket}
+
+[Install]
+RequiredBy=${unitName}.service
 `,
     { encoding: "utf8" }
   );
