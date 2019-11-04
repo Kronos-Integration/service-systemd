@@ -10,8 +10,14 @@ import {
 
 //const archs={'x64':'x86_64','arm':'armv7l'};
 const require = createRequire(import.meta.url);
-const { notify, journal_print_object } = require(`../systemd-linux-${arch()}.node`);
+const {
+  notify,
+  journal_print_object
+} = require(`../systemd-linux-${arch()}.node`);
 
+/**
+ * forward logs entries to the journal
+ */
 class JournalLogger extends ServiceLogger {
   logEntry(entry) {
     journal_print_object(entry);
@@ -31,13 +37,12 @@ class SystemdConfig extends ServiceConfig {
   }
 
   /**
-   * 
-   *     const listeners = sd.listeners();
+   *
    * if (listeners.length > 0) config.http.port = listeners[0];
    * FDSTORE=1
    * FDNAME
    */
-  listeners() {
+  get listeners() {
     const count = Number(process.env.LISTEN_FDS) || 0;
     const fdNames = (process.env.LISTEN_FDNAMES || "").split(":");
     const arr = new Array(count);
@@ -63,13 +68,13 @@ class SystemdConfig extends ServiceConfig {
     return config;
   }
 
-  async _start() {    
+  async _start() {
     try {
+      console.log("LISTENERS", this.listeners);
       const config = await this.loadConfig();
       notify("RELOADING=1");
       await this.configure(config);
-    }
-    catch(e) {
+    } catch (e) {
       this.warn(e);
     }
 
@@ -99,7 +104,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
   }
 
   async _start() {
-    process.on('beforeExit', code => this.stop());
+    process.on("beforeExit", code => this.stop());
     return super._start();
   }
 
@@ -120,7 +125,6 @@ export class ServiceSystemd extends ServiceProviderMixin(
         notify(`STATUS=${newState}`);
     }
   }
-
 }
 
 export default ServiceSystemd;
