@@ -12,25 +12,15 @@ import {
 const require = createRequire(import.meta.url);
 const { notify, journal_print_object } = require(`../systemd-linux-${arch()}.node`);
 
-/*
-    const listeners = sd.listeners();
-    if (listeners.length > 0) config.http.port = listeners[0];
-
-    FDSTORE=1
-    FDNAME
-*/
-
 class JournalLogger extends ServiceLogger {
   logEntry(entry) {
     journal_print_object(entry);
-    /*
-    const severity = entry.severity;
-    delete entry.severity;
-    journal_print(severity, JSON.stringify(entry));
-    */
   }
 }
 
+/**
+ * provides config form CONFIGURATION_DIRECTORY
+ */
 class SystemdConfig extends ServiceConfig {
   constructor(config, owner) {
     super(config, owner);
@@ -38,6 +28,28 @@ class SystemdConfig extends ServiceConfig {
     Object.defineProperties(this, {
       configurationDirectory: { value: process.env.CONFIGURATION_DIRECTORY }
     });
+  }
+
+  /**
+   * 
+   *     const listeners = sd.listeners();
+   * if (listeners.length > 0) config.http.port = listeners[0];
+   * FDSTORE=1
+   * FDNAME
+   */
+  listeners() {
+    const count = Number(process.env.LISTEN_FDS) || 0;
+    const fdNames = (process.env.LISTEN_FDNAMES || "").split(":");
+    const arr = new Array(count);
+    for (let i = 0; i < count; i++) {
+      arr[i] = {
+        fd: binding.LISTEN_FDS_START + i
+      };
+      if (fdNames[i]) {
+        arr[i].name = fdNames[i];
+      }
+    }
+    return arr;
   }
 
   async loadConfig() {
@@ -51,9 +63,7 @@ class SystemdConfig extends ServiceConfig {
     return config;
   }
 
-  async _start() {
-    process.on('beforeExit', code => this.stop());
-    
+  async _start() {    
     try {
       const config = await this.loadConfig();
       notify("RELOADING=1");
@@ -88,6 +98,11 @@ export class ServiceSystemd extends ServiceProviderMixin(
     return true;
   }
 
+  async _start() {
+    process.on('beforeExit', code => this.stop());
+    return super._start();
+  }
+
   stateChanged(oldState, newState) {
     super.stateChanged(oldState, newState);
     switch (newState) {
@@ -106,20 +121,6 @@ export class ServiceSystemd extends ServiceProviderMixin(
     }
   }
 
-  listeners() {
-    const count = Number(process.env.LISTEN_FDS) || 0;
-    const fdNames = (process.env.LISTEN_FDNAMES || "").split(":");
-    const arr = new Array(count);
-    for (let i = 0; i < count; i++) {
-      arr[i] = {
-        fd: binding.LISTEN_FDS_START + i
-      };
-      if (fdNames[i]) {
-        arr[i].name = fdNames[i];
-      }
-    }
-    return arr;
-  }
 }
 
 export default ServiceSystemd;
