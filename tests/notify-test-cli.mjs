@@ -30,18 +30,22 @@ async function actions() {
     true
   );
 
-  ssd.info({ message: "Hello World" });
   ssd.info("starting...");
   await ssd.start();
   ssd.info("started...");
-  ssd.error("error test after start");
-  ssd.info("info test after start");
-  ssd.trace("trace test after start");
-  ssd.warn("warn test after start");
-  ssd.debug("debug test after start");
-  ssd.info({ message: "some values", aNumber: 42, aBoolean: false });
 
-  await wait(10000);
+ // for (i = 0; i < 10; i++) {
+    ssd.info({ message: "Hello World" });
+    ssd.error("error test after start");
+    ssd.info("info test after start");
+    ssd.trace("trace test after start");
+    ssd.warn("warn test after start");
+    ssd.debug("debug test after start");
+    ssd.info({ message: "some values", aNumber: 42, aBoolean: false });
+    await wait(100);
+  //}
+
+  await wait(8000);
   ssd.info("stopping...");
   await ssd.stop();
   ssd.info("stopped...");

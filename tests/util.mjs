@@ -43,9 +43,22 @@ export function clearMonitorUnit(handle) {
   clearInterval(handle);
 }
 
-export function journalctl(unitName) {
-  const j = execa("journalctl", ["--user", "-u", unitName, "-f"]);
-  j.stdout.pipe(process.stdout);
+export async function * journalctl(unitName) {
+  const j = execa("journalctl", ["--user", "-u", unitName, "-f", '-o', 'json']);
+
+  let buffer = "";
+  for await (const chunk of j.stdout) {
+    buffer += buffer.toString('utf8');
+    const i = buffer.indexOf('\n');
+    if(i >= 0) {
+      const line = buffer.substr(0,i);
+      buffer = buffer.substr(i+1);
+      const entry = JSON.parse(line);
+      console.log(entry.MESSAGE);
+      yield entry;
+    }
+  }
+
   return j;
 }
 

@@ -11,10 +11,11 @@ import {
   writeSocketUnitDefinition
 } from "./util.mjs";
 
-test("service states", async t => {
+const unitName = "notify-test";
+
+test.before(async t => {
   await execa("rollup", ["-c", "tests/rollup.config.js"]);
 
-  const unitName = "notify-test";
   const wd = process.cwd();
 
   const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
@@ -23,22 +24,44 @@ test("service states", async t => {
 
   const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
   const port = 8080;
-  await writeSocketUnitDefinition(socketUnitDefinitionFileName, unitName, "main", port);
+  await writeSocketUnitDefinition(
+    socketUnitDefinitionFileName,
+    unitName,
+    "main",
+    port
+  );
   await systemctl("link", socketUnitDefinitionFileName);
+});
 
-  const start = systemctl("start", unitName);
+test.after("cleanup", async t => {
+  await systemctl("disable", unitName);
+});
+
+test.skip("logging", async t => {
+  await systemctl("restart", unitName);
+
+  for await (const entry of journalctl(unitName)) {
+    console.log(entry);
+    t.is(entry.MESSAGE, "error test after start");
+
+    if(entry.MESSAGE === 'error test after start') {
+      break;
+    }
+  }
+
+  await systemctl("stop", unitName);
+});
+
+test("service states", async t => {
+  systemctl("start", unitName);
   //systemctl("start", unitName + '.socket');
-
-  const j = journalctl(unitName);
 
   let status, active;
   const m = monitorUnit(unitName, unit => {
-    t.log(unit);
+    // t.log(unit);
     active = unit.active;
     status = unit.status;
   });
-
-  await start;
 
   await wait(3000);
 
@@ -52,9 +75,4 @@ test("service states", async t => {
   t.is(active, "inactive");
 
   clearMonitorUnit(m);
-
-  //t.log(j);
-  //j.cancel();
-
-  await systemctl("disable", unitName);
 });
