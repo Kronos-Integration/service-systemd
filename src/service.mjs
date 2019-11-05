@@ -74,6 +74,7 @@ class SystemdConfig extends ServiceConfig {
 
   async _start() {
     try {
+      notify("RELOADING=1");
       const config = await this.loadConfig();
 
       for (const listener of this.listeners) {
@@ -92,13 +93,13 @@ class SystemdConfig extends ServiceConfig {
           } while (true);
         }
       }
-
-      notify("RELOADING=1");
-      await this.configure(config);
+      await this.configure(config);  
     } catch (e) {
       this.warn(e);
     }
-
+    
+    // notify("READY=1");
+    
     return super._start();
   }
 }
@@ -133,11 +134,11 @@ export class ServiceSystemd extends ServiceProviderMixin(
     super.stateChanged(oldState, newState);
     switch (newState) {
       case "running":
-        notify("READY=1\nSTATUS=running");
+        notify("READY=1");
         break;
 
       case "stopping":
-        notify("STOPPING=1\nSTATUS=stopping");
+        notify("STOPPING=1");
         break;
 
       // case "stopped":
