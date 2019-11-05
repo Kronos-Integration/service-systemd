@@ -86,7 +86,8 @@ Description=notifying service test
 Type=notify
 ExecStart=${node} ${wd}/build/notify-test-cli
 Environment=LOGLEVEL=trace
-
+NotifyAccess=all
+FileDescriptorStoreMax=2
 RuntimeDirectory=${unitName}
 StateDirectory=${unitName}
 ConfigurationDirectory=${unitName}
