@@ -39,7 +39,6 @@ class SystemdConfig extends ServiceConfig {
 
   /**
    *
-   * if (listeners.length > 0) config.http.port = listeners[0];
    * FDSTORE=1
    * FDNAME
    */
@@ -79,14 +78,14 @@ class SystemdConfig extends ServiceConfig {
 
       for (const listener of this.listeners) {
         if (listener.name) {
-          console.log("SET listener", listener.name);
+          this.trace({ message:"set listener", listener:listener.name});
           const path = listener.name.split(/\./);
           let c = config;
 
           do {
             let slot = path.shift();
             if (path.length === 0) {
-              c[slot] = listener.fd;
+              c[slot] = listener;
               break;
             }
             c = c[slot];
