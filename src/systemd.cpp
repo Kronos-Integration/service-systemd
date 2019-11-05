@@ -1,8 +1,10 @@
 #define NAPI_VERSION 6
-#include <node_api.h>
-#include <systemd/sd-daemon.h>
-
 #define SD_JOURNAL_SUPPRESS_LOCATION
+
+#include <node_api.h>
+#include <sys/uio.h>
+#include <ctype.h>
+#include <systemd/sd-daemon.h>
 #include <systemd/sd-journal.h>
 
 namespace daemon
@@ -43,20 +45,23 @@ napi_value notify(napi_env env, napi_callback_info info)
 typedef struct
 {
     const char *name;
-    int priority;
+    const char *priority;
 } NamedPriority;
 
-const static NamedPriority priorities[] = {
-    {"trace", LOG_DEBUG},
-    {"debug", LOG_DEBUG},
-    {"info", LOG_INFO},
-    {"notice", LOG_NOTICE},
-    {"warn", LOG_WARNING},
-    {"error", LOG_ERR},
-    {"crit", LOG_CRIT},
-    {"alert", LOG_ALERT}};
+#define STR(num) #num
+#define PRIORITY(x) "PRIORITY=" STR(x)
 
-int priorityForName(char *name)
+const static NamedPriority priorities[] = {
+    {"trace", PRIORITY(LOG_DEBUG)},
+    {"debug", PRIORITY(LOG_DEBUG)},
+    {"info", PRIORITY(LOG_INFO)},
+    {"notice", PRIORITY(LOG_NOTICE)},
+    {"warn", PRIORITY(LOG_WARNING)},
+    {"error", PRIORITY(LOG_ERR)},
+    {"crit", PRIORITY(LOG_CRIT)},
+    {"alert", PRIORITY(LOG_ALERT)}};
+
+const char *priorityForName(char *name)
 {
     for (size_t i = 0; i < sizeof(priorities) / sizeof(priorities[0]); i++)
     {
@@ -66,55 +71,8 @@ int priorityForName(char *name)
         }
     }
 
-    return LOG_INFO;
+    return PRIORITY(LOG_INFO);
 }
-
-/*
-napi_value journal_print(napi_env env, napi_callback_info info)
-{
-    napi_status status;
-    size_t argc;
-    size_t len;
-    napi_value args[2];
-
-    argc = 2;
-    status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
-    if (status != napi_ok)
-        return nullptr;
-
-    if (argc != 2)
-    {
-        napi_throw_error(env, nullptr, "Wrong arguments");
-    }
-
-    status = napi_get_value_string_utf8(env, args[0], nullptr, 0, &len);
-    if (status != napi_ok)
-        return nullptr;
-
-    char *severity = new char[len + 1];
-    status = napi_get_value_string_utf8(env, args[0], severity, len + 1, nullptr);
-
-    const int priority = priorityForName(severity);
-
-    delete[] severity;
-
-    status = napi_get_value_string_utf8(env, args[1], nullptr, 0, &len);
-    if (status != napi_ok)
-        return nullptr;
-
-    char *message = new char[len + 1];
-    status = napi_get_value_string_utf8(env, args[1], message, len + 1, nullptr);
-    int res = sd_journal_print(priority, message);
-    delete[] message;
-
-    napi_value value;
-    status = napi_create_int32(env, res, &value);
-    if (status != napi_ok)
-        return nullptr;
-
-    return value;
-}
-*/
 
 napi_value journal_print_object(napi_env env, napi_callback_info info)
 {
@@ -122,7 +80,6 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
     size_t argc;
     napi_value args[1];
     int res = 0;
-    int priority = LOG_INFO;
 
     argc = 1;
     status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
@@ -134,80 +91,93 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
         napi_throw_error(env, nullptr, "Wrong arguments");
     }
 
-#define MAX_MESSAGE_LEN 256
-    char *message = new char[MAX_MESSAGE_LEN];
-    char *pos = message;
-
     napi_value property_names;
     status = napi_get_property_names(env, args[0], &property_names);
     if (status != napi_ok)
         return nullptr;
 
     unsigned int number;
+
     napi_get_array_length(env, property_names, &number);
 
-    for (size_t i = 0; i < number; i++)
+    struct iovec iov[number];
+    char *buffer = new char[number * 256];
+    char *last = buffer + number * 256 - 1;
+    char *append = buffer;
+
+    size_t writtenEntries;
+    for (writtenEntries = 0; writtenEntries < number; writtenEntries++)
     {
-        size_t len;
-
         napi_value property_name;
-        napi_get_element(env, property_names, i, &property_name);
+        napi_get_element(env, property_names, writtenEntries, &property_name);
 
-        status = napi_get_value_string_utf8(env, property_name, nullptr, 0, &len);
+        size_t nameLen;
+
+        status = napi_get_value_string_utf8(env, property_name, nullptr, 0, &nameLen);
         if (status != napi_ok)
             return nullptr;
-        char *name = new char[len + 1];
-        status = napi_get_value_string_utf8(env, property_name, name, len + 1, nullptr);
+        char name[nameLen + 1];
+        status = napi_get_value_string_utf8(env, property_name, name, nameLen + 1, nullptr);
 
         napi_value value;
         napi_get_property(env, args[0], property_name, &value);
 
-        status = napi_get_value_string_utf8(env, value, nullptr, 0, &len);
-        if (status != napi_ok)
-            return nullptr;
+        char *string = append;
+        append += nameLen + 1;
 
-        char *string = new char[len + 1];
-        status = napi_get_value_string_utf8(env, value, string, len + 1, nullptr);
+        if(append >= last) {
+            break;
+        }
+
+        size_t stringLen;
+
+        status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
         if (status != napi_ok)
         {
-            strcpy(string, "?");
+            strcpy(string + nameLen + 1, "?");
+            append += 1 + 1;
+        }
+        else
+        {
+            if(append + stringLen + 1 >= last) {
+                break;
+            }
+
+            status = napi_get_value_string_utf8(env, value, string + nameLen + 1, stringLen + 1, nullptr);
+            if (status != napi_ok)
+            {
+                strcpy(string + nameLen + 1, "?");
+                append += 1 + 1;
+            }
+            else {
+                append += stringLen + 1;
+            }
         }
 
         if (strcmp(name, "severity") == 0)
         {
-            priority = priorityForName(string);
+            const char *p = priorityForName(string + nameLen + 1);
+            iov[writtenEntries].iov_base = (void *)p;
+            iov[writtenEntries].iov_len = strlen(p);
         }
         else
-        {
-            if (pos != message && pos - message < MAX_MESSAGE_LEN - 1)
-                *pos++ = ',';
+        {            
+            char *s = name;
+            char *d = string;
 
-            const auto len = strlen(name);
-
-            if (strcmp(name, "message") != 0 && pos + len + 1 - message < MAX_MESSAGE_LEN - 1)
-            {
-                strcpy(pos, name);
-                pos += len;
-                *pos++ = '=';
+            while(*s) {
+                *d++ = toupper(*s++);
             }
-
-            const auto len2 = strlen(string);
-
-            if (pos + len2 + 1 - message < MAX_MESSAGE_LEN - 1)
-            {
-                strcpy(pos, string);
-                pos += len2;
-            }
+            *d++ = '=';
+            iov[writtenEntries].iov_base = string;
+            iov[writtenEntries].iov_len = nameLen + stringLen + 1;
         }
-
-        delete[] string;
-        delete[] name;
     }
 
-    res = sd_journal_print(priority, message);
+    res = sd_journal_sendv(iov, writtenEntries);
 
-    delete[] message;
-
+    delete  [] buffer;
+    
     napi_value value;
     status = napi_create_int32(env, res, &value);
     if (status != napi_ok)
@@ -228,7 +198,6 @@ napi_value init(napi_env env, napi_value exports)
     napi_property_descriptor desc[] = {
         {"LISTEN_FDS_START", nullptr, nullptr, nullptr, nullptr, listenFdsStart, napi_default, nullptr},
         {"notify", nullptr, daemon::notify, nullptr, nullptr, nullptr, napi_default, nullptr},
-        //  {"journal_print", nullptr, daemon::journal_print, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"journal_print_object", nullptr, daemon::journal_print_object, nullptr, nullptr, nullptr, napi_default, nullptr}};
     status = napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
     if (status != napi_ok)

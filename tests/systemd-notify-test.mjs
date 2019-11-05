@@ -27,7 +27,7 @@ test("service states", async t => {
   await systemctl("link", socketUnitDefinitionFileName);
 
   const start = systemctl("start", unitName);
-  systemctl("start", unitName + '.socket');
+  //systemctl("start", unitName + '.socket');
 
   const j = journalctl(unitName);
 

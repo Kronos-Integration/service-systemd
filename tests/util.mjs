@@ -44,8 +44,9 @@ export function clearMonitorUnit(handle) {
 }
 
 export function journalctl(unitName) {
-  return execa("journalctl", ["--user", "-u", unitName, "-f"]);
-  //  journalctl.stdout.pipe(process.stdout);
+  const j = execa("journalctl", ["--user", "-u", unitName, "-f"]);
+  j.stdout.pipe(process.stdout);
+  return j;
 }
 
 export function systemctl(...args) {

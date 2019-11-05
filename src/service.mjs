@@ -59,35 +59,38 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async loadConfig() {
-    const config = await expand("${include('config.json')}", {
-      constants: {
-        basedir: this.configurationDirectory
-      },
-      default: {}
-    });
+    const d = {};
 
-    return config;
+    if (this.configurationDirectory) {
+      return await expand("${include('config.json')}", {
+        constants: {
+          basedir: this.configurationDirectory
+        },
+        default: d
+      });
+    }
+
+    return d;
   }
 
   async _start() {
     try {
       const config = await this.loadConfig();
 
-      for(const listener of this.listeners) {
-        if(listener.name) {
+      for (const listener of this.listeners) {
+        if (listener.name) {
           console.log("SET listener", listener.name);
           const path = listener.name.split(/\./);
           let c = config;
 
           do {
             let slot = path.shift();
-            if(path.length === 0) {
+            if (path.length === 0) {
               c[slot] = listener.fd;
               break;
             }
             c = c[slot];
-          }
-          while(true);
+          } while (true);
         }
       }
 
