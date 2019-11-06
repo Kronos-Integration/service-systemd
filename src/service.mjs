@@ -98,8 +98,6 @@ class SystemdConfig extends ServiceConfig {
       this.warn(e);
     }
     
-    // notify("READY=1");
-    
     return super._start();
   }
 }
@@ -108,7 +106,7 @@ class SystemdConfig extends ServiceConfig {
  * Kronos bridge to systemd
  * - sync node state to systemd with notify (partly)
  * - propagate config into kronos world
- * - propagate socket activations into kronos
+ * - propagate socket activations into kronos (partly)
  * - start / stop / restart / reload initiated from systemd
  * - log into journal (done)
  */
