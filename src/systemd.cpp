@@ -50,6 +50,7 @@ typedef struct
 
 #define STR(num) #num
 #define PRIORITY(x) "PRIORITY=" STR(x)
+#define NUMBER_OF_ENTRIES(a) sizeof(a)/sizeof(a[0])
 
 const static NamedPriority priorities[] = {
     {"trace", PRIORITY(LOG_DEBUG)},
@@ -63,7 +64,7 @@ const static NamedPriority priorities[] = {
 
 const char *priorityForName(char *name)
 {
-    for (size_t i = 0; i < sizeof(priorities) / sizeof(priorities[0]); i++)
+    for (size_t i = 0; i < NUMBER_OF_ENTRIES(priorities); i++)
     {
         if (strcmp(priorities[i].name, name) == 0)
         {
@@ -125,7 +126,8 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
         char *string = append;
         append += nameLen + 1;
 
-        if(append >= last) {
+        if (append >= last)
+        {
             break;
         }
 
@@ -139,7 +141,8 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
         }
         else
         {
-            if(append + stringLen + 1 >= last) {
+            if (append + stringLen + 1 >= last)
+            {
                 break;
             }
 
@@ -149,7 +152,8 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
                 strcpy(string + nameLen + 1, "?");
                 append += 1 + 1;
             }
-            else {
+            else
+            {
                 append += stringLen + 1;
             }
         }
@@ -161,11 +165,12 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
             iov[writtenEntries].iov_len = strlen(p);
         }
         else
-        {            
+        {
             char *s = name;
             char *d = string;
 
-            while(*s) {
+            while (*s)
+            {
                 *d++ = toupper(*s++);
             }
             *d++ = '=';
@@ -176,8 +181,8 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
 
     res = sd_journal_sendv(iov, writtenEntries);
 
-    delete  [] buffer;
-    
+    delete[] buffer;
+
     napi_value value;
     status = napi_create_int32(env, res, &value);
     if (status != napi_ok)
@@ -199,7 +204,7 @@ napi_value init(napi_env env, napi_value exports)
         {"LISTEN_FDS_START", nullptr, nullptr, nullptr, nullptr, listenFdsStart, napi_default, nullptr},
         {"notify", nullptr, daemon::notify, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"journal_print_object", nullptr, daemon::journal_print_object, nullptr, nullptr, nullptr, napi_default, nullptr}};
-    status = napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
+    status = napi_define_properties(env, exports, NUMBER_OF_ENTRIES(desc), desc);
     if (status != napi_ok)
         return nullptr;
     return exports;
