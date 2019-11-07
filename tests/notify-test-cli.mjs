@@ -21,6 +21,11 @@ class TestService extends Service {
 
 const ssd = new ServiceSystemd();
 
+process.on("SIGINT", () => {
+  console.log("SIGINT -> exit");
+  process.exit();
+});
+
 async function actions() {
   ssd.registerServiceFactory(TestService);
   await ssd.declareService(
@@ -34,15 +39,15 @@ async function actions() {
   await ssd.start();
   ssd.info("started...");
 
- // for (i = 0; i < 10; i++) {
-    ssd.info({ message: "Hello World" });
-    ssd.error("error test after start");
-    ssd.info("info test after start");
-    ssd.trace("trace test after start");
-    ssd.warn("warn test after start");
-    ssd.debug("debug test after start");
-    ssd.info({ message: "some values", aNumber: 42, aBoolean: false });
-    await wait(100);
+  // for (i = 0; i < 10; i++) {
+  ssd.info({ message: "Hello World" });
+  ssd.error("error test after start");
+  ssd.info("info test after start");
+  ssd.trace("trace test after start");
+  ssd.warn("warn test after start");
+  ssd.debug("debug test after start");
+  ssd.info({ message: "some values", aNumber: 42, aBoolean: false });
+  await wait(100);
   //}
 
   await wait(8000);

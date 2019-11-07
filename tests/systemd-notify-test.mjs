@@ -76,3 +76,21 @@ test("service states", async t => {
 
   clearMonitorUnit(m);
 });
+
+test("service kill", async t => {
+  systemctl("start", unitName);
+
+  let pid;
+
+  const m = monitorUnit(unitName, unit => {
+    pid = unit.pid;
+  });
+
+  await wait(1000);
+
+  process.kill(pid);
+
+  await wait(4000);
+
+  t.is(active, "inactive");
+});

@@ -14,19 +14,26 @@ export function monitorUnit(unitName, cb) {
 
       sysctl.stdout.on("data", data => {
         let changed = false;
-        let m = String(data).match(/Status:\s*"([^"]+)/);
+        const line = String(data);
+        let m = line.match(/Status:\s*"([^"]+)/);
         if (m && m[1] != status) {
           changed = true;
           status = m[1];
         }
-        m = String(data).match(/Active:\s*(\w+)/);
+        m = line.match(/Active:\s*(\w+)/);
         if (m && m[1] != active) {
           changed = true;
           active = m[1];
         }
 
+        m = line.match(/Main PID:\s*(\d+)/);
+        if (m && m[1] != pid) {
+          changed = true;
+          pid = m[1];
+        }
+
         if (changed) {
-          cb({ name: unitName, status, active });
+          cb({ name: unitName, status, active, pid });
         }
       });
 

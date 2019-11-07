@@ -9,6 +9,17 @@ import {
 } from "@kronos-integration/service";
 
 //const archs={'x64':'x86_64','arm':'armv7l'};
+
+/*
+import os from 'os';
+const module = {};
+
+process.dlopen(module, `../systemd-linux-${arch()}.node`,
+               os.constants.dlopen.RTLD_NOW);
+
+console.log(module);
+*/
+
 const require = createRequire(import.meta.url);
 const {
   notify,
@@ -79,7 +90,7 @@ class SystemdConfig extends ServiceConfig {
 
       for (const listener of this.listeners) {
         if (listener.name) {
-          this.trace({ message:"set listener", listener:listener.name});
+          this.trace({ message: "set listener", listener: listener.name });
           const path = listener.name.split(/\./);
           let c = config;
 
@@ -93,11 +104,11 @@ class SystemdConfig extends ServiceConfig {
           } while (true);
         }
       }
-      await this.configure(config);  
+      await this.configure(config);
     } catch (e) {
       this.warn(e);
     }
-    
+
     return super._start();
   }
 }
@@ -124,7 +135,15 @@ export class ServiceSystemd extends ServiceProviderMixin(
   }
 
   async _start() {
-    process.on("beforeExit", code => this.stop());
+    process.on("beforeExit", code => {
+      console.log("BEFORE EXIT");
+      this.stop();
+    });
+    process.on("exit", code => {
+      console.log("EXIT");
+      this.stop();
+    });
+
     return super._start();
   }
 
