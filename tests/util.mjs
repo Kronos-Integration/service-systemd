@@ -4,20 +4,29 @@ import fs from "fs";
 export function monitorUnit(unitName, cb) {
   let status, active, pid;
 
-  const statusInterval = setInterval(async () => {
+  let sysctl;
+  let terminate;
+
+  const handler = async () => {
     try {
       //const sysctl = systemctl("status",unitName);
-      const sysctl = execa("systemctl", ["--user", "status", unitName]);
+      sysctl = execa("systemctl", ["--user", "status", unitName, '-n', '0']);
       sysctl.stderr.pipe(process.stderr);
 
       let changed = false;
       let buffer = "";
       for await (const chunk of sysctl.stdout) {
         buffer += chunk.toString("utf8");
-        const i = buffer.indexOf("\n");
-        if (i >= 0) {
+        do {
+          const i = buffer.indexOf("\n");
+          if (i < 0) {
+            break;
+          }
           const line = buffer.substr(0, i);
           buffer = buffer.substr(i + 1);
+
+          console.log(line);
+
           let m = line.match(/Status:\s*"([^"]+)/);
           if (m && m[1] != status) {
             changed = true;
@@ -36,23 +45,34 @@ export function monitorUnit(unitName, cb) {
           }
 
           if (changed) {
+            //console.log({ status, active, pid });
             cb({ name: unitName, status, active, pid });
             changed = false;
           }
-        }
+        } while (true);
       }
-
       const p = await status;
+
+      if(!terminate) {
+        await handler();
+      }
     } catch (e) {
       console.log(e);
     }
-  }, 1000);
+  };
 
-  return statusInterval;
+  handler();
+
+  return {
+    terminate: () => {
+      terminate = true;
+      sysctl.kill();
+    }
+  };
 }
 
 export function clearMonitorUnit(handle) {
-  clearInterval(handle);
+  handle.terminate();
 }
 
 export async function* journalctl(unitName) {
@@ -61,14 +81,18 @@ export async function* journalctl(unitName) {
   let buffer = "";
   for await (const chunk of j.stdout) {
     buffer += chunk.toString("utf8");
-    const i = buffer.indexOf("\n");
-    if (i >= 0) {
+    do {
+      const i = buffer.indexOf("\n");
+      if (i < 0) {
+        break;
+      }
+
       const line = buffer.substr(0, i);
       buffer = buffer.substr(i + 1);
       const entry = JSON.parse(line);
       console.log(entry.MESSAGE);
       yield entry;
-    }
+    } while (true);
   }
 
   return j;

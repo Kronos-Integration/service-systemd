@@ -58,12 +58,12 @@ test("service states", async t => {
 
   let status, active;
   const m = monitorUnit(unitName, unit => {
-     t.log(unit);
+//     t.log(unit);
     active = unit.active;
     status = unit.status;
   });
 
-  await wait(3000);
+  await wait(4000);
 
   t.is(status, "running");
   t.is(active, "active");
@@ -78,7 +78,7 @@ test("service states", async t => {
 });
 
 test.skip("service kill", async t => {
-  systemctl("start", unitName);
+  systemctl("restart", unitName);
 
   let pid;
 
@@ -87,11 +87,11 @@ test.skip("service kill", async t => {
     pid = unit.pid;
   });
 
-  await wait(2000);
+  await wait(3000);
 
   process.kill(pid);
 
-  await wait(4000);
+  await wait(2000);
 
   t.is(active, "inactive");
 });
