@@ -2,40 +2,45 @@ import execa from "execa";
 import fs from "fs";
 
 export function monitorUnit(unitName, cb) {
-  let status, active;
+  let status, active, pid;
 
   const statusInterval = setInterval(async () => {
-    status = undefined;
-    active = undefined;
     try {
       //const sysctl = systemctl("status",unitName);
       const sysctl = execa("systemctl", ["--user", "status", unitName]);
       sysctl.stderr.pipe(process.stderr);
 
-      sysctl.stdout.on("data", data => {
         let changed = false;
-        const line = String(data);
-        let m = line.match(/Status:\s*"([^"]+)/);
-        if (m && m[1] != status) {
-          changed = true;
-          status = m[1];
-        }
-        m = line.match(/Active:\s*(\w+)/);
-        if (m && m[1] != active) {
-          changed = true;
-          active = m[1];
-        }
+  let buffer = "";
+  for await (const chunk of sysctl.stdout) {
+    buffer += buffer.toString('utf8');
+    const i = buffer.indexOf('\n');
+    if(i >= 0) {
+      const line = buffer.substr(0,i);
+      buffer = buffer.substr(i+1);
+      let m = line.match(/Status:\s*"([^"]+)/);
+      if (m && m[1] != status) {
+        changed = true;
+        status = m[1];
+      }
+      m = line.match(/Active:\s*(\w+)/);
+      if (m && m[1] != active) {
+        changed = true;
+        active = m[1];
+      }
 
-        m = line.match(/Main PID:\s*(\d+)/);
-        if (m && m[1] != pid) {
-          changed = true;
-          pid = m[1];
-        }
+      m = line.match(/Main\s+PID:\s*(\d+)/);
+      if (m && m[1] != pid) {
+        changed = true;
+        pid = parseInt(m[1]);
+      }
 
-        if (changed) {
-          cb({ name: unitName, status, active, pid });
-        }
-      });
+      if (changed) {
+        cb({ name: unitName, status, active, pid });
+        changed = false;
+      }
+    }
+  }
 
       const p = await status;
     } catch (e) {

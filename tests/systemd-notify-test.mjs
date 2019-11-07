@@ -58,7 +58,7 @@ test("service states", async t => {
 
   let status, active;
   const m = monitorUnit(unitName, unit => {
-    // t.log(unit);
+     t.log(unit);
     active = unit.active;
     status = unit.status;
   });
@@ -77,16 +77,17 @@ test("service states", async t => {
   clearMonitorUnit(m);
 });
 
-test("service kill", async t => {
+test.skip("service kill", async t => {
   systemctl("start", unitName);
 
   let pid;
 
   const m = monitorUnit(unitName, unit => {
+    console.log(unit);
     pid = unit.pid;
   });
 
-  await wait(1000);
+  await wait(2000);
 
   process.kill(pid);
 
