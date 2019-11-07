@@ -58,7 +58,7 @@ test("service states", async t => {
 
   let status, active;
   const m = monitorUnit(unitName, unit => {
-//     t.log(unit);
+     t.log(unit);
     active = unit.active;
     status = unit.status;
   });

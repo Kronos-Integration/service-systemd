@@ -9,9 +9,7 @@ export function monitorUnit(unitName, cb) {
 
   const handler = async () => {
     try {
-      //const sysctl = systemctl("status",unitName);
-      sysctl = execa("systemctl", ["--user", "status", unitName, '-n', '0']);
-      sysctl.stderr.pipe(process.stderr);
+      sysctl = execa("systemctl", ["--user", "-n", "0", "status", unitName]);
 
       let changed = false;
       let buffer = "";
@@ -25,7 +23,7 @@ export function monitorUnit(unitName, cb) {
           const line = buffer.substr(0, i);
           buffer = buffer.substr(i + 1);
 
-          console.log(line);
+         // console.log(line);
 
           let m = line.match(/Status:\s*"([^"]+)/);
           if (m && m[1] != status) {
@@ -45,7 +43,6 @@ export function monitorUnit(unitName, cb) {
           }
 
           if (changed) {
-            //console.log({ status, active, pid });
             cb({ name: unitName, status, active, pid });
             changed = false;
           }
@@ -53,8 +50,8 @@ export function monitorUnit(unitName, cb) {
       }
       const p = await status;
 
-      if(!terminate) {
-        await handler();
+      if (!terminate) {
+        setTimeout(handler, 1000);
       }
     } catch (e) {
       console.log(e);
