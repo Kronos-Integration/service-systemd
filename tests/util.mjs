@@ -10,37 +10,37 @@ export function monitorUnit(unitName, cb) {
       const sysctl = execa("systemctl", ["--user", "status", unitName]);
       sysctl.stderr.pipe(process.stderr);
 
-        let changed = false;
-  let buffer = "";
-  for await (const chunk of sysctl.stdout) {
-    buffer += buffer.toString('utf8');
-    const i = buffer.indexOf('\n');
-    if(i >= 0) {
-      const line = buffer.substr(0,i);
-      buffer = buffer.substr(i+1);
-      let m = line.match(/Status:\s*"([^"]+)/);
-      if (m && m[1] != status) {
-        changed = true;
-        status = m[1];
-      }
-      m = line.match(/Active:\s*(\w+)/);
-      if (m && m[1] != active) {
-        changed = true;
-        active = m[1];
-      }
+      let changed = false;
+      let buffer = "";
+      for await (const chunk of sysctl.stdout) {
+        buffer += chunk.toString("utf8");
+        const i = buffer.indexOf("\n");
+        if (i >= 0) {
+          const line = buffer.substr(0, i);
+          buffer = buffer.substr(i + 1);
+          let m = line.match(/Status:\s*"([^"]+)/);
+          if (m && m[1] != status) {
+            changed = true;
+            status = m[1];
+          }
+          m = line.match(/Active:\s*(\w+)/);
+          if (m && m[1] != active) {
+            changed = true;
+            active = m[1];
+          }
 
-      m = line.match(/Main\s+PID:\s*(\d+)/);
-      if (m && m[1] != pid) {
-        changed = true;
-        pid = parseInt(m[1]);
-      }
+          m = line.match(/Main\s+PID:\s*(\d+)/);
+          if (m && m[1] != pid) {
+            changed = true;
+            pid = parseInt(m[1]);
+          }
 
-      if (changed) {
-        cb({ name: unitName, status, active, pid });
-        changed = false;
+          if (changed) {
+            cb({ name: unitName, status, active, pid });
+            changed = false;
+          }
+        }
       }
-    }
-  }
 
       const p = await status;
     } catch (e) {
@@ -55,16 +55,16 @@ export function clearMonitorUnit(handle) {
   clearInterval(handle);
 }
 
-export async function * journalctl(unitName) {
-  const j = execa("journalctl", ["--user", "-u", unitName, "-f", '-o', 'json']);
+export async function* journalctl(unitName) {
+  const j = execa("journalctl", ["--user", "-u", unitName, "-f", "-o", "json"]);
 
   let buffer = "";
   for await (const chunk of j.stdout) {
-    buffer += buffer.toString('utf8');
-    const i = buffer.indexOf('\n');
-    if(i >= 0) {
-      const line = buffer.substr(0,i);
-      buffer = buffer.substr(i+1);
+    buffer += chunk.toString("utf8");
+    const i = buffer.indexOf("\n");
+    if (i >= 0) {
+      const line = buffer.substr(0, i);
+      buffer = buffer.substr(i + 1);
       const entry = JSON.parse(line);
       console.log(entry.MESSAGE);
       yield entry;
