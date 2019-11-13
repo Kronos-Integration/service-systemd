@@ -193,20 +193,25 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
 
 } // namespace daemon
 
-napi_value init(napi_env env, napi_value exports)
-{
+napi_value init(napi_env env, napi_value exports) {
     napi_status status;
-    napi_value listenFdsStart;
-    status = napi_create_int32(env, SD_LISTEN_FDS_START, &listenFdsStart);
-    if (status != napi_ok)
-        return nullptr;
-    napi_property_descriptor desc[] = {
-        {"LISTEN_FDS_START", nullptr, nullptr, nullptr, nullptr, listenFdsStart, napi_default, nullptr},
-        {"notify", nullptr, daemon::notify, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"journal_print_object", nullptr, daemon::journal_print_object, nullptr, nullptr, nullptr, napi_default, nullptr}};
-    status = napi_define_properties(env, exports, NUMBER_OF_ENTRIES(desc), desc);
-    if (status != napi_ok)
-        return nullptr;
+    napi_value value;
+
+    status = napi_create_int32(env, SD_LISTEN_FDS_START, &value);
+    if (status != napi_ok) return NULL;
+    status = napi_set_named_property(env, exports, "LISTEN_FDS_START", value);
+    if (status != napi_ok) return NULL;
+
+    status = napi_create_function(env, NULL, 0, daemon::notify, NULL, &value);
+    if (status != napi_ok) return NULL;
+    status = napi_set_named_property(env, exports, "notify", value);
+    if (status != napi_ok) return NULL;
+
+    status = napi_create_function(env, NULL, 0, daemon::journal_print_object, NULL, &value);
+    if (status != napi_ok) return NULL;
+    status = napi_set_named_property(env, exports, "journal_print_object", value);
+    if (status != napi_ok) return NULL;
+
     return exports;
 }
 
