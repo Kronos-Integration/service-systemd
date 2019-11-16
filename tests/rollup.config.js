@@ -17,7 +17,7 @@ export default {
     externalLiveBindings: false
   },
   plugins: [
-    native(),
+    native({ loaderMode: 'dlopen' }),
     commonjs(),
     resolve(),
     executable()
