@@ -52,12 +52,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kronos-Integration/kronos-service-systemd.git"
+    "url": "https://github.com/Kronos-Integration/service-systemd.git"
   },
   "bugs": {
-    "url": "https://github.com/Kronos-Integration/kronos-service-systemd/issues"
+    "url": "https://github.com/Kronos-Integration/service-systemd/issues"
   },
-  "homepage": "https://github.com/Kronos-Integration/kronos-service-systemd#readme",
+  "homepage": "https://github.com/Kronos-Integration/service-systemd#readme",
   "ava": {
     "require": [
       "esm"
