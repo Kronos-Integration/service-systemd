@@ -1,6 +1,5 @@
 import { createRequire } from "module";
 import { expand } from "config-expander";
-import { arch } from "os";
 import {
   ServiceProviderMixin,
   Service,
@@ -8,24 +7,20 @@ import {
   ServiceConfig
 } from "@kronos-integration/service";
 
-//const archs={'x64':'x86_64','arm':'armv7l'};
-
-/*
-import os from 'os';
-const module = {};
-
-process.dlopen(module, `../systemd-linux-${arch()}.node`,
-               os.constants.dlopen.RTLD_NOW);
-
-console.log(module);
-*/
-
-const require = createRequire(import.meta.url);
+import { arch } from "os";
 const {
   notify,
   journal_print_object,
   LISTEN_FDS_START
-} = require(`../systemd-linux-${arch()}.node`);
+} = createRequire(import.meta.url)(`../systemd-linux-${arch()}.node`);
+
+/*
+import {
+  notify,
+  journal_print_object,
+  LISTEN_FDS_START
+} from "../systemd.node";
+*/
 
 /**
  * forward logs entries to the journal
