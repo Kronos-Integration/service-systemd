@@ -28,7 +28,7 @@ export default [
     input: "tests/service-test.mjs",
     output: {
       file: "build/service-test.mjs",
-      format: "mjs"
+      format: "esm"
     }
   }
 ];
