@@ -14,7 +14,7 @@ import {
 const unitName = "notify-test";
 
 test.before(async t => {
-  await execa("rollup", ["-c", "tests/rollup.config.js"]);
+  //await execa("rollup", ["-c", "tests/rollup.config.js"]);
 
   const wd = process.cwd();
 
