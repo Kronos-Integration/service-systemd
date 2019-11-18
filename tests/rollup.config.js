@@ -4,7 +4,7 @@ import native from "rollup-plugin-native";
 import commonjs from "rollup-plugin-commonjs";
 import executable from "rollup-plugin-executable";
 
-const external = [...builtins];
+const external = [...builtins, "ava"];
 const plugins = [
   native({ loaderMode: "dlopen" }),
   commonjs(),
@@ -25,10 +25,13 @@ export default [
     external
   },
   {
-    input: "tests/service-test.mjs",
+    input: "src/service.mjs",
     output: {
-      file: "build/service-test.mjs",
-      format: "esm"
-    }
+      file: "build/service.js",
+      format: "cjs"
+      //format: "esm"
+    },
+    plugins,
+    external
   }
 ];
