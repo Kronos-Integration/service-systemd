@@ -27,9 +27,9 @@ export default [
   {
     input: "src/service.mjs",
     output: {
-      file: "build/service.js",
-      format: "cjs"
-      //format: "esm"
+      file: "build/service.mjs",
+      //format: "cjs"
+      format: "esm"
     },
     plugins,
     external

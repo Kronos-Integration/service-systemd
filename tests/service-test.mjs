@@ -1,5 +1,6 @@
 import test from "ava";
-import ServiceSystemd from "../src/service.mjs";
+//import {ServiceSystemd} from "../src/service.mjs";
+import {ServiceSystemd} from "../build/service.mjs";
 
 test("service start stop plain", async t => {
   const ssd = new ServiceSystemd();
