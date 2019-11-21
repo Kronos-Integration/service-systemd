@@ -1,4 +1,3 @@
-import { createRequire } from "module";
 import { expand } from "config-expander";
 import {
   ServiceProviderMixin,
