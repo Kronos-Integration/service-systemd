@@ -7,15 +7,6 @@ import {
   ServiceConfig
 } from "@kronos-integration/service";
 
-/*
-import { arch } from "os";
-const {
-  notify,
-  journal_print_object,
-  LISTEN_FDS_START
-} = createRequire(import.meta.url)(`../systemd-linux-${arch()}.node`);
-*/
-
 import {
   notify,
   journal_print_object,
