@@ -14,13 +14,14 @@ import {
 const unitName = "notify-test";
 
 test.before(async t => {
-  //await execa("rollup", ["-c", "tests/rollup.config.js"]);
-
   const wd = process.cwd();
 
   const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
   await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
-  await systemctl("link", unitDefinitionFileName);
+  try {
+    await systemctl("link", unitDefinitionFileName);
+  }
+  catch(e) {}
 
   const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
   const port = 8080;
@@ -30,7 +31,10 @@ test.before(async t => {
     "main",
     port
   );
-  await systemctl("link", socketUnitDefinitionFileName);
+  try {
+    await systemctl("link", socketUnitDefinitionFileName);
+  }
+  catch(e) {}
 });
 
 test.after("cleanup", async t => {
@@ -58,12 +62,12 @@ test("service states", async t => {
 
   let status, active;
   const m = monitorUnit(unitName, unit => {
-     t.log(unit);
+    t.log(unit);
     active = unit.active;
     status = unit.status;
   });
 
-  await wait(4000);
+  await wait(5000);
 
   t.is(status, "running");
   t.is(active, "active");
