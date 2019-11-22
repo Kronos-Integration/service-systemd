@@ -27,7 +27,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "@kronos-integration/service": "^6.1.14",
+    "@kronos-integration/service": "^6.1.16",
     "config-expander": "^11.0.6"
   },
   "devDependencies": {
