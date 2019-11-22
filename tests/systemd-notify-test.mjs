@@ -20,8 +20,7 @@ test.before(async t => {
   await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
   try {
     await systemctl("link", unitDefinitionFileName);
-  }
-  catch(e) {}
+  } catch (e) {}
 
   const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
   const port = 8080;
@@ -33,8 +32,7 @@ test.before(async t => {
   );
   try {
     await systemctl("link", socketUnitDefinitionFileName);
-  }
-  catch(e) {}
+  } catch (e) {}
 });
 
 test.after("cleanup", async t => {
@@ -48,7 +46,7 @@ test.skip("logging", async t => {
     console.log(entry);
     t.is(entry.MESSAGE, "error test after start");
 
-    if(entry.MESSAGE === 'error test after start') {
+    if (entry.MESSAGE === "error test after start") {
       break;
     }
   }

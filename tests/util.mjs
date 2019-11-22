@@ -23,7 +23,7 @@ export function monitorUnit(unitName, cb) {
           const line = buffer.substr(0, i);
           buffer = buffer.substr(i + 1);
 
-         // console.log(line);
+          // console.log(line);
 
           let m = line.match(/Status:\s*"([^"]+)/);
           if (m && m[1] != status) {
