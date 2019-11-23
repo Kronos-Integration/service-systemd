@@ -52,7 +52,7 @@ export function monitorUnit(unitName, cb) {
       const p = await status;
 
       if (!terminate) {
-        setTimeout(handler, 1000);
+        setTimeout(handler, 800);
       }
     } catch (e) {
       console.log(e);
