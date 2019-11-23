@@ -1,5 +1,5 @@
 import test from "ava";
-import {ServiceSystemd} from "../build/service.mjs";
+import { ServiceSystemd } from "../build/service.mjs";
 
 test("service start stop plain", async t => {
   const ssd = new ServiceSystemd();
@@ -16,5 +16,3 @@ test("service start stop plain", async t => {
   t.is(ssd.services.logger.state, "stopped");
   t.is(ssd.services.config.state, "stopped");
 });
-
-

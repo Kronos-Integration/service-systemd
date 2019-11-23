@@ -42,7 +42,7 @@ test.after("cleanup", async t => {
 test.serial("logging", async t => {
   await systemctl("restart", unitName);
 
-  let m1,m2,m3;
+  let m1, m2, m3;
 
   for await (const entry of journalctl(unitName)) {
     //console.log(entry);
@@ -63,10 +63,10 @@ test.serial("logging", async t => {
   t.is(m1.PRIORITY, "3");
   t.is(m2.MESSAGE, "debug test after start");
   t.is(m2.PRIORITY, "7");
-  t.is(m2.SERVICE, 'systemd');
+  t.is(m2.SERVICE, "systemd");
   t.is(m3.MESSAGE, "some values");
   t.is(m3.PRIORITY, "6");
-  t.is(m3.SERVICE, 'systemd');
+  t.is(m3.SERVICE, "systemd");
 
   await systemctl("stop", unitName);
 });
@@ -99,7 +99,7 @@ test.serial("service states", async t => {
 test.serial("service kill", async t => {
   systemctl("restart", unitName);
 
-  let pid,active,status;
+  let pid, active, status;
 
   const m = monitorUnit(unitName, unit => {
     active = unit.active;
