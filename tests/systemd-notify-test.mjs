@@ -19,7 +19,7 @@ test.before(async t => {
   await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
   try {
     await systemctl("link", unitDefinitionFileName);
-  } catch (e) {}
+  } catch (e) { }
 
   const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
   const port = 8080;
@@ -31,7 +31,7 @@ test.before(async t => {
   );
   try {
     await systemctl("link", socketUnitDefinitionFileName);
-  } catch (e) {}
+  } catch (e) { }
 });
 
 test.after("cleanup", async t => {
@@ -113,5 +113,26 @@ test.serial("service kill", async t => {
   await wait(2000);
 
   t.is(active, "inactive");
+  clearMonitorUnit(m);
+});
+
+
+test.serial("service SIGHUP", async t => {
+  systemctl("restart", unitName);
+
+  const unit = {};
+  const m = monitorUnit(unitName, u => unit = u);
+
+  await wait(1000);
+
+  process.kill(unit.pid, 'SIGHUP');
+
+  for await (const entry of journalctl(unitName)) {
+    console.log(entry);
+  }
+
+//  await wait(3000);
+
+  t.is(unit.active, "inactive");
   clearMonitorUnit(m);
 });

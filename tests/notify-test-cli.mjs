@@ -21,7 +21,7 @@ class TestService extends Service {
 
 const ssd = new ServiceSystemd();
 
-process.on("SIGINT", () => process.exit());
+//process.on("SIGINT", () => process.exit());
 
 async function actions() {
   ssd.registerServiceFactory(TestService);
