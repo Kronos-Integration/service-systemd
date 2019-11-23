@@ -81,14 +81,14 @@ test.serial("service states", async t => {
     status = unit.status;
   });
 
-  await wait(5000);
+  await wait(2000);
 
   t.is(status, "running");
   t.is(active, "active");
 
   await systemctl("stop", unitName);
 
-  await wait(5000);
+  await wait(2000);
 
   t.is(active, "inactive");
 
