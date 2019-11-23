@@ -35,11 +35,8 @@ async function actions() {
     true
   );
 
-  //ssd.info("starting...");
   await ssd.start();
-  //ssd.info("started...");
 
-  //for (i = 0; i < 2; i++) {
   ssd.info({ message: "Hello World" });
   ssd.error("error test after start");
   ssd.info("info test after start");
@@ -47,13 +44,9 @@ async function actions() {
   ssd.warn("warn test after start");
   ssd.debug("debug test after start");
   ssd.info({ message: "some values", aNumber: 42, aBoolean: false });
-  //await wait(100);
-  //}
 
   await wait(10000);
-  //ssd.info("stopping...");
   await ssd.stop();
-  //ssd.info("stopped...");
 }
 
 actions();
