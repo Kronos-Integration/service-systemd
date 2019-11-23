@@ -130,7 +130,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
     process.on('warning', warning => this.warn(warning));
     process.on("SIGINT", () => this.stop());
     process.on("SIGTERM", () => this.stop());
-    process.on("SIGHUP", () => this.configure(await this.loadConfig()));
+    process.on("SIGHUP", async () => this.configure(await this.loadConfig()));
     process.on("beforeExit", code => this.stop());
     process.on("exit", code => this.stop() );
     return super._start();
