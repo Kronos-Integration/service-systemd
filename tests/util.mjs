@@ -119,6 +119,7 @@ Description=notifying service test
 [Service]
 Type=notify
 ExecStart=${node} --title notify-test ${wd}/build/notify-test-cli.cjs
+ExecReload=/bin/kill -HUP $MAINPID
 Environment=LOGLEVEL=trace
 NotifyAccess=all
 FileDescriptorStoreMax=2
