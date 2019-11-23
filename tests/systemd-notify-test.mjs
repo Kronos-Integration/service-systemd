@@ -1,6 +1,5 @@
 import test from "ava";
 import { join } from "path";
-import execa from "execa";
 import {
   clearMonitorUnit,
   monitorUnit,
