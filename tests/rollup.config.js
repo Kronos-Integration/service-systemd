@@ -16,7 +16,7 @@ export default [
   {
     input: "tests/notify-test-cli.mjs",
     output: {
-      file: "build/notify-test-cli",
+      file: "build/notify-test-cli.cjs",
       format: "cjs",
       interop: false,
       externalLiveBindings: false
@@ -28,7 +28,6 @@ export default [
     input: "src/service.mjs",
     output: {
       file: "build/service.mjs",
-      //format: "cjs"
       format: "esm"
     },
     plugins,

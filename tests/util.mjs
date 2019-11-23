@@ -117,7 +117,7 @@ export async function writeUnitDefinition(
 Description=notifying service test
 [Service]
 Type=notify
-ExecStart=${node} ${wd}/build/notify-test-cli
+ExecStart=${node} --title notify-test-cli ${wd}/build/notify-test-cli.cjs
 Environment=LOGLEVEL=trace
 NotifyAccess=all
 FileDescriptorStoreMax=2
