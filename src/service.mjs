@@ -70,8 +70,7 @@ class SystemdConfig extends ServiceConfig {
     return d;
   }
 
-  async configure(config)
-  {
+  async configure(config) {
     for (const listener of this.listeners) {
       if (listener.name) {
         this.trace(`set listener ${listener.name}`);
@@ -86,8 +85,7 @@ class SystemdConfig extends ServiceConfig {
           }
           c = c[slot];
         } while (true);
-      }
-      else {
+      } else {
         this.warn(`listener without name ${JSON.stringify(listener)}`);
       }
     }
@@ -127,12 +125,12 @@ export class ServiceSystemd extends ServiceProviderMixin(
   }
 
   async _start() {
-    process.on('warning', warning => this.warn(warning));
-    process.on("SIGINT", () => this.stop());
+    process.on("warning", warning => this.warn(warning));
+    //process.on("SIGINT", () => this.stop());
     process.on("SIGTERM", () => this.stop());
     process.on("SIGHUP", async () => this.configure(await this.loadConfig()));
     process.on("beforeExit", code => this.stop());
-    process.on("exit", code => this.stop() );
+    process.on("exit", code => this.stop());
     return super._start();
   }
 
