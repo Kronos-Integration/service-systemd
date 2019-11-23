@@ -1,4 +1,5 @@
 import test from "ava";
+import { writeFileSync } from 'fs';
 import { join } from "path";
 import {
   clearMonitorUnit,
@@ -106,7 +107,7 @@ test.serial("service kill", async t => {
     pid = unit.pid;
   });
 
-  await wait(1000);
+  await wait(1500);
 
   process.kill(pid);
 
@@ -117,21 +118,43 @@ test.serial("service kill", async t => {
 });
 
 
-test.serial("service SIGHUP", async t => {
+test.serial.skip("service SIGHUP", async t => {
+
+  const configFile = `${process.env.HOME}/.config/notify-test/config.json`;
+  writeFileSync(configFile,'{}',{encoding:'utf8'});
+
   systemctl("restart", unitName);
 
-  const unit = {};
-  const m = monitorUnit(unitName, u => unit = u);
+  let pid, active, status;
+
+  const m = monitorUnit(unitName, unit => {
+    active = unit.active;
+    status = unit.status;
+    pid = unit.pid;
+  });
+
+  await wait(1500);
+
+  writeFileSync(configFile,'{"test": { "serial": 4711 }}',{encoding:'utf8'});
+
+  process.kill(pid, 'SIGHUP');
+
+  let m1 = {};
+  let i = 0;
+  for await (const entry of journalctl(unitName)) {
+    console.log(entry);
+
+    if(entry.MESSAGE.match(/config SERIAL 4711/)) {
+      m1 = entry;
+      process.kill(pid);
+    }
+    i++;
+    if(i >= 15) break
+  }
 
   await wait(1000);
 
-  process.kill(unit.pid, 'SIGHUP');
-
-  for await (const entry of journalctl(unitName)) {
-    console.log(entry);
-  }
-
-//  await wait(3000);
+  t.is(m1.MESSAGE, "config SERIAL 4711");
 
   t.is(unit.active, "inactive");
   clearMonitorUnit(m);

@@ -13,21 +13,21 @@ class TestService extends Service {
   async configure(config) {
     delete config.name;
     Object.assign(this, config);
-    wait(1000);
 
+    this.info("config SERIAL ${config.serial}"); 
+    wait(1000);
     return this.restartIfRunning();
   }
 }
 
 const ssd = new ServiceSystemd();
 
-//process.on("SIGINT", () => process.exit());
-
 async function actions() {
   ssd.registerServiceFactory(TestService);
   await ssd.declareService(
     {
-      type: "test"
+      type: "test",
+      loglevel: "trace"
     },
     true
   );
