@@ -110,7 +110,7 @@ test.serial("service kill", async t => {
 
   process.kill(pid);
 
-  await wait(3000);
+  await wait(2000);
 
   t.is(active, "inactive");
   clearMonitorUnit(m);
