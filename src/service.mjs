@@ -54,6 +54,8 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async loadConfig() {
+    console.log("RELOADING=1");
+    notify("RELOADING=1");
     const d = {};
 
     if (this.configurationDirectory) {
@@ -68,29 +70,33 @@ class SystemdConfig extends ServiceConfig {
     return d;
   }
 
+  async configure(config)
+  {
+    for (const listener of this.listeners) {
+      if (listener.name) {
+        this.trace(`set listener ${listener.name}`);
+        const path = listener.name.split(/\./);
+        let c = config;
+
+        do {
+          let slot = path.shift();
+          if (path.length === 0) {
+            c[slot] = listener;
+            break;
+          }
+          c = c[slot];
+        } while (true);
+      }
+      else {
+        this.warn(`listener without name ${JSON.stringify(listener)}`);
+      }
+    }
+    return super.configure(config);
+  }
+
   async _start() {
     try {
-      console.log("RELOADING=1");
-      notify("RELOADING=1");
-      const config = await this.loadConfig();
-
-      for (const listener of this.listeners) {
-        if (listener.name) {
-          this.trace({ message: "set listener", listener: listener.name });
-          const path = listener.name.split(/\./);
-          let c = config;
-
-          do {
-            let slot = path.shift();
-            if (path.length === 0) {
-              c[slot] = listener;
-              break;
-            }
-            c = c[slot];
-          } while (true);
-        }
-      }
-      await this.configure(config);
+      await this.configure(await this.loadConfig());
     } catch (e) {
       this.warn(e);
     }
@@ -121,17 +127,12 @@ export class ServiceSystemd extends ServiceProviderMixin(
   }
 
   async _start() {
+    process.on('warning', warning => this.warn(warning));
     process.on("SIGINT", () => this.stop());
-
-    process.on("beforeExit", code => {
-      console.log("BEFORE EXIT");
-      this.stop();
-    });
-    process.on("exit", code => {
-      console.log("EXIT");
-      this.stop();
-    });
-
+    process.on("SIGTERM", () => this.stop());
+    process.on("SIGHUP", () => this.configure(await this.loadConfig()));
+    process.on("beforeExit", code => this.stop());
+    process.on("exit", code => this.stop() );
     return super._start();
   }
 
