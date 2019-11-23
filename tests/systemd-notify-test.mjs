@@ -72,7 +72,7 @@ test("service states", async t => {
 
   await systemctl("stop", unitName);
 
-  await wait(4000);
+  await wait(5000);
 
   t.is(active, "inactive");
 

@@ -23,17 +23,18 @@ export function monitorUnit(unitName, cb) {
           const line = buffer.substr(0, i);
           buffer = buffer.substr(i + 1);
 
-          // console.log(line);
+          //console.log(line);
 
           let m = line.match(/Status:\s*"([^"]+)/);
           if (m && m[1] != status) {
             changed = true;
             status = m[1];
           }
-          m = line.match(/Active:\s*(\w+)/);
-          if (m && m[1] != active) {
+          m = line.match(/Active:\s+(\w+)(\s+\((\w+)\))?/);
+          if (m && (m[1] != active || m[3] != status)) {
             changed = true;
             active = m[1];
+            status = m[3];
           }
 
           m = line.match(/Main\s+PID:\s*(\d+)/);
@@ -117,7 +118,7 @@ export async function writeUnitDefinition(
 Description=notifying service test
 [Service]
 Type=notify
-ExecStart=${node} --title notify-test-cli ${wd}/build/notify-test-cli.cjs
+ExecStart=${node} --title notify-test ${wd}/build/notify-test-cli.cjs
 Environment=LOGLEVEL=trace
 NotifyAccess=all
 FileDescriptorStoreMax=2
