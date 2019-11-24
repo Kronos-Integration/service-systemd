@@ -54,7 +54,6 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async loadConfig() {
-    console.log("RELOADING=1");
     notify("RELOADING=1");
 
     for (const listener of this.listeners) {
@@ -134,12 +133,10 @@ export class ServiceSystemd extends ServiceProviderMixin(
     super.stateChanged(oldState, newState);
     switch (newState) {
       case "running":
-        console.log("READY=1");
         notify("READY=1");
         break;
 
       case "stopping":
-        console.log("STOPPING=1");
         notify("STOPPING=1");
         break;
     }
