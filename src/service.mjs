@@ -56,8 +56,17 @@ class SystemdConfig extends ServiceConfig {
   async loadConfig() {
     console.log("RELOADING=1");
     notify("RELOADING=1");
-    const d = {};
 
+    for (const listener of this.listeners) {
+      if(listener.name === undefined) {
+        this.warn(`listener without name ${JSON.stringify(listener)}`);
+      }
+      else {
+        await this.configureValue(listener.name,listener);
+      }
+    }
+
+    const d = {};
     if (this.configurationDirectory) {
       return await expand("${include('config.json')}", {
         constants: {
@@ -68,28 +77,6 @@ class SystemdConfig extends ServiceConfig {
     }
 
     return d;
-  }
-
-  async configure(config) {
-    for (const listener of this.listeners) {
-      if (listener.name) {
-        this.trace(`set listener ${listener.name}`);
-        const path = listener.name.split(/\./);
-        let c = config;
-
-        do {
-          let slot = path.shift();
-          if (path.length === 0) {
-            c[slot] = listener;
-            break;
-          }
-          c = c[slot];
-        } while (true);
-      } else {
-        this.warn(`listener without name ${JSON.stringify(listener)}`);
-      }
-    }
-    return super.configure(config);
   }
 
   async _start() {
