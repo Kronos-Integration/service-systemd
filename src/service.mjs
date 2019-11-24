@@ -58,11 +58,10 @@ class SystemdConfig extends ServiceConfig {
     notify("RELOADING=1");
 
     for (const listener of this.listeners) {
-      if(listener.name === undefined) {
+      if (listener.name === undefined) {
         this.warn(`listener without name ${JSON.stringify(listener)}`);
-      }
-      else {
-        await this.configureValue(listener.name,listener);
+      } else {
+        await this.configureValue(listener.name, listener);
       }
     }
 
@@ -80,7 +79,10 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async _start() {
-    process.on("SIGHUP", async () => this.configure(await this.loadConfig()));
+    process.on("SIGHUP", async () => {
+      await this.configure(await this.loadConfig());
+      notify("READY=1");
+    });
     try {
       await this.configure(await this.loadConfig());
     } catch (e) {
