@@ -102,7 +102,7 @@ test.serial("service states", async t => {
   clearMonitorUnit(m);
 });
 
-test.serial("service socket states", async t => {
+test.serial.skip("service socket states", async t => {
   await systemctl("start", unitName + ".socket");
 
   await wait(2000);
