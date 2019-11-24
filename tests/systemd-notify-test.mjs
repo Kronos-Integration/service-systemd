@@ -34,7 +34,7 @@ test.before(async t => {
   await writeSocketUnitDefinition(
     socketUnitDefinitionFileName,
     unitName,
-    "main",
+    "test.socket",
     port
   );
   try {

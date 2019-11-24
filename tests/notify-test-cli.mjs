@@ -1,5 +1,6 @@
 import { Service } from "@kronos-integration/service";
 import ServiceSystemd from "../src/service.mjs";
+import { createServer } from "net";
 
 class TestService extends Service {
   static get name() {
@@ -10,13 +11,23 @@ class TestService extends Service {
     return true;
   }
 
-  async configure(config) {
+  /*async configure(config) {
     delete config.name;
     Object.assign(this, config);
 
     this.info("config SERIAL ${config.serial}"); 
     wait(1000);
     return this.restartIfRunning();
+  }*/
+
+  async _start() {
+    this.server = createServer((client) => {
+      client.setEncoding('utf-8');
+      client.write("Hello");
+    });
+    this.server.listen(this.socket, () =>{
+      this.trace(`listen ${JSON.stringify(this.server.address())}`)
+    });
   }
 }
 
