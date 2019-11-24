@@ -25,8 +25,8 @@ class JournalLogger extends ServiceLogger {
  * provides config form CONFIGURATION_DIRECTORY
  */
 class SystemdConfig extends ServiceConfig {
-  constructor(config, owner) {
-    super(config, owner);
+  constructor(...args) {
+    super(...args);
 
     Object.defineProperties(this, {
       configurationDirectory: { value: process.env.CONFIGURATION_DIRECTORY }
