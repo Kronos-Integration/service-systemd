@@ -120,7 +120,6 @@ export class ServiceSystemd extends ServiceProviderMixin(
       this.stop();
     });
     process.on("SIGTERM", async () => {
-      this.info("SIGTERM");
       await this.stop();
       process.exit(0);
     });
