@@ -80,7 +80,6 @@ test.serial("logging", async t => {
 
 test.serial("service states", async t => {
   systemctl("start", unitName);
-  //systemctl("start", unitName + '.socket');
 
   let status, active;
   const m = monitorUnit(unitName, unit => {
@@ -104,10 +103,9 @@ test.serial("service states", async t => {
 });
 
 test.serial("service socket states", async t => {
-  //systemctl("start", unitName);
   await systemctl("start", unitName + ".socket");
 
-  await wait(1000);
+  await wait(2000);
 
   const client = createConnection(
     {
