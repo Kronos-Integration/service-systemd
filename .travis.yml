@@ -21,6 +21,8 @@ jobs:
         - npm run cover
         - npx codecov
         - cat ./build/coverage/lcov.info | npx coveralls
+      after_failure:
+        - journalctl --user -xe
     - stage: doc
       node_js: lts/*
       skip_cleanup: 'true'
