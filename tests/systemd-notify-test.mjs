@@ -15,8 +15,13 @@ import {
 
 const unitName = "notify-test";
 const port = 8080;
+const configFile = `${process.env.HOME}/.config/notify-test/config.json`;
 
 test.before(async t => {
+  writeFileSync(configFile, '{"test": { "serial": 0 }}', {
+    encoding: "utf8"
+  });
+
   const wd = process.cwd();
 
   const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
@@ -109,7 +114,7 @@ test.serial("service socket states", async t => {
       host: "localhost",
       port
     },
-    (err) => console.log("connected", err)
+    err => console.log("connected", err)
   );
   client.on("data", data => console.log("Server", data));
 
@@ -154,9 +159,6 @@ test.serial("service kill", async t => {
 });
 
 test.serial.skip("service SIGHUP", async t => {
-  const configFile = `${process.env.HOME}/.config/notify-test/config.json`;
-  writeFileSync(configFile, "{}", { encoding: "utf8" });
-
   systemctl("restart", unitName);
 
   let pid, active, status;
