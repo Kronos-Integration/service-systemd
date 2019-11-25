@@ -38,7 +38,7 @@
     "esm": "^3.2.25",
     "execa": "^3.4.0",
     "node-addon-api": "^1.7.1",
-    "rollup": "^1.27.4",
+    "rollup": "^1.27.5",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-executable": "^1.5.1",
     "rollup-plugin-native": "0.0.10",
