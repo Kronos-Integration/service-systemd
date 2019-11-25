@@ -26,7 +26,9 @@ class JournalLogger extends ServiceLogger {
 }
 
 /**
- * provides config form CONFIGURATION_DIRECTORY
+ * Provides config form CONFIGURATION_DIRECTORY
+ * Also injects listeners into the conifg
+ * @property {string} configurationDirectory tken from CONFIGURATION_DIRECTORY
  */
 class SystemdConfig extends ServiceConfig {
   static get name() {
