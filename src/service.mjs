@@ -16,6 +16,10 @@ import {
  * forward logs entries to the journal
  */
 class JournalLogger extends ServiceLogger {
+  static get name() {
+    return "systemd-logger";
+  }
+
   logEntry(entry) {
     journal_print_object(entry);
   }
@@ -25,6 +29,10 @@ class JournalLogger extends ServiceLogger {
  * provides config form CONFIGURATION_DIRECTORY
  */
 class SystemdConfig extends ServiceConfig {
+  static get name() {
+    return "systemd-config";
+  }
+
   constructor(...args) {
     super(...args);
 
@@ -54,7 +62,6 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async loadConfig() {
-    console.log("RELOADING=1");
     notify("RELOADING=1");
 
     for (const listener of this.listeners) {
@@ -95,8 +102,8 @@ class SystemdConfig extends ServiceConfig {
 
 /**
  * Kronos bridge to systemd
- * - sync node state to systemd with notify (partly)
- * - propagate config into kronos world
+ * - sync node state to systemd with notify (done)
+ * - propagate config into kronos world (done)
  * - propagate socket activations into kronos (partly)
  * - start / stop / restart / reload initiated from systemd
  * - log into journal (done)
@@ -134,12 +141,10 @@ export class ServiceSystemd extends ServiceProviderMixin(
     super.stateChanged(oldState, newState);
     switch (newState) {
       case "running":
-        console.log("READY=1");
         notify("READY=1");
         break;
 
       case "stopping":
-        console.log("STOPPING=1");
         notify("STOPPING=1");
         break;
     }
