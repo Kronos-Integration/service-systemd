@@ -10,7 +10,8 @@
   "description": "kronos systemd integration",
   "keywords": [
     "systemd",
-    "journal"
+    "journal",
+    "notify"
   ],
   "contributors": [
     {
