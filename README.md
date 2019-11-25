@@ -12,8 +12,13 @@
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 # @kronos-integration/service-systemd
 
-
 kronos systemd integration
+
+- sync node state to systemd with notify (done)
+- propagate config into kronos world (done)
+- propagate socket activations into kronos (partly)
+- start / stop / restart / reload initiated from systemd (partly)
+- log into journal (done)
 
 # usage
 
