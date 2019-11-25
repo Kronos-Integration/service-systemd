@@ -178,9 +178,9 @@ test.serial.skip("service SIGHUP", async t => {
   let m1 = {};
   let i = 0;
   for await (const entry of journalctl(unitName)) {
-    console.log(entry);
+    t.log(entry.MESSAGE);
 
-    if (entry.MESSAGE.match(/config SERIAL 4711/)) {
+    if (entry.MESSAGE.match(/SERIAL 4711/)) {
       m1 = entry;
       process.kill(pid);
     }
@@ -188,7 +188,7 @@ test.serial.skip("service SIGHUP", async t => {
     if (i >= 15) break;
   }
 
-  await wait(1000);
+  await wait(2000);
 
   t.is(m1.MESSAGE, "config SERIAL 4711");
 
