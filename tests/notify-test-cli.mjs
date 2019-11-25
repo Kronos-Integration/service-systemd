@@ -11,14 +11,11 @@ class TestService extends Service {
     return true;
   }
 
-  /*async configure(config) {
-    delete config.name;
-    Object.assign(this, config);
-
-    this.info("config SERIAL ${config.serial}"); 
-    wait(1000);
-    return this.restartIfRunning();
-  }*/
+  async configure(config) {
+    const result = await super.configure(config);
+    this.info("config SERIAL ${config.serial}");
+    return result;
+  }
 
   async _start() {
     this.server = createServer((client) => {
@@ -55,7 +52,8 @@ async function actions() {
     message: "some values",
     aNumber: 42,
     aBoolean: false,
-    aBigInt: 77n
+    aBigInt: 77n,
+    aObject: { a:1 }
   });
 
   await wait(10000);
