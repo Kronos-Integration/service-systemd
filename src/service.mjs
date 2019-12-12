@@ -35,13 +35,7 @@ class SystemdConfig extends ServiceConfig {
     return "systemd-config";
   }
 
-  constructor(...args) {
-    super(...args);
-
-    Object.defineProperties(this, {
-      configurationDirectory: { value: process.env.CONFIGURATION_DIRECTORY }
-    });
-  }
+  configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
 
   /**
    *
