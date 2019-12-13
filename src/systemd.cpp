@@ -29,15 +29,21 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     char *state = new char[len + 1];
     status = napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr);
 
-
     unsigned int alen;
-
     status = napi_get_array_length(env, args[1], &alen);
 
-    const int fds[1] = { SD_LISTEN_FDS_START };
+    int *fds = new int[alen];
+
+    for (unsigned int i = 0; i < alen; i++)
+     {
+      napi_value e;
+      status = napi_get_element(env, args[1], i, &e);
+      napi_get_value_int32(env,e, &fds[i]);
+     }
 
     int res = sd_pid_notify_with_fds(0, 0, state, fds, 1);
     delete[] state;
+    delete[] fds;
 
     napi_value value;
     status = napi_create_int32(env, res, &value);
