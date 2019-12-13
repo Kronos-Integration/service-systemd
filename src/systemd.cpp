@@ -35,11 +35,11 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     int *fds = new int[alen];
 
     for (unsigned int i = 0; i < alen; i++)
-     {
-      napi_value e;
-      status = napi_get_element(env, args[1], i, &e);
-      napi_get_value_int32(env,e, &fds[i]);
-     }
+    {
+        napi_value e;
+        status = napi_get_element(env, args[1], i, &e);
+        napi_get_value_int32(env, e, &fds[i]);
+    }
 
     int res = sd_pid_notify_with_fds(0, 0, state, fds, 1);
     delete[] state;
@@ -93,7 +93,7 @@ typedef struct
 
 #define STR(num) #num
 #define PRIORITY(x) "PRIORITY=" STR(x)
-#define NUMBER_OF_ENTRIES(a) sizeof(a)/sizeof(a[0])
+#define NUMBER_OF_ENTRIES(a) sizeof(a) / sizeof(a[0])
 
 const static NamedPriority priorities[] = {
     {"trace", PRIORITY(LOG_DEBUG)},
@@ -234,29 +234,38 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
     return value;
 }
 
-napi_value init(napi_env env, napi_value exports) {
+napi_value init(napi_env env, napi_value exports)
+{
     napi_status status;
     napi_value value;
 
     status = napi_create_int32(env, SD_LISTEN_FDS_START, &value);
-    if (status != napi_ok) return NULL;
+    if (status != napi_ok)
+        return NULL;
     status = napi_set_named_property(env, exports, "LISTEN_FDS_START", value);
-    if (status != napi_ok) return NULL;
+    if (status != napi_ok)
+        return NULL;
 
     status = napi_create_function(env, NULL, 0, notify_with_fds, NULL, &value);
-    if (status != napi_ok) return NULL;
+    if (status != napi_ok)
+        return NULL;
     status = napi_set_named_property(env, exports, "notify_with_fds", value);
-    if (status != napi_ok) return NULL;
+    if (status != napi_ok)
+        return NULL;
 
     status = napi_create_function(env, NULL, 0, notify, NULL, &value);
-    if (status != napi_ok) return NULL;
+    if (status != napi_ok)
+        return NULL;
     status = napi_set_named_property(env, exports, "notify", value);
-    if (status != napi_ok) return NULL;
+    if (status != napi_ok)
+        return NULL;
 
     status = napi_create_function(env, NULL, 0, journal_print_object, NULL, &value);
-    if (status != napi_ok) return NULL;
+    if (status != napi_ok)
+        return NULL;
     status = napi_set_named_property(env, exports, "journal_print_object", value);
-    if (status != napi_ok) return NULL;
+    if (status != napi_ok)
+        return NULL;
 
     return exports;
 }
