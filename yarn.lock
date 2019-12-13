@@ -1007,10 +1007,10 @@
   dependencies:
     model-attributes "^4.1.3"
 
-"@kronos-integration/service@^8.1.6":
-  version "8.1.6"
-  resolved "https://registry.yarnpkg.com/@kronos-integration/service/-/service-8.1.6.tgz#88bb650ecfac864d48f519d69ef8ff5bbffb04e7"
-  integrity sha512-98pu28T1I7yzK+nNKVW5yRBLR8ASglnfF9MZTE0Z1U/+ZsYres5nFDDiewZ4Sm8GC68qOwLlKeC3/FjVxbs7KA==
+"@kronos-integration/service@^8.1.7":
+  version "8.1.7"
+  resolved "https://registry.yarnpkg.com/@kronos-integration/service/-/service-8.1.7.tgz#9c1dd1fb7030c207f50934577c78d94da4f3543a"
+  integrity sha512-kBBbQWr6RRahPsrcU67C4gU2H/wn8O/1kUbBdnsSktzJRztWIPxmosJLpGKRaqh5CshYKIR80P6USkeM/kkTWQ==
   dependencies:
     "@kronos-integration/endpoint" "^7.3.0"
     loglevel-mixin "^5.0.3"
