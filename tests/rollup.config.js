@@ -7,7 +7,7 @@ import executable from "rollup-plugin-executable";
 
 const external = [...builtins, "ava"];
 const plugins = [
-  native({ loaderMode: "dlopen" }),
+  native({ }),
   commonjs(),
   resolve(),
   executable()
