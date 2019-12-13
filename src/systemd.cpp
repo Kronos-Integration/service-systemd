@@ -26,11 +26,17 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     if (status != napi_ok)
         return nullptr;
 
-    char *state = new char[len + 1];
-    status = napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr);
-
     unsigned int alen;
     status = napi_get_array_length(env, args[1], &alen);
+    if (status != napi_ok)
+    {
+        return nullptr;
+    }
+
+    char *state = new char[len + 1];
+    status = napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr);
+    if (status != napi_ok)
+        return nullptr;
 
     int *fds = new int[alen];
 
@@ -38,6 +44,13 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     {
         napi_value e;
         status = napi_get_element(env, args[1], i, &e);
+        if (status != napi_ok)
+        {
+            delete[] state;
+            delete[] fds;
+            return nullptr;
+        }
+
         napi_get_value_int32(env, e, &fds[i]);
     }
 
