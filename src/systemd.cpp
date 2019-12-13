@@ -7,9 +7,6 @@
 #include <systemd/sd-daemon.h>
 #include <systemd/sd-journal.h>
 
-namespace daemon
-{
-
 napi_value notify_with_fds(napi_env env, napi_callback_info info)
 {
     napi_status status;
@@ -229,8 +226,6 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
     return value;
 }
 
-} // namespace daemon
-
 napi_value init(napi_env env, napi_value exports) {
     napi_status status;
     napi_value value;
@@ -240,17 +235,17 @@ napi_value init(napi_env env, napi_value exports) {
     status = napi_set_named_property(env, exports, "LISTEN_FDS_START", value);
     if (status != napi_ok) return NULL;
 
-    status = napi_create_function(env, NULL, 0, daemon::notify_with_fds, NULL, &value);
+    status = napi_create_function(env, NULL, 0, notify_with_fds, NULL, &value);
     if (status != napi_ok) return NULL;
     status = napi_set_named_property(env, exports, "notify_with_fds", value);
     if (status != napi_ok) return NULL;
 
-    status = napi_create_function(env, NULL, 0, daemon::notify, NULL, &value);
+    status = napi_create_function(env, NULL, 0, notify, NULL, &value);
     if (status != napi_ok) return NULL;
     status = napi_set_named_property(env, exports, "notify", value);
     if (status != napi_ok) return NULL;
 
-    status = napi_create_function(env, NULL, 0, daemon::journal_print_object, NULL, &value);
+    status = napi_create_function(env, NULL, 0, journal_print_object, NULL, &value);
     if (status != napi_ok) return NULL;
     status = napi_set_named_property(env, exports, "journal_print_object", value);
     if (status != napi_ok) return NULL;
