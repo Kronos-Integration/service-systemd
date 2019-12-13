@@ -30,7 +30,9 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     status = napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr);
 
 
-    status = napi_get_array_length(env, args[1], &len);
+    unsigned int alen;
+
+    status = napi_get_array_length(env, args[1], &alen);
 
     const int fds[1] = { SD_LISTEN_FDS_START };
 
