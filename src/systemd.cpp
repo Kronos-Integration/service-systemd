@@ -33,13 +33,11 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     status = napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr);
 
 
-    uint32_t len;
     status = napi_get_array_length(env, args[1], &len);
 
-    int fds[1];
-    fds[0] = SD_LISTEN_FDS_START;
+    const int fds[1] = { SD_LISTEN_FDS_START };
 
-    int res = sd_pid_notify_with_fds(0, 0, state, &fds, 1);
+    int res = sd_pid_notify_with_fds(0, 0, state, fds, 1);
     delete[] state;
 
     napi_value value;
