@@ -83,8 +83,7 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async _stop() {
-    this.info("notify_with_fds...");
-
+    this.info("FDSTORE=1" + this.listeners.map(l => ` FDNAME=${l.name}`).join(""));
     notify_with_fds(
       "FDSTORE=1" + this.listeners.map(l => `\nFDNAME=${l.name}`).join(""),
       this.listeners.map(l => l.fd)
