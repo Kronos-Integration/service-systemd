@@ -7,10 +7,6 @@ class TestService extends Service {
     return "test";
   }
 
-  get autostart() {
-    return true;
-  }
-
   async configure(config) {
     const result = await super.configure(config);
     this.info("config SERIAL ${config.serial}");
@@ -18,12 +14,12 @@ class TestService extends Service {
   }
 
   async _start() {
-    this.server = createServer((client) => {
-      client.setEncoding('utf-8');
+    this.server = createServer(client => {
+      client.setEncoding("utf-8");
       client.write("Hello");
     });
-    this.server.listen(this.socket, () =>{
-      this.trace(`listen ${JSON.stringify(this.server.address())}`)
+    this.server.listen(this.socket, () => {
+      this.trace(`listen ${JSON.stringify(this.server.address())}`);
     });
   }
 }
@@ -31,13 +27,12 @@ class TestService extends Service {
 const ssd = new ServiceSystemd();
 
 async function actions() {
-  ssd.registerServiceFactory(TestService);
   await ssd.declareService(
     {
-      type: "test",
-      loglevel: "trace"
-    },
-    true
+      type: TestService,
+      loglevel: "trace",
+      autostart: true
+    }
   );
 
   await ssd.start();
@@ -53,7 +48,7 @@ async function actions() {
     aNumber: 42,
     aBoolean: false,
     aBigInt: 77n,
-    aObject: { a:1 }
+    aObject: { a: 1 }
   });
 
   await wait(10000);

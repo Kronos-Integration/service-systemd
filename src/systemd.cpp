@@ -10,6 +10,46 @@
 namespace daemon
 {
 
+napi_value notify_with_fds(napi_env env, napi_callback_info info)
+{
+    napi_status status;
+    size_t argc = 2;
+    napi_value args[2];
+    status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
+    if (status != napi_ok)
+        return nullptr;
+
+    if (argc != 2)
+    {
+        napi_throw_error(env, nullptr, "Wrong arguments");
+    }
+
+    size_t len;
+    status = napi_get_value_string_utf8(env, args[0], nullptr, 0, &len);
+    if (status != napi_ok)
+        return nullptr;
+
+    char *state = new char[len + 1];
+    status = napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr);
+
+
+    uint32_t len;
+    status = napi_get_array_length(env, args[1], &len);
+
+    int fds[1];
+    fds[0] = SD_LISTEN_FDS_START;
+
+    int res = sd_pid_notify_with_fds(0, 0, state, &fds, 1);
+    delete[] state;
+
+    napi_value value;
+    status = napi_create_int32(env, res, &value);
+    if (status != napi_ok)
+        return nullptr;
+
+    return value;
+}
+
 napi_value notify(napi_env env, napi_callback_info info)
 {
     napi_status status;
@@ -200,6 +240,11 @@ napi_value init(napi_env env, napi_value exports) {
     status = napi_create_int32(env, SD_LISTEN_FDS_START, &value);
     if (status != napi_ok) return NULL;
     status = napi_set_named_property(env, exports, "LISTEN_FDS_START", value);
+    if (status != napi_ok) return NULL;
+
+    status = napi_create_function(env, NULL, 0, daemon::notify_with_fds, NULL, &value);
+    if (status != napi_ok) return NULL;
+    status = napi_set_named_property(env, exports, "notify_with_fds", value);
     if (status != napi_ok) return NULL;
 
     status = napi_create_function(env, NULL, 0, daemon::notify, NULL, &value);

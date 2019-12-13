@@ -8,6 +8,7 @@ import {
 
 import {
   notify,
+  notify_with_fds,
   journal_print_object,
   LISTEN_FDS_START
 } from "../systemd.node";
@@ -79,6 +80,17 @@ class SystemdConfig extends ServiceConfig {
     }
 
     return d;
+  }
+
+  async _stop() {
+    this.info("notify_with_fds...");
+
+    notify_with_fds(
+      "FDSTORE=1" + this.listeners.map(l => `\nFDNAME=${l.name}`).join(""),
+      this.listeners.map(l => l.fd)
+    );
+
+    return super._stop();
   }
 
   async _start() {
