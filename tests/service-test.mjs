@@ -1,15 +1,24 @@
 import test from "ava";
-import { ServiceSystemd } from "../build/service.mjs";
+import { ServiceSystemd, notify_with_fds } from "../build/service.mjs";
 
 test("endpoints", t => {
   const ssd = new ServiceSystemd();
- 
+
   //console.log(ssd.services.logger.endpoints.log.toJSON());
 
   t.true(ssd.services.logger.endpoints.log.isOpen);
   t.true(ssd.endpoints.log.isConnected(ssd.services.logger.endpoints.log));
-  t.true(ssd.services.config.endpoints.log.isConnected(ssd.services.logger.endpoints.log));
+  t.true(
+    ssd.services.config.endpoints.log.isConnected(
+      ssd.services.logger.endpoints.log
+    )
+  );
   //t.true(ssd.services.logger.endpoints.log.isConnected(ssd.services.logger.endpoints.log));
+});
+
+test("notify_with_fds", t => {
+  t.is(notify_with_fds("FDSTORE=1", []), 0);
+  t.is(notify_with_fds("FDSTORE=1\nFDNAME=fd1\nFDNAME=fd2", [3, 4]), 0);
 });
 
 test("service start stop plain", async t => {

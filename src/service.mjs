@@ -13,6 +13,8 @@ import {
   LISTEN_FDS_START
 } from "../systemd.node";
 
+export { notify, notify_with_fds };
+
 /**
  * forward logs entries to the journal
  */
@@ -40,8 +42,6 @@ class SystemdConfig extends ServiceConfig {
 
   /**
    *
-   * FDSTORE=1
-   * FDNAME
    */
   get listeners() {
     const count = Number(process.env.LISTEN_FDS) || 0;
@@ -83,7 +83,9 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async _stop() {
-    this.info("FDSTORE=1" + this.listeners.map(l => ` FDNAME=${l.name}`).join(""));
+    this.info(
+      "FDSTORE=1" + this.listeners.map(l => ` FDNAME=${l.name}`).join("")
+    );
     this.info(this.listeners.map(l => l.fd));
     notify_with_fds(
       "FDSTORE=1" + this.listeners.map(l => `\nFDNAME=${l.name}`).join(""),
