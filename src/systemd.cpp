@@ -189,30 +189,49 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
 
         size_t stringLen;
 
-        status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
-        if (status != napi_ok)
+/*
+        bool isError;
+        status = napi_is_error(env, value, &isError);
+        if (isError)
         {
-            strcpy(string + nameLen + 1, "?");
-            append += 1 + 1;
+            string = (char *)"isError";
+            stringLen = 8;
         }
         else
         {
-            if (append + stringLen + 1 >= last)
-            {
-                break;
-            }
+            */
 
-            status = napi_get_value_string_utf8(env, value, string + nameLen + 1, stringLen + 1, nullptr);
+            status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
             if (status != napi_ok)
             {
+                napi_coerce_to_string(env, value, &value);
+                status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
+
+                /*
                 strcpy(string + nameLen + 1, "?");
                 append += 1 + 1;
+                */
             }
-            else
+
+            //else
             {
-                append += stringLen + 1;
+                if (append + stringLen + 1 >= last)
+                {
+                    break;
+                }
+
+                status = napi_get_value_string_utf8(env, value, string + nameLen + 1, stringLen + 1, nullptr);
+                if (status != napi_ok)
+                {
+                    strcpy(string + nameLen + 1, "?");
+                    append += 1 + 1;
+                }
+                else
+                {
+                    append += stringLen + 1;
+                }
             }
-        }
+       // }
 
         if (strcmp(name, "severity") == 0)
         {

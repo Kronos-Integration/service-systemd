@@ -63,17 +63,12 @@ test.serial("logging", async t => {
   m = entries.find(m => m.MESSAGE === "Cannot read property 'doSomething' of undefined");
   t.truthy(m);
   t.is(m.PRIORITY, "3");
-  //t.is(m.STACK, "");
+  t.truthy(m.STACK.startsWith("TypeError: Cannot read property 'doSomething' of undefined,at actions (/workspace/markus/service-systemd/build/notify-test-cli.cjs:"));
 
-  /*
-    "STACK" : [
-            63,
-            0,
-            77,
-            69,
-            83
-    ],
-*/
+  m = entries.find(m => m.MESSAGE === "this is an Error");
+  t.truthy(m);
+  t.is(m.PRIORITY, "3");
+  t.truthy(m.STACK.startsWith("Error: this is an Error,at actions (/workspace/markus/service-systemd/build/notify-test-cli.cjs:"));
 
   m = entries.find(m => m.MESSAGE === "error test after start");
   t.truthy(m);
@@ -89,11 +84,11 @@ test.serial("logging", async t => {
   m = entries.find(m => m.MESSAGE === "some values");
   t.truthy(m);
   t.is(m.PRIORITY, "6");
- // t.is(m.ABIGINT, '');
- // t.is(m.ANUMBER, '');
- // t.is(m.AOBJECT, '');
- // t.is(m.ABOOLEAN, '');
-  
+  t.is(m.ABIGINT, '77');
+  t.is(m.ANUMBER, '42');
+  t.is(m.ABOOLEAN, 'false');
+   // t.is(m.AOBJECT, '');
+
   await systemctl("stop", unitName);
 });
 

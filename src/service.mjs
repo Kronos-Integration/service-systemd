@@ -71,6 +71,7 @@ class SystemdConfig extends ServiceConfig {
 
     const d = {};
     if (this.configurationDirectory) {
+      this.trace(`load: config.json from ${this.configurationDirectory}`);
       return await expand("${include('config.json')}", {
         constants: {
           basedir: this.configurationDirectory
@@ -96,6 +97,8 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async _start() {
+    await super._start();
+
     process.on("SIGHUP", async () => {
       await this.configure(await this.loadConfig());
       notify("READY=1");
@@ -105,8 +108,6 @@ class SystemdConfig extends ServiceConfig {
     } catch (e) {
       this.warn(e);
     }
-
-    return super._start();
   }
 }
 

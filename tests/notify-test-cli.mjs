@@ -45,6 +45,7 @@ async function actions() {
     ssd.error(e)
   }
 
+  ssd.error(new Error("this is an Error"));
   ssd.info({ message: "Hello World" });
   ssd.error("error test after start");
   ssd.info("info test after start");
