@@ -37,6 +37,14 @@ async function actions() {
 
   await ssd.start();
 
+  try {
+    x = undefined;
+    x.doSomething();
+  }
+  catch(e) {
+    ssd.error(e)
+  }
+
   ssd.info({ message: "Hello World" });
   ssd.error("error test after start");
   ssd.info("info test after start");
