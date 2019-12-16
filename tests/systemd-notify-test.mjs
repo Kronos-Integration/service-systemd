@@ -58,7 +58,24 @@ test.serial("logging", async t => {
     }
   }
 
-  let m = entries.find(m => m.MESSAGE === "error test after start");
+  let m;
+
+  m = entries.find(m => m.MESSAGE === "Cannot read property 'doSomething' of undefined");
+  t.truthy(m);
+  t.is(m.PRIORITY, "3");
+  //t.is(m.STACK, "");
+
+  /*
+    "STACK" : [
+            63,
+            0,
+            77,
+            69,
+            83
+    ],
+*/
+
+  m = entries.find(m => m.MESSAGE === "error test after start");
   t.truthy(m);
   t.is(m.PRIORITY, "3");
 
@@ -72,7 +89,11 @@ test.serial("logging", async t => {
   m = entries.find(m => m.MESSAGE === "some values");
   t.truthy(m);
   t.is(m.PRIORITY, "6");
-
+ // t.is(m.ABIGINT, '');
+ // t.is(m.ANUMBER, '');
+ // t.is(m.AOBJECT, '');
+ // t.is(m.ABOOLEAN, '');
+  
   await systemctl("stop", unitName);
 });
 

@@ -38,7 +38,7 @@ async function actions() {
   await ssd.start();
 
   try {
-    x = undefined;
+    const x = undefined;
     x.doSomething();
   }
   catch(e) {
