@@ -21,7 +21,7 @@ test("notify_with_fds", t => {
   t.is(notify_with_fds("FDSTORE=1\nFDNAME=fd1\nFDNAME=fd2", [3, 4]), 0);
   t.is(notify_with_fds("FDSTORE=1\nFDNAME=fd1\nFDNAME=fd2", [undefined]), 0);
   t.throws(() => notify_with_fds("FDSTORE=1\nFDNAME=fd1\nFDNAME=fd2"), "Wrong arguments");
-  t.is(notify_with_fds("FDSTORE=1\nFDNAME=fd1\nFDNAME=fd2", "hello"), 0);
+  t.is(notify_with_fds("FDSTORE=1\nFDNAME=fd1\nFDNAME=fd2", "hello"), undefined);
 });
 
 test("service start stop plain", async t => {

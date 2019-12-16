@@ -49,31 +49,29 @@ test.after("cleanup", async t => {
 test.serial("logging", async t => {
   await systemctl("restart", unitName);
 
-  let m1, m2, m3;
+  const entries = [];
 
   for await (const entry of journalctl(unitName)) {
-    //console.log(entry);
-
-    if (entry.MESSAGE === "error test after start") {
-      m1 = entry;
-    }
-    if (entry.MESSAGE === "debug test after start") {
-      m2 = entry;
-    }
+    entries.push(entry);
     if (entry.MESSAGE === "some values") {
-      m3 = entry;
       break;
     }
   }
 
-  t.is(m1.MESSAGE, "error test after start");
-  t.is(m1.PRIORITY, "3");
-  t.is(m2.MESSAGE, "debug test after start");
-  t.is(m2.PRIORITY, "7");
-  t.is(m2.SERVICE, "systemd");
-  t.is(m3.MESSAGE, "some values");
-  t.is(m3.PRIORITY, "6");
-  t.is(m3.SERVICE, "systemd");
+  let m = entries.find(m => m.MESSAGE === "error test after start");
+  t.truthy(m);
+  t.is(m.PRIORITY, "3");
+
+  m = entries.find(m => m.MESSAGE === "debug test after start");
+  t.truthy(m);
+  t.is(m.PRIORITY, "7");
+
+  m = entries.find(m => m.SERVICE === "systemd");
+  t.truthy(m);
+
+  m = entries.find(m => m.MESSAGE === "some values");
+  t.truthy(m);
+  t.is(m.PRIORITY, "6");
 
   await systemctl("stop", unitName);
 });
