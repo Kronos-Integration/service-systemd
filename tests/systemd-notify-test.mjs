@@ -64,12 +64,12 @@ test.serial("logging", async t => {
   m = entries.find(m => m.MESSAGE === "Cannot read property 'doSomething' of undefined");
   t.truthy(m);
   t.is(m.PRIORITY, "3");
-  t.truthy(m.STACK.startsWith("TypeError: Cannot read property 'doSomething' of undefined\nat actions (/workspace/markus/service-systemd/build/notify-test-cli.cjs:"));
+  t.truthy(m.STACK.startsWith("TypeError: Cannot read property 'doSomething' of undefined\nat actions (/"));
 
   m = entries.find(m => m.MESSAGE === "this is an Error");
   t.truthy(m);
   t.is(m.PRIORITY, "3");
-  t.truthy(m.STACK.startsWith("Error: this is an Error\nat actions (/workspace/markus/service-systemd/build/notify-test-cli.cjs:"));
+  t.truthy(m.STACK.startsWith("Error: this is an Error\nat actions (/"));
 
   m = entries.find(m => m.MESSAGE === "error test after start");
   t.truthy(m);
