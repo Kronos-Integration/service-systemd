@@ -62,23 +62,23 @@ class SystemdConfig extends ServiceConfig {
   async loadConfig() {
     notify("RELOADING=1");
 
+    let d = {};
+    if (this.configurationDirectory) {
+      this.trace(`load: ${this.configurationDirectory}/config.json`);
+      d = await expand("${include('config.json')}", {
+        constants: {
+          basedir: this.configurationDirectory
+        },
+        default: d
+      });
+    }
+
     for (const listener of this.listeners) {
       if (listener.name === undefined) {
         this.warn(`listener without name ${JSON.stringify(listener)}`);
       } else {
         await this.configureValue(listener.name, listener);
       }
-    }
-
-    const d = {};
-    if (this.configurationDirectory) {
-      this.trace(`load: ${this.configurationDirectory}/config.json`);
-      return await expand("${include('config.json')}", {
-        constants: {
-          basedir: this.configurationDirectory
-        },
-        default: d
-      });
     }
 
     return d;
