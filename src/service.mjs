@@ -41,7 +41,7 @@ class SystemdConfig extends ServiceConfig {
   configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
 
   /**
-   *
+   * listeners as passed in LISTEN_FDS and LISTEN_FDNAMES
    */
   get listeners() {
     const count = Number(process.env.LISTEN_FDS) || 0;
@@ -55,6 +55,7 @@ class SystemdConfig extends ServiceConfig {
         arr[i].name = fdNames[i];
       }
     }
+    this.trace(`listeners ${JSON.stringify(arr)}`);
     return arr;
   }
 
@@ -71,7 +72,7 @@ class SystemdConfig extends ServiceConfig {
 
     const d = {};
     if (this.configurationDirectory) {
-      this.trace(`load: config.json from ${this.configurationDirectory}`);
+      this.trace(`load: ${this.configurationDirectory}/config.json`);
       return await expand("${include('config.json')}", {
         constants: {
           basedir: this.configurationDirectory
@@ -103,11 +104,8 @@ class SystemdConfig extends ServiceConfig {
       await this.configure(await this.loadConfig());
       notify("READY=1");
     });
-    try {
-      await this.configure(await this.loadConfig());
-    } catch (e) {
-      this.warn(e);
-    }
+    
+    await this.configure(await this.loadConfig());
   }
 }
 

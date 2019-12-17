@@ -198,8 +198,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
             stringLen = 8;
         }
         else
-        {
-            */
+        { */
 
             status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
             if (status != napi_ok)
