@@ -54,10 +54,11 @@ async function actions() {
   ssd.debug("debug test after start");
   ssd.info({
     message: "some values",
-    aNumber: 42,
-    aBoolean: false,
-    aBigInt: 77n,
-    aObject: { a: 1 }
+    number: 42,
+    boolean: false,
+    bigInt: 77n,
+    object: { a: 1 },
+    array: ["A","B","C","AA"]
   });
 
   await wait(10000);

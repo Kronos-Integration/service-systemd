@@ -158,8 +158,8 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
     napi_get_array_length(env, property_names, &number);
 
     struct iovec iov[number];
-    char *buffer = new char[number * 256];
-    char *last = buffer + number * 256 - 1;
+    char *buffer = new char[number * 512];
+    char *last = buffer + number * 512 - 1;
     char *append = buffer;
 
     size_t writtenEntries;
@@ -173,12 +173,15 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
         status = napi_get_value_string_utf8(env, property_name, nullptr, 0, &nameLen);
         if (status != napi_ok)
             return nullptr;
-        char name[nameLen + 1];
+
+        char *name = append;
+        append += nameLen + 1;
         status = napi_get_value_string_utf8(env, property_name, name, nameLen + 1, nullptr);
 
         napi_value value;
         napi_get_property(env, args[0], property_name, &value);
 
+        size_t stringLen;
         char *string = append;
         append += nameLen + 1;
 
@@ -187,33 +190,64 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
             break;
         }
 
-        size_t stringLen;
+        bool is;
 
-/*
-        bool isError;
-        status = napi_is_error(env, value, &isError);
-        if (isError)
+        status = napi_is_array(env, value, &is);
+        if (is)
         {
-            string = (char *)"isError";
-            stringLen = 8;
+            unsigned int arrayLength;
+            status = napi_get_array_length(env, value, &arrayLength);
+
+            stringLen = 0;
+
+            for (unsigned int i = 0; i < arrayLength; i++)
+            {
+                napi_value e;
+                size_t len;
+
+                status = napi_get_element(env, value, i, &e);
+
+                napi_coerce_to_string(env, e, &e);
+                status = napi_get_value_string_utf8(env, e, nullptr, 0, &len);
+
+                if (append + len + 1 >= last)
+                {
+                    break;
+                }
+
+                status = napi_get_value_string_utf8(env, e, append, len + 1, nullptr);
+
+                stringLen += len;
+                append += len;
+
+                if (i == arrayLength - 1)
+                {
+                    break;
+                }
+
+                append[0] = '\n';
+                append += 1;
+                stringLen += 1;
+            }
         }
         else
-        { */
-
-            status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
-            if (status != napi_ok)
+        {
+            status = napi_is_error(env, value, &is);
+            if (is)
             {
-                napi_coerce_to_string(env, value, &value);
-                status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
-
-                /*
-                strcpy(string + nameLen + 1, "?");
-                append += 1 + 1;
-                */
+                string = (char *)"error";
+                stringLen = strlen(string);
             }
-
-            //else
+            else
             {
+                // string
+                status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
+                if (status != napi_ok)
+                {
+                    napi_coerce_to_string(env, value, &value);
+                    status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
+                }
+
                 if (append + stringLen + 1 >= last)
                 {
                     break;
@@ -230,7 +264,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
                     append += stringLen + 1;
                 }
             }
-       // }
+        }
 
         if (strcmp(name, "severity") == 0)
         {
