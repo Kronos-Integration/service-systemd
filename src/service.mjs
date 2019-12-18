@@ -61,16 +61,16 @@ class SystemdConfig extends ServiceConfig {
 
   async loadConfig() {
     notify("RELOADING=1");
-
-    let d = {};
     if (this.configurationDirectory) {
       this.trace(`load: ${this.configurationDirectory}/config.json`);
-      d = await expand("${include('config.json')}", {
-        constants: {
-          basedir: this.configurationDirectory
-        },
-        default: d
-      });
+      await this.configure(
+        await expand("${include('config.json')}", {
+          constants: {
+            basedir: this.configurationDirectory
+          },
+          default: {}
+        })
+      );
     }
 
     for (const listener of this.listeners) {
@@ -80,8 +80,6 @@ class SystemdConfig extends ServiceConfig {
         await this.configureValue(listener.name, listener);
       }
     }
-
-    return d;
   }
 
   async _stop() {
@@ -101,11 +99,11 @@ class SystemdConfig extends ServiceConfig {
     await super._start();
 
     process.on("SIGHUP", async () => {
-      await this.configure(await this.loadConfig());
+      await this.loadConfig();
       notify("READY=1");
     });
-    
-    await this.configure(await this.loadConfig());
+
+    await this.loadConfig();
   }
 }
 
