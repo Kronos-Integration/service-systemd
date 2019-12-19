@@ -39,7 +39,7 @@
     "c8": "^6.0.1",
     "documentation": "^12.1.4",
     "esm": "^3.2.25",
-    "execa": "^3.4.0",
+    "execa": "^4.0.0",
     "node-addon-api": "^2.0.0",
     "rollup": "^1.27.12",
     "rollup-plugin-commonjs": "^10.1.0",
