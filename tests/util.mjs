@@ -74,7 +74,16 @@ export function clearMonitorUnit(handle) {
 }
 
 export async function* journalctl(unitName) {
-  const j = execa("journalctl", ["--user", "-u", unitName, "-f", "-o", "json"]);
+  const j = execa("journalctl", [
+    "--user",
+    "-u",
+    unitName,
+    "-n",
+    "0",
+    "-f",
+    "-o",
+    "json"
+  ]);
 
   let buffer = "";
   for await (const chunk of j.stdout) {
@@ -88,7 +97,10 @@ export async function* journalctl(unitName) {
       const line = buffer.substr(0, i);
       buffer = buffer.substr(i + 1);
       const entry = JSON.parse(line);
-      console.log(entry.MESSAGE);
+      if (entry.MESSAGE === "*** END ***") {
+        return;
+      }
+
       yield entry;
     } while (true);
   }

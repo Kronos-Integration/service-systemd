@@ -1,11 +1,7 @@
 import test from "ava";
 import { join } from "path";
 
-import {
-  journalctl,
-  systemctl,
-  writeUnitDefinition,
-} from "./util.mjs";
+import { journalctl, systemctl, writeUnitDefinition } from "./util.mjs";
 
 const unitName = "notify-test";
 
@@ -22,11 +18,19 @@ test.before(async t => {
   } catch (e) {}
 });
 
+
 test.after("cleanup", async t => {
   await systemctl("disable", unitName);
+  await systemctl("clean", unitName);
 });
 
+
 test("logging", async t => {
+  /*setTimeout(() => {
+    systemctl("stop", unitName);
+  }, 10000);
+  */
+
   await systemctl("restart", unitName);
 
   const entries = [];
@@ -34,17 +38,23 @@ test("logging", async t => {
   for await (const entry of journalctl(unitName)) {
     entries.push(entry);
     console.log(entry.MESSAGE);
-    if (entry.MESSAGE === "some values") {
+    if (entry.MESSAGE === "*** END ***") {
       break;
     }
   }
 
   let m;
 
-  m = entries.find(m => m.MESSAGE === "Cannot read property 'doSomething' of undefined");
+  m = entries.find(
+    m => m.MESSAGE === "Cannot read property 'doSomething' of undefined"
+  );
   t.truthy(m);
   t.is(m.PRIORITY, "3");
-  t.truthy(m.STACK.startsWith("TypeError: Cannot read property 'doSomething' of undefined\nat actions (/"));
+  t.truthy(
+    m.STACK.startsWith(
+      "TypeError: Cannot read property 'doSomething' of undefined\nat actions (/"
+    )
+  );
 
   m = entries.find(m => m.MESSAGE === "this is an Error");
   t.truthy(m);
@@ -65,11 +75,15 @@ test("logging", async t => {
   m = entries.find(m => m.MESSAGE === "some values");
   t.truthy(m);
   t.is(m.PRIORITY, "6");
-  t.is(m.BIGINT, '77');
-  t.is(m.NUMBER, '42');
-  t.is(m.BOOLEAN, 'false');
-  t.is(m.ARRAY, 'A\nB\nC\nAA');
-   // t.is(m.AOBJECT, '');
+  t.is(m.BIGINT, "77");
+  t.is(m.NUMBER, "42");
+  t.is(m.BOOLEAN, "false");
+  t.is(m.ARRAY, "A\nB\nC");
+  // t.is(m.AOBJECT, '');
+
+  m = entries.find(m => m.MESSAGE.startsWith("0123456789"));
+  t.truthy(m);
+  t.is(m.MESSAGE.length, 5 * 10);
 
   await systemctl("stop", unitName);
 });

@@ -14,6 +14,8 @@ class TestService extends Service {
   }
 
   async _start() {
+    await super._start();
+
     this.server = createServer(client => {
       client.setEncoding("utf-8");
       client.write("Hello");
@@ -21,6 +23,11 @@ class TestService extends Service {
     this.server.listen(this.socket, () => {
       this.trace(`listen ${JSON.stringify(this.server.address())}`);
     });
+  }
+
+  async _stop() {
+    this.server.close();
+    return super._close();
   }
 }
 
@@ -58,8 +65,11 @@ async function actions() {
     boolean: false,
     bigInt: 77n,
     object: { a: 1 },
-    array: ["A","B","C","AA"]
+    array: ["A","B","C"]
   });
+
+  ssd.info("0123456789".repeat(5));
+  ssd.info("*** END ***");
 
   await wait(10000);
   await ssd.stop();
