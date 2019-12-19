@@ -27,7 +27,7 @@ class TestService extends Service {
 
   async _stop() {
     this.server.close();
-    return super._close();
+    return super._stop();
   }
 }
 

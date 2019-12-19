@@ -85,6 +85,8 @@ export async function* journalctl(unitName) {
     "json"
   ]);
 
+  const th = setTimeout(() => j.kill(), 5000);
+
   let buffer = "";
   for await (const chunk of j.stdout) {
     buffer += chunk.toString("utf8");
@@ -105,6 +107,8 @@ export async function* journalctl(unitName) {
     } while (true);
   }
 
+  clearTimeout(th);
+  
   return j;
 }
 
