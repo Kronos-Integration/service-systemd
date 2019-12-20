@@ -131,6 +131,28 @@ const char *priorityForName(char *name)
     return PRIORITY(LOG_INFO);
 }
 
+static bool get_string(napi_env env, napi_value value, char *append, size_t maxLen, size_t *len)
+{
+    napi_status status;
+
+    status = napi_get_value_string_utf8(env, value, nullptr, 0, len);
+    if (status != napi_ok)
+    {
+        return false;
+    }
+
+    if (*len + 1 >= maxLen)
+    {
+        if (maxLen <= 0)
+            return false;
+        *len = maxLen;
+    }
+
+    status = napi_get_value_string_utf8(env, value, append, *len + 1, nullptr);
+    
+    return status == napi_ok;
+}
+
 napi_value journal_print_object(napi_env env, napi_callback_info info)
 {
     napi_status status;
@@ -140,10 +162,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
 
     argc = 1;
     status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
-    if (status != napi_ok)
-        return nullptr;
-
-    if (argc != 1)
+    if (argc != 1 || status != napi_ok)
     {
         napi_throw_error(env, nullptr, "Wrong arguments");
     }
@@ -151,7 +170,9 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
     napi_value property_names;
     status = napi_get_property_names(env, args[0], &property_names);
     if (status != napi_ok)
-        return nullptr;
+    {
+        napi_throw_error(env, nullptr, "ERROR 1");
+    }
 
     unsigned int number;
 
@@ -169,83 +190,93 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
         napi_get_element(env, property_names, writtenEntries, &property_name);
 
         size_t nameLen;
-
-        status = napi_get_value_string_utf8(env, property_name, nullptr, 0, &nameLen);
-        if (status != napi_ok)
-            return nullptr;
-
+        get_string(env, property_name, append, last - append, &nameLen);
         char *name = append;
         append += nameLen + 1;
-        status = napi_get_value_string_utf8(env, property_name, name, nameLen + 1, nullptr);
 
         napi_value value;
-        napi_get_property(env, args[0], property_name, &value);
+        status = napi_get_property(env, args[0], property_name, &value);
+        if (status != napi_ok)
+        {
+            delete[] buffer;
+            napi_throw_error(env, nullptr, "ERROR 4");
+        }
 
-        size_t stringLen;
         char *string = append;
         append += nameLen + 1;
 
-        if (append >= last)
-        {
-            break;
-        }
-
+        size_t stringLen;
         bool is;
-
-        status = napi_is_array(env, value, &is);
+        
+        /*status = napi_is_error(env, value, &is);
         if (is)
         {
-            unsigned int arrayLength;
-            status = napi_get_array_length(env, value, &arrayLength);
-
-            stringLen = 0;
-
-            for (unsigned int i = 0; i < arrayLength; i++)
+            status = napi_coerce_to_string(env, value, &value);
+            if (status != napi_ok)
             {
-                napi_value e;
-                size_t len;
-
-                status = napi_get_element(env, value, i, &e);
-
-                napi_coerce_to_string(env, e, &e);
-                status = napi_get_value_string_utf8(env, e, nullptr, 0, &len);
-
-                if (append + len + 1 >= last)
-                {
-                    break;
-                }
-
-                status = napi_get_value_string_utf8(env, e, append, len + 1, nullptr);
-
-                stringLen += len;
-                append += len;
-
-                if (i == arrayLength - 1)
-                {
-                    break;
-                }
-
-                append[0] = '\n';
-                append += 1;
-                stringLen += 1;
+                delete[] buffer;
+                napi_throw_error(env, nullptr, "ERROR 5");
             }
+
+            get_string(env, value, append, last - append, &stringLen);
+            append += stringLen + 1;
         }
-        else
+        else*/
         {
-            status = napi_is_error(env, value, &is);
+            status = napi_is_array(env, value, &is);
             if (is)
             {
-                string = (char *)"error";
-                stringLen = strlen(string);
+                unsigned int arrayLength;
+                status = napi_get_array_length(env, value, &arrayLength);
+
+                stringLen = 0;
+
+                for (unsigned int i = 0; i < arrayLength; i++)
+                {
+                    napi_value e;
+                    size_t len;
+
+                    status = napi_get_element(env, value, i, &e);
+                    if (status != napi_ok)
+                    {
+                        delete[] buffer;
+                        napi_throw_error(env, nullptr, "ERROR 8");
+                    }
+
+                    napi_coerce_to_string(env, e, &e);
+
+                    get_string(env, e, append, last - append, &len);
+                    stringLen += len;
+                    append += len;
+
+                    if (i == arrayLength - 1)
+                    {
+                        break;
+                    }
+
+                    append[0] = '\n';
+                    append += 1;
+                    stringLen += 1;
+                }
             }
             else
             {
-                // string
                 status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
                 if (status != napi_ok)
                 {
-                    napi_coerce_to_string(env, value, &value);
+                    status = napi_coerce_to_string(env, value, &value);
+                    if (status != napi_ok)
+                    {
+                        delete[] buffer;
+                        napi_throw_error(env, nullptr, "ERROR 11");
+                    }
+
                     status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
+                    if (status != napi_ok)
+                    {
+                        delete[] buffer;
+                        napi_throw_error(env, nullptr, "ERROR 12");
+                    }
                 }
 
                 if (append + stringLen + 1 >= last)
@@ -283,7 +314,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
             }
             *d++ = '=';
             iov[writtenEntries].iov_base = string;
-            iov[writtenEntries].iov_len = nameLen + stringLen + 1;
+            iov[writtenEntries].iov_len = nameLen + 1 + stringLen;
         }
     }
 

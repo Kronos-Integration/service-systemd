@@ -8,6 +8,8 @@ async function jt(t, send, expect) {
 
   let i = await entries.next();
 
+  t.log(i.value);
+
   for (const key of Object.keys(expect)) {
     t.is(i.value[key], expect[key], key);
   }
@@ -49,6 +51,8 @@ test.serial(
 
 test.serial(
   jt,
-  { error: new Error('error') },
-  { MESSAGE: "xerror" }
+  { error: new Error('the error message') },
+  { ERROR: "Error: the error message" }
 );
+
+
