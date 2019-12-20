@@ -1,5 +1,6 @@
 import execa from "execa";
 import fs from "fs";
+import { exec, spawn }  from 'child_process';
 
 export function monitorUnit(unitName, cb) {
   let status, active, pid;
@@ -73,43 +74,46 @@ export function clearMonitorUnit(handle) {
   handle.terminate();
 }
 
-export async function* journalctl(unitName) {
-  const j = execa("journalctl", [
-    "--user",
-    "-u",
-    unitName,
-    "-n",
-    "0",
-    "-f",
-    "-o",
-    "json"
-  ]);
+export function journalctl(unitName) {
+  const args = ["--user", "-n", "1", "-f", "-o", "json"];
 
-  const th = setTimeout(() => j.kill(), 5000);
-
-  let buffer = "";
-  for await (const chunk of j.stdout) {
-    buffer += chunk.toString("utf8");
-    do {
-      const i = buffer.indexOf("\n");
-      if (i < 0) {
-        break;
-      }
-
-      const line = buffer.substr(0, i);
-      buffer = buffer.substr(i + 1);
-      const entry = JSON.parse(line);
-      if (entry.MESSAGE === "*** END ***") {
-        return;
-      }
-
-      yield entry;
-    } while (true);
+  if (unitName !== undefined) {
+    args.push("-u", unitName);
   }
 
-  clearTimeout(th);
-  
-  return j;
+  const j = spawn("journalctl", args, {
+    timeout: 5000,
+    stdio: ['ignore', 'pipe', process.stderr]
+  });
+
+  async function * entries() {
+    let buffer = "";
+    for await (const chunk of j.stdout) {
+      buffer += chunk.toString("utf8");
+      //console.log(buffer);
+      do {
+        const i = buffer.indexOf("\n");
+        if (i < 0) {
+          break;
+        }
+
+        const line = buffer.substr(0, i);
+        buffer = buffer.substr(i + 1);
+        const entry = JSON.parse(line);
+        if (entry.MESSAGE === "*** END ***") {
+          return;
+        }
+        yield entry;
+      } while (true);
+    }
+  };
+
+  return {
+    entries: entries(),
+    stop() {
+      j.kill();
+    }
+  };
 }
 
 export function systemctl(...args) {

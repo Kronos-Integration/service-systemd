@@ -13,7 +13,7 @@ import {
   LISTEN_FDS_START
 } from "../systemd.node";
 
-export { notify, notify_with_fds };
+export { notify, notify_with_fds, journal_print_object };
 
 /**
  * forward logs entries to the journal
