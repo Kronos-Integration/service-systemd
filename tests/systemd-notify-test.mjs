@@ -43,7 +43,9 @@ test.before(async t => {
 });
 
 test.after("cleanup", async t => {
-  await systemctl("disable", unitName);
+  try {
+    await systemctl("disable", unitName);
+  } catch (e) {}
 });
 
 test.serial("service states", async t => {
@@ -116,7 +118,9 @@ test.serial("service kill", async t => {
 
   await wait(1500);
 
-  process.kill(pid);
+  try {
+    process.kill(pid);
+  } catch (e) {}
 
   await wait(2000);
 

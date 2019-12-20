@@ -34,6 +34,9 @@ class TestService extends Service {
 const ssd = new ServiceSystemd();
 
 async function actions() {
+
+  console.log("using stdout");
+
   await ssd.declareService(
     {
       type: TestService,
@@ -44,6 +47,7 @@ async function actions() {
 
   await ssd.start();
 
+  /*
   try {
     const x = undefined;
     x.doSomething();
@@ -53,6 +57,7 @@ async function actions() {
   }
 
   ssd.error(new Error("this is an Error"));
+  */
   ssd.info({ message: "Hello World" });
   ssd.error("error test after start");
   ssd.info("info test after start");

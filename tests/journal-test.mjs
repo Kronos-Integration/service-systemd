@@ -26,11 +26,13 @@ test.serial(
   { severity: "info", message: "a message" },
   { PRIORITY: "6", MESSAGE: "a message" }
 );
+
 test.serial(
   jt,
-  { severity: "trace", message: "0123456789".repeat(5) },
-  { PRIORITY: "7", MESSAGE: "0123456789".repeat(5) }
+  { severity: "trace", message: "0123456789".repeat(50) },
+  { PRIORITY: "7", MESSAGE: "0123456789".repeat(50) }
 );
+
 test.serial(
   jt,
   {
@@ -42,5 +44,11 @@ test.serial(
     object: { a: 1 },
     array: ["A", "B", "C"]
   },
-  { MESSAGE: "some values", BIGINT: "77", NUMBER: "42", FALSE: "false", TRUE: "true" }
+  { MESSAGE: "some values", BIGINT: "77", NUMBER: "42", FALSE: "false", TRUE: "true", ARRAY: "A\nB\nC" }
+);
+
+test.serial(
+  jt,
+  { error: new Error('error') },
+  { MESSAGE: "xerror" }
 );
