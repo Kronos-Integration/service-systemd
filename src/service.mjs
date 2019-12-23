@@ -89,7 +89,7 @@ class SystemdConfig extends ServiceConfig {
     );
 
     this.info(
-      `FDSTORE=1 ${ this.listeners.map(l => ` FDNAME=${l.name}`).join("")} (${$rc})`
+      `FDSTORE=1 ${ this.listeners.map(l => ` FDNAME=${l.name}`).join("")} (${rc})`
     );
     
     return super._stop();
