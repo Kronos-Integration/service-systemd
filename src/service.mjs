@@ -30,7 +30,7 @@ class JournalLogger extends ServiceLogger {
 
 /**
  * Provides config form CONFIGURATION_DIRECTORY
- * Also injects listeners into the conifg
+ * Also injects listeners into the config
  * @property {string} configurationDirectory tken from CONFIGURATION_DIRECTORY
  */
 class SystemdConfig extends ServiceConfig {
