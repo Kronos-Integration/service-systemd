@@ -54,7 +54,7 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
         napi_get_value_int32(env, e, &fds[i]);
     }
 
-    int res = sd_pid_notify_with_fds(0, 0, state, fds, 1);
+    int res = sd_pid_notify_with_fds(0, 0, state, fds, alen);
     delete[] state;
     delete[] fds;
 
