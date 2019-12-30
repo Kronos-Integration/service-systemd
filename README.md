@@ -1,7 +1,7 @@
 [![Build Status](https://secure.travis-ci.org/Kronos-Integration/service-systemd.png)](http://travis-ci.org/Kronos-Integration/service-systemd)
 [![codecov.io](http://codecov.io/github/Kronos-Integration/service-systemd/coverage.svg?branch=master)](http://codecov.io/github/Kronos-Integration/service-systemd?branch=master)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![downloads](http://img.shields.io/npm/dm/service-systemd.svg?style=flat-square)](https://npmjs.org/package/service-systemd)
+[![downloads](http://img.shields.io/npm/dm/@kronos-integration/service-systemd.svg?style=flat-square)](https://npmjs.org/package/@kronos-integration/service-systemd)
 [![GitHub Issues](https://img.shields.io/github/issues/Kronos-Integration/service-systemd.svg?style=flat-square)](https://github.com/Kronos-Integration/service-systemd/issues)
 [![Greenkeeper](https://badges.greenkeeper.io/Kronos-Integration/service-systemd.svg)](https://greenkeeper.io/)
 [![Known Vulnerabilities](https://snyk.io/test/github/Kronos-Integration/service-systemd/badge.svg)](https://snyk.io/test/github/Kronos-Integration/service-systemd)
