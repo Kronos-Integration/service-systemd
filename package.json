@@ -47,7 +47,6 @@
     "rollup-plugin-native": "^1.2.0",
     "semantic-release": "^15.14.0"
   },
-  "native": "${dirname}/${basename}-${os}-${arch}.node",
   "engines": {
     "node": ">=12.14.0"
   },
@@ -79,5 +78,6 @@
     "repository": {
       "url": "https://github.com/arlac77/npm-package-template-esm-only.git"
     }
-  }
+  },
+  "native": "${dirname}/${basename}-${os}-${arch}.node"
 }
