@@ -1,6 +1,6 @@
 {
   "name": "@kronos-integration/service-systemd",
-  "version": "2.1.7",
+  "version": "0.0.0-semantic-release",
   "publishConfig": {
     "access": "public"
   },
