@@ -1,5 +1,4 @@
 {
-  "native": "${dirname}/${basename}-${os}-${arch}.node",
   "name": "@kronos-integration/service-systemd",
   "version": "0.0.0-semantic-release",
   "publishConfig": {
@@ -75,6 +74,7 @@
       "tests/*-test.mjs"
     ]
   },
+  "native": "${dirname}/${basename}-${os}-${arch}.node",
   "template": {
     "repository": {
       "url": "https://github.com/arlac77/npm-package-template-esm-only.git"
