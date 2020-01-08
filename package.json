@@ -26,7 +26,8 @@
     "docs": "documentation readme src/service.mjs --section=API",
     "lint": "documentation lint src/service.mjs",
     "pretest": "rollup -c tests/rollup.config.js",
-    "test": "ava"
+    "test": "ava",
+    "prepare": "rollup -c"
   },
   "dependencies": {
     "@kronos-integration/service": "^8.3.15",
