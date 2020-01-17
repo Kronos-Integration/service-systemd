@@ -26,7 +26,9 @@
     "docs": "documentation readme src/service.mjs --section=API",
     "lint": "documentation lint src/service.mjs",
     "pretest": "rollup -c tests/rollup.config.js",
-    "test": "ava"
+    "test": "ava",
+    "posttest": "npm run prepare && markdown-doctest",
+    "prepare": "rollup -c"
   },
   "dependencies": {
     "@kronos-integration/service": "^8.3.15",
@@ -34,17 +36,20 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.1",
-    "@rollup/plugin-node-resolve": "^6.0.0",
+    "@rollup/plugin-json": "^4.0.1",
+    "@rollup/plugin-node-resolve": "^7.0.0",
     "acorn-class-fields": "https://github.com/arlac77/acorn-class-fields.git",
     "ava": "^2.4.0",
-    "c8": "^7.0.0",
+    "builtin-modules": "^3.1.0",
+    "c8": "^7.0.1",
     "documentation": "^12.1.4",
     "esm": "^3.2.25",
     "execa": "^4.0.0",
+    "markdown-doctest": "^1.0.0",
     "node-addon-api": "^2.0.0",
-    "rollup": "^1.27.14",
+    "rollup": "^1.29.0",
+    "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-executable": "^1.5.2",
-    "rollup-plugin-native": "^1.2.2",
     "semantic-release": "^16.0.1"
   },
   "engines": {
@@ -77,7 +82,7 @@
   "native": "${dirname}/${basename}-${os}-${arch}.node",
   "template": {
     "repository": {
-      "url": "https://github.com/arlac77/npm-package-template-esm-only.git"
+      "url": "https://github.com/arlac77/npm-package-template.git"
     }
   }
 }
