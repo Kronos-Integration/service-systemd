@@ -26,15 +26,22 @@
     "docs": "documentation readme src/service.mjs --section=API",
     "lint": "documentation lint src/service.mjs",
     "pretest": "rollup -c tests/rollup.config.js",
-    "test": "ava"
+    "test": "ava",
+    "prepare": "rollup -c",
+    "start": "rollup -c -w"
   },
   "dependencies": {
     "@kronos-integration/service": "^8.3.15",
-    "config-expander": "^11.0.9"
+    "config-expander": "^11.0.9",
+    "mf-styling": "arlac77/mf-styling",
+    "svelte-common": "^1.3.0",
+    "svelte-guard-history-router": "^1.1.11",
+    "svelte-session-manager": "^1.0.5"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.1",
-    "@rollup/plugin-node-resolve": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^7.0.0",
+    "@semantic-release/exec": "^5.0.0",
     "acorn-class-fields": "https://github.com/arlac77/acorn-class-fields.git",
     "ava": "^2.4.0",
     "c8": "^7.0.1",
@@ -42,10 +49,15 @@
     "esm": "^3.2.25",
     "execa": "^4.0.0",
     "node-addon-api": "^2.0.0",
-    "rollup": "^1.27.14",
-    "rollup-plugin-executable": "^1.5.2",
-    "rollup-plugin-native": "^1.2.5",
-    "semantic-release": "^17.0.1"
+    "npm-pkgbuild": "^6.11.4",
+    "rollup": "^1.30.1",
+    "rollup-plugin-consts": "^1.0.1",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-dev": "^1.1.1",
+    "rollup-plugin-svelte": "^5.1.1",
+    "rollup-plugin-terser": "^5.2.0",
+    "semantic-release": "^17.0.1",
+    "svelte": "^3.18.1"
   },
   "engines": {
     "node": ">=12.14.1"
@@ -61,6 +73,37 @@
     "url": "https://github.com/Kronos-Integration/service-systemd/issues"
   },
   "homepage": "https://github.com/Kronos-Integration/service-systemd#readme",
+  "config": {
+    "base": "/services/@kronos-integration/service-systemd/",
+    "api": "/services/@kronos-integration/service-systemd/api",
+    "proxyTarget": "https://somewhere/"
+  },
+  "pacman": {
+    "groups": "{{group}}",
+    "hooks": "pacman/hooks.sh",
+    "installdir": "/services/@kronos-integration/service-systemd/frontend",
+    "depends": {
+      "systemd": ">=244.1"
+    },
+    "content": {
+      "${installdir}/": {
+        "base": "public"
+      },
+      "/etc/nginx/config.d/${name}.conf": "pacman/nginx.conf"
+    }
+  },
+  "release": {
+    "plugins": [
+      [
+        "@semantic-release/exec",
+        {
+          "publishCmd": "npx npm-pkgbuild --pkgver ${nextRelease.version} pkgbuild pacman makepkg"
+        }
+      ],
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator"
+    ]
+  },
   "ava": {
     "require": [
       "esm"
