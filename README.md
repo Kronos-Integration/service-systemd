@@ -17,7 +17,7 @@
 kronos systemd integration
 
 -   sync node state to systemd with notify (done)
--   propagate config into kronos world (done)
+-   propagate config into kronos (done)
 -   propagate socket activations into kronos (partly)
 -   start / stop / restart / reload initiated from systemd (partly)
 -   log into journal (done)
