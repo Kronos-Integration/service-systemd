@@ -22,11 +22,11 @@
   ],
   "license": "BSD-2-Clause",
   "scripts": {
-    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
+    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/service.mjs --section=API",
     "lint": "documentation lint src/service.mjs",
     "pretest": "rollup -c tests/rollup.config.js",
-    "test": "ava"
+    "test": "ava && ava --timeout 2m"
   },
   "dependencies": {
     "@kronos-integration/service": "^8.3.16",
@@ -36,10 +36,9 @@
     "@rollup/plugin-commonjs": "^11.0.1",
     "@rollup/plugin-node-resolve": "^7.1.0",
     "acorn-class-fields": "https://github.com/arlac77/acorn-class-fields.git",
-    "ava": "^2.4.0",
+    "ava": "^3.3.0",
     "c8": "^7.1.0",
     "documentation": "^12.1.4",
-    "esm": "^3.2.25",
     "execa": "^4.0.0",
     "node-addon-api": "^2.0.0",
     "rollup": "^1.31.0",
@@ -61,19 +60,6 @@
     "url": "https://github.com/Kronos-Integration/service-systemd/issues"
   },
   "homepage": "https://github.com/Kronos-Integration/service-systemd#readme",
-  "ava": {
-    "require": [
-      "esm"
-    ],
-    "extensions": [
-      "mjs"
-    ],
-    "babel": false,
-    "compileEnhancements": false,
-    "files": [
-      "tests/*-test.mjs"
-    ]
-  },
   "native": "${dirname}/${basename}-${os}-${arch}.node",
   "template": {
     "repository": {
