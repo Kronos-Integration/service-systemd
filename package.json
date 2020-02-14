@@ -41,7 +41,7 @@
     "documentation": "^12.1.4",
     "execa": "^4.0.0",
     "node-addon-api": "^2.0.0",
-    "rollup": "^1.31.0",
+    "rollup": "^1.31.1",
     "rollup-plugin-executable": "^1.5.2",
     "rollup-plugin-native": "^1.2.8",
     "semantic-release": "^17.0.3"
