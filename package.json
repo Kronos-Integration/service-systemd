@@ -22,11 +22,11 @@
   ],
   "license": "BSD-2-Clause",
   "scripts": {
+    "test": "ava && ava --timeout 2m",
+    "pretest": "rollup -c tests/rollup.config.js",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/service.mjs --section=API",
-    "lint": "documentation lint src/service.mjs",
-    "pretest": "rollup -c tests/rollup.config.js",
-    "test": "ava && ava --timeout 2m"
+    "lint": "documentation lint src/service.mjs"
   },
   "dependencies": {
     "@kronos-integration/service": "^8.3.16",
