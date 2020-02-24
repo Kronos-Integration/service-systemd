@@ -11,7 +11,7 @@ import {
   wait,
   writeUnitDefinition,
   writeSocketUnitDefinition
-} from "./util.mjs";
+} from "./helpers/util.mjs";
 
 const unitName = "notify-test";
 const port = 8080;

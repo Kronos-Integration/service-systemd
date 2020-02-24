@@ -17,7 +17,7 @@ const acornInjectPlugins = [ acornClassFields ];
 
 export default [
   {
-    input: "tests/notify-test-cli.mjs",
+    input: "tests/helpers/notify-test-cli.mjs",
     output: {
       file: "build/notify-test-cli.cjs",
       format: "cjs",

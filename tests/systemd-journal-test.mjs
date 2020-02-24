@@ -1,7 +1,7 @@
 import test from "ava";
 import { join } from "path";
 
-import { journalctl, systemctl, writeUnitDefinition } from "./util.mjs";
+import { journalctl, systemctl, writeUnitDefinition } from "./helpers/util.mjs";
 
 const unitName = "notify-test";
 

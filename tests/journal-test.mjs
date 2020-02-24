@@ -1,6 +1,6 @@
 import test from "ava";
 import { journal_print_object } from "../build/service.mjs";
-import { journalctl } from "./util.mjs";
+import { journalctl } from "./helpers/util.mjs";
 
 async function jt(t, send, expect) {
   const { entries, stop } = journalctl();

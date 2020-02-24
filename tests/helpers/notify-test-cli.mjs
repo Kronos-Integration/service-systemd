@@ -1,5 +1,5 @@
 import { Service } from "@kronos-integration/service";
-import ServiceSystemd from "../src/service.mjs";
+import ServiceSystemd from "../../src/service.mjs";
 import { createServer } from "net";
 
 class TestService extends Service {
