@@ -22,11 +22,11 @@
   ],
   "license": "BSD-2-Clause",
   "scripts": {
+    "test": "ava --node-arguments '--experimental-modules' --timeout 2m",
+    "pretest": "rollup -c tests/helpers/rollup.config.js",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --node-arguments '--experimental-modules' --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/service.mjs --section=API",
-    "lint": "documentation lint src/service.mjs",
-    "pretest": "rollup -c tests/helpers/rollup.config.js",
-    "test": "ava --node-arguments '--experimental-modules' --timeout 2m"
+    "lint": "documentation lint src/service.mjs"
   },
   "dependencies": {
     "@kronos-integration/service": "^8.3.16",
@@ -62,8 +62,6 @@
   "homepage": "https://github.com/Kronos-Integration/service-systemd#readme",
   "native": "${dirname}/${basename}-${os}-${arch}.node",
   "template": {
-    "repository": {
-      "url": "https://github.com/arlac77/npm-package-template-kronos-module.git"
-    }
+    "inheritFrom": "arlac77/template-kronos-module"
   }
 }
