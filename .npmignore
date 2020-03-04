@@ -9,3 +9,4 @@ doc
 .vscode
 binding.gyp
 src/*.cpp
+.github
