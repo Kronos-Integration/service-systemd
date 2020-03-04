@@ -62,6 +62,9 @@
   "homepage": "https://github.com/Kronos-Integration/service-systemd#readme",
   "native": "${dirname}/${basename}-${os}-${arch}.node",
   "template": {
-    "inheritFrom": "arlac77/template-kronos-module"
+    "inheritFrom": [
+      "arlac77/template-kronos-module",
+      "arlac77/template-github"
+    ]
   }
 }
