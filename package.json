@@ -41,13 +41,13 @@
     "documentation": "^12.1.4",
     "execa": "^4.0.0",
     "node-addon-api": "^2.0.0",
-    "rollup": "^2.0.0",
+    "rollup": "^2.0.2",
     "rollup-plugin-executable": "^1.5.2",
-    "rollup-plugin-native": "^1.2.9",
+    "rollup-plugin-native": "^1.2.10",
     "semantic-release": "^17.0.4"
   },
   "engines": {
-    "node": ">=13.8.0"
+    "node": ">=13.10.1"
   },
   "os": [
     "linux"
