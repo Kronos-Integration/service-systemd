@@ -1,3 +1,4 @@
+dist: bionic
 language: node_js
 addons:
   apt:
@@ -35,4 +36,3 @@ branches:
     - /^greenkeeper/.*$/
     - /^mkpr/.*$/
     - /^npm-template-sync/.*$/
-dist: bionic
