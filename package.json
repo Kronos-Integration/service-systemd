@@ -38,7 +38,7 @@
     "acorn-class-fields": "https://github.com/arlac77/acorn-class-fields.git",
     "ava": "^3.6.0",
     "c8": "^7.1.0",
-    "documentation": "^12.2.0",
+    "documentation": "^12.3.0",
     "execa": "^4.0.0",
     "node-addon-api": "^2.0.0",
     "rollup": "^2.3.2",
