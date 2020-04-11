@@ -41,9 +41,9 @@
     "documentation": "^12.3.0",
     "execa": "^4.0.0",
     "node-addon-api": "^2.0.0",
-    "rollup": "^2.4.0",
+    "rollup": "^2.6.0",
     "rollup-plugin-executable": "^1.5.3",
-    "rollup-plugin-native": "^1.2.11",
+    "rollup-plugin-native": "^1.2.12",
     "semantic-release": "^17.0.4"
   },
   "engines": {
