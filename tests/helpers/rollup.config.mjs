@@ -1,6 +1,5 @@
-import acornClassFields from 'acorn-class-fields';
 import builtins from "builtin-modules";
-import resolve from '@rollup/plugin-node-resolve';
+import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import native from "rollup-plugin-native";
 import executable from "rollup-plugin-executable";
@@ -13,8 +12,6 @@ const plugins = [
   executable()
 ];
 
-const acornInjectPlugins = [ acornClassFields ];
-
 export default [
   {
     input: "tests/helpers/notify-test-cli.mjs",
@@ -25,8 +22,7 @@ export default [
       externalLiveBindings: false
     },
     plugins,
-    external,
-    acornInjectPlugins
+    external
   },
   {
     input: "src/service.mjs",
@@ -35,7 +31,6 @@ export default [
       format: "esm"
     },
     plugins,
-    external,
-    acornInjectPlugins
+    external
   }
 ];
