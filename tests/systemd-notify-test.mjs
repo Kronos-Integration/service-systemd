@@ -114,6 +114,7 @@ test.serial("service kill", async t => {
     active = unit.active;
     status = unit.status;
     pid = unit.pid;
+    t.log(active,status,pid);
   });
 
   await wait(1500);
