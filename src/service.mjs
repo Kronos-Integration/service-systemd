@@ -6,13 +6,25 @@ import {
   ServiceConfig
 } from "@kronos-integration/service";
 
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { Module } from "module";
+import { arch, constants } from "os";
+
+const filename = join(dirname(fileURLToPath(import.meta.url)), "..", `systemd-linux-${arch()}.node`);
+const m = new Module(filename);
+m.filename = filename;
+process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
+const { LISTEN_FDS_START,notify_with_fds,notify,journal_print_object } = m.exports;
+
+/*
 import {
   notify,
   notify_with_fds,
   journal_print_object,
   LISTEN_FDS_START
 } from "../systemd.node";
-
+*/
 export { notify, notify_with_fds, journal_print_object };
 
 /**

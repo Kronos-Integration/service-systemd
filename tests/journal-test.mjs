@@ -1,5 +1,5 @@
 import test from "ava";
-import { journal_print_object } from "../build/service.mjs";
+import { journal_print_object } from "../src/service.mjs";
 import { journalctl } from "./helpers/util.mjs";
 
 async function jt(t, send, expect) {
