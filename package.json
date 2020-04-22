@@ -22,8 +22,8 @@
   ],
   "license": "BSD-2-Clause",
   "scripts": {
-    "test": "ava -s --timeout 5m",
-    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava -s --timeout 5m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
+    "test": "ava -s --timeout 5m && ava --timeout 2m",
+    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme src/service.mjs --section=API",
     "lint": "documentation lint src/service.mjs"
   },
@@ -37,7 +37,7 @@
     "documentation": "^12.3.0",
     "execa": "^4.0.0",
     "node-addon-api": "^2.0.0",
-    "semantic-release": "^17.0.6"
+    "semantic-release": "^17.0.7"
   },
   "engines": {
     "node": ">=13.13.0"
