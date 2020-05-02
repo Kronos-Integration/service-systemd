@@ -6,9 +6,9 @@
   },
   "sideEffects": false,
   "type": "module",
-  "main": "src/service.mjs",
+  "main": "./src/service.mjs",
   "exports": {
-    ".": "src/service.mjs",
+    ".": "./src/service.mjs",
     "./": "./"
   },
   "description": "kronos systemd integration",
@@ -27,11 +27,11 @@
   "scripts": {
     "test": "ava -s --timeout 5m && ava --timeout 2m",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
-    "docs": "documentation readme src/service.mjs --section=API",
-    "lint": "documentation lint src/service.mjs"
+    "docs": "documentation readme ./src/service.mjs --section=API",
+    "lint": "documentation lint ./src/service.mjs"
   },
   "dependencies": {
-    "@kronos-integration/service": "^8.3.25",
+    "@kronos-integration/service": "^8.3.26",
     "config-expander": "^11.0.13"
   },
   "devDependencies": {

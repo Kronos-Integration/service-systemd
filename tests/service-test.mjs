@@ -1,5 +1,5 @@
 import test from "ava";
-import { ServiceSystemd, notify_with_fds } from "../src/service.mjs";
+import { ServiceSystemd, notify_with_fds } from "@kronos-integration/service-systemd";
 
 test("endpoints", t => {
   const ssd = new ServiceSystemd();
