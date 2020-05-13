@@ -10,3 +10,4 @@ doc
 binding.gyp
 src/*.cpp
 .github
+
