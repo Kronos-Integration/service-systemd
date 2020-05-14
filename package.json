@@ -31,7 +31,7 @@
     "lint": "documentation lint ./src/service.mjs"
   },
   "dependencies": {
-    "@kronos-integration/service": "^8.5.1",
+    "@kronos-integration/service": "^8.5.2",
     "config-expander": "^11.0.13"
   },
   "devDependencies": {
