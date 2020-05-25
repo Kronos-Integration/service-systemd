@@ -15,7 +15,8 @@
   "keywords": [
     "systemd",
     "journal",
-    "notify"
+    "notify",
+    "kronos-service"
   ],
   "contributors": [
     {
@@ -40,7 +41,7 @@
     "documentation": "^13.0.0",
     "execa": "^4.0.2",
     "node-addon-api": "^3.0.0",
-    "semantic-release": "^17.0.7"
+    "semantic-release": "^17.0.8"
   },
   "engines": {
     "node": ">=14.3.0"
