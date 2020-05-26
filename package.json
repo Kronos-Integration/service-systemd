@@ -8,8 +8,7 @@
   "type": "module",
   "main": "./src/service.mjs",
   "exports": {
-    ".": "./src/service.mjs",
-    "./": "./"
+    ".": "./src/service.mjs"
   },
   "description": "kronos systemd integration",
   "keywords": [
