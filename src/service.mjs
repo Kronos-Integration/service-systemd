@@ -42,7 +42,7 @@ class JournalLogger extends ServiceLogger {
 
 /**
  * Provides config form CONFIGURATION_DIRECTORY
- * Also injects listeners into the config
+ * Also injects listeningFileDescriptors into the config
  * @property {string} configurationDirectory taken from CONFIGURATION_DIRECTORY
  */
 class SystemdConfig extends ServiceConfig {
@@ -53,9 +53,9 @@ class SystemdConfig extends ServiceConfig {
   configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
 
   /**
-   * listeners as passed in LISTEN_FDS and LISTEN_FDNAMES
+   * listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES
    */
-  get listeners() {
+  get listeningFileDescriptors() {
     const count = Number(process.env.LISTEN_FDS) || 0;
     const fdNames = (process.env.LISTEN_FDNAMES || "").split(":");
     const arr = new Array(count);
@@ -67,7 +67,7 @@ class SystemdConfig extends ServiceConfig {
         arr[i].name = fdNames[i];
       }
     }
-    this.trace(`listeners ${JSON.stringify(arr)}`);
+    this.trace(`listeningFileDescriptors ${JSON.stringify(arr)}`);
     return arr;
   }
 
@@ -85,7 +85,7 @@ class SystemdConfig extends ServiceConfig {
       );
     }
 
-    for (const listener of this.listeners) {
+    for (const listener of this.listeningFileDescriptors) {
       if (listener.name === undefined) {
         this.warn(`listener without name ${JSON.stringify(listener)}`);
       } else {
@@ -96,12 +96,12 @@ class SystemdConfig extends ServiceConfig {
 
   async _stop() {
     const rc = notify_with_fds(
-      "FDSTORE=1" + this.listeners.map(l => `\nFDNAME=${l.name}`).join(""),
-      this.listeners.map(l => l.fd)
+      "FDSTORE=1" + this.listeningFileDescriptors.map(l => `\nFDNAME=${l.name}`).join(""),
+      this.listeningFileDescriptors.map(l => l.fd)
     );
 
     this.info(
-      `FDSTORE=1 ${ this.listeners.map(l => ` FDNAME=${l.name}`).join("")} (${rc})`
+      `FDSTORE=1 ${ this.listeningFileDescriptors.map(l => ` FDNAME=${l.name}`).join("")} (${rc})`
     );
     
     return super._stop();
