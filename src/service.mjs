@@ -28,7 +28,7 @@ import {
 export { notify, notify_with_fds, journal_print_object };
 
 /**
- * forward logs entries to the journal
+ * Forward logs entries to the journal
  */
 class JournalLogger extends ServiceLogger {
   static get name() {
@@ -121,11 +121,11 @@ class SystemdConfig extends ServiceConfig {
 
 /**
  * Kronos bridge to systemd
- * - sync node state to systemd with notify (done)
- * - propagate config into kronos world (done)
+ * - sync node state to systemd with notify
+ * - propagate config into kronos world
  * - propagate socket activations into kronos (partly)
  * - start / stop / restart / reload initiated from systemd
- * - log into journal (done)
+ * - log into journal
  */
 export class ServiceSystemd extends ServiceProviderMixin(
   Service,
