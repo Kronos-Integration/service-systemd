@@ -17,14 +17,6 @@ m.filename = filename;
 process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
 const { LISTEN_FDS_START,notify_with_fds,notify,journal_print_object } = m.exports;
 
-/*
-import {
-  notify,
-  notify_with_fds,
-  journal_print_object,
-  LISTEN_FDS_START
-} from "../systemd.node";
-*/
 export { notify, notify_with_fds, journal_print_object };
 
 /**
@@ -41,7 +33,7 @@ class JournalLogger extends ServiceLogger {
 }
 
 /**
- * Provides config form CONFIGURATION_DIRECTORY
+ * Provides config from CONFIGURATION_DIRECTORY
  * Also injects listeningFileDescriptors into the config
  * @property {string} configurationDirectory taken from CONFIGURATION_DIRECTORY
  */
