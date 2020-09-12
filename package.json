@@ -27,8 +27,8 @@
   "scripts": {
     "test": "ava -s --timeout 5m && ava --timeout 2m",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
-    "docs": "documentation readme ./src/service.mjs --section=API && documentation readme ./src/service.mjs --section=API",
-    "lint": "documentation lint ./src/service.mjs && documentation lint ./src/service.mjs"
+    "docs": "documentation readme ./src/service.mjs --section=API",
+    "lint": "documentation lint ./src/service.mjs"
   },
   "dependencies": {
     "@kronos-integration/service": "^9.2.8",
