@@ -8,8 +8,7 @@ addons:
 jobs:
   include:
     - stage: test
-      node_js:
-        - 14.2.0
+      node_js: 14.11.0
       script:
         - npm run cover
         - npx codecov
@@ -18,7 +17,6 @@ jobs:
         - journalctl --user -xe
     - stage: doc
       node_js: lts/*
-      skip_cleanup: 'true'
       script:
         - npm run lint
         - npm run docs
@@ -32,7 +30,6 @@ jobs:
 branches:
   only:
     - master
-    - /^greenkeeper/.*$/
     - /^mkpr/.*$/
     - /^npm-template-sync/.*$/
 matrix:
