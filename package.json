@@ -30,7 +30,8 @@
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme ./src/service.mjs --section=API",
     "lint": "npm run lint:docs",
-    "lint:docs": "documentation lint ./src/service.mjs"
+    "lint:docs": "documentation lint ./src/service.mjs",
+    "prebuild": "prebuild --strip --verbose"
   },
   "dependencies": {
     "@kronos-integration/service": "^9.2.13",
@@ -42,6 +43,7 @@
     "documentation": "^13.0.2",
     "execa": "^4.0.3",
     "node-addon-api": "^3.0.0",
+    "prebuild": "^10.0.1",
     "semantic-release": "^17.1.2"
   },
   "engines": {
