@@ -34,7 +34,7 @@
     "prebuild": "prebuild --strip --verbose"
   },
   "dependencies": {
-    "@kronos-integration/service": "^9.2.13",
+    "@kronos-integration/service": "^9.2.14",
     "config-expander": "^11.0.13"
   },
   "devDependencies": {
