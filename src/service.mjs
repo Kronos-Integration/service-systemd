@@ -5,13 +5,10 @@ import {
   ServiceLogger,
   ServiceConfig
 } from "@kronos-integration/service";
-
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
 import { Module } from "module";
 import { arch, constants } from "os";
 
-const filename = join(dirname(fileURLToPath(import.meta.url)), "..", `systemd-linux-${arch()}.node`);
+const filename = (new URL(`../systemd-linux-${arch()}.node`,import.meta.url)).pathname;
 const m = new Module(filename);
 m.filename = filename;
 process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
