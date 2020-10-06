@@ -31,7 +31,7 @@
     "docs": "documentation readme ./src/service.mjs --section=API",
     "lint": "npm run lint:docs",
     "lint:docs": "documentation lint ./src/service.mjs",
-    "prebuild": "prebuild --strip --verbose"
+    "build": "prebuild --strip --verbose"
   },
   "dependencies": {
     "@kronos-integration/service": "^9.2.14",
