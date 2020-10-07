@@ -8,11 +8,17 @@ import {
 import { Module } from "module";
 import { arch, constants } from "os";
 
-const filename = (new URL(`../systemd-linux-${arch()}.node`,import.meta.url)).pathname;
+const filename = new URL(`../systemd-linux-${arch()}.node`, import.meta.url)
+  .pathname;
 const m = new Module(filename);
 m.filename = filename;
 process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
-const { LISTEN_FDS_START,notify_with_fds,notify,journal_print_object } = m.exports;
+const {
+  LISTEN_FDS_START,
+  notify_with_fds,
+  notify,
+  journal_print_object
+} = m.exports;
 
 export { notify, notify_with_fds, journal_print_object };
 
@@ -85,14 +91,17 @@ class SystemdConfig extends ServiceConfig {
 
   async _stop() {
     const rc = notify_with_fds(
-      "FDSTORE=1" + this.listeningFileDescriptors.map(l => `\nFDNAME=${l.name}`).join(""),
+      "FDSTORE=1" +
+        this.listeningFileDescriptors.map(l => `\nFDNAME=${l.name}`).join(""),
       this.listeningFileDescriptors.map(l => l.fd)
     );
 
     this.info(
-      `FDSTORE=1 ${ this.listeningFileDescriptors.map(l => ` FDNAME=${l.name}`).join("")} (${rc})`
+      `FDSTORE=1 ${this.listeningFileDescriptors
+        .map(l => ` FDNAME=${l.name}`)
+        .join("")} (${rc})`
     );
-    
+
     return super._stop();
   }
 
