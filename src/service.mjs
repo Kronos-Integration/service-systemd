@@ -36,7 +36,14 @@ class JournalLogger extends ServiceLogger {
 }
 
 /**
- * Provides config from CONFIGURATION_DIRECTORY
+ * 
+ * @typedef {Object} FileDescriptor
+ * @property {string} name
+ * @property {number} fd
+ */
+
+/**
+ * Provides config from CONFIGURATION_DIRECTORY.
  * Also injects listeningFileDescriptors into the config
  * @property {string} configurationDirectory taken from CONFIGURATION_DIRECTORY
  */
@@ -49,6 +56,7 @@ class SystemdConfig extends ServiceConfig {
 
   /**
    * listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES
+   * @return {FileDescriptor[]}
    */
   get listeningFileDescriptors() {
     const count = Number(process.env.LISTEN_FDS) || 0;
