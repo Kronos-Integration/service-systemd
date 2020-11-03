@@ -13,7 +13,7 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: 'false'
+      fail-fast: false
       matrix:
         language:
           - javascript
@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: '2'
+          fetch-depth: 2
       - run: git checkout HEAD^2
         if: '${{ github.event_name == ''pull_request'' }}'
       - name: Initialize CodeQL
@@ -30,7 +30,7 @@ jobs:
           languages: '${{ matrix.language }}'
       - uses: actions/setup-node@v1
         with:
-          node-version: 14.13.1
+          node-version: 14.15.0
       - run: npm install
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
