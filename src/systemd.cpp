@@ -1,4 +1,4 @@
-#define NAPI_VERSION 6
+#define NAPI_VERSION 7
 #define SD_JOURNAL_SUPPRESS_LOCATION
 
 #include <node_api.h>
@@ -9,11 +9,9 @@
 
 napi_value notify_with_fds(napi_env env, napi_callback_info info)
 {
-    napi_status status;
     size_t argc = 2;
     napi_value args[2];
-    status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
-    if (status != napi_ok)
+    if (napi_get_cb_info(env, info, &argc, args, nullptr, nullptr) != napi_ok)
         return nullptr;
 
     if (argc != 2)
@@ -22,20 +20,17 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     }
 
     size_t len;
-    status = napi_get_value_string_utf8(env, args[0], nullptr, 0, &len);
-    if (status != napi_ok)
+    if (napi_get_value_string_utf8(env, args[0], nullptr, 0, &len) != napi_ok)
         return nullptr;
 
     unsigned int alen;
-    status = napi_get_array_length(env, args[1], &alen);
-    if (status != napi_ok)
+    if (napi_get_array_length(env, args[1], &alen) != napi_ok)
     {
         return nullptr;
     }
 
     char *state = new char[len + 1];
-    status = napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr);
-    if (status != napi_ok)
+    if (napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr) != napi_ok)
         return nullptr;
 
     int *fds = new int[alen];
@@ -43,8 +38,7 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     for (unsigned int i = 0; i < alen; i++)
     {
         napi_value e;
-        status = napi_get_element(env, args[1], i, &e);
-        if (status != napi_ok)
+        if (napi_get_element(env, args[1], i, &e) != napi_ok)
         {
             delete[] state;
             delete[] fds;
@@ -59,8 +53,7 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     delete[] fds;
 
     napi_value value;
-    status = napi_create_int32(env, res, &value);
-    if (status != napi_ok)
+    if (napi_create_int32(env, res, &value) != napi_ok)
         return nullptr;
 
     return value;
@@ -68,11 +61,9 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
 
 napi_value notify(napi_env env, napi_callback_info info)
 {
-    napi_status status;
     size_t argc = 1;
     napi_value args[1];
-    status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
-    if (status != napi_ok)
+    if (napi_get_cb_info(env, info, &argc, args, nullptr, nullptr) != napi_ok)
         return nullptr;
 
     if (argc != 1)
@@ -81,18 +72,18 @@ napi_value notify(napi_env env, napi_callback_info info)
     }
 
     size_t len;
-    status = napi_get_value_string_utf8(env, args[0], nullptr, 0, &len);
-    if (status != napi_ok)
+    if (napi_get_value_string_utf8(env, args[0], nullptr, 0, &len) != napi_ok)
         return nullptr;
 
     char *state = new char[len + 1];
-    status = napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr);
+    if (napi_get_value_string_utf8(env, args[0], state, len + 1, nullptr) != napi_ok)
+        return nullptr;
+
     int res = sd_notify(0, state);
     delete[] state;
 
     napi_value value;
-    status = napi_create_int32(env, res, &value);
-    if (status != napi_ok)
+    if (napi_create_int32(env, res, &value) != napi_ok)
         return nullptr;
 
     return value;
@@ -133,10 +124,7 @@ const char *priorityForName(char *name)
 
 static bool get_string(napi_env env, napi_value value, char *append, size_t maxLen, size_t *len)
 {
-    napi_status status;
-
-    status = napi_get_value_string_utf8(env, value, nullptr, 0, len);
-    if (status != napi_ok)
+    if (napi_get_value_string_utf8(env, value, nullptr, 0, len) != napi_ok)
     {
         return false;
     }
@@ -148,9 +136,7 @@ static bool get_string(napi_env env, napi_value value, char *append, size_t maxL
         *len = maxLen;
     }
 
-    status = napi_get_value_string_utf8(env, value, append, *len + 1, nullptr);
-    
-    return status == napi_ok;
+    return napi_get_value_string_utf8(env, value, append, *len + 1, nullptr) == napi_ok;
 }
 
 napi_value journal_print_object(napi_env env, napi_callback_info info)
@@ -168,8 +154,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
     }
 
     napi_value property_names;
-    status = napi_get_property_names(env, args[0], &property_names);
-    if (status != napi_ok)
+    if (napi_get_property_names(env, args[0], &property_names) != napi_ok)
     {
         napi_throw_error(env, nullptr, "ERROR 1");
     }
@@ -195,8 +180,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
         append += nameLen + 1;
 
         napi_value value;
-        status = napi_get_property(env, args[0], property_name, &value);
-        if (status != napi_ok)
+        if (napi_get_property(env, args[0], property_name, &value) != napi_ok)
         {
             delete[] buffer;
             napi_throw_error(env, nullptr, "ERROR 4");
@@ -207,7 +191,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
 
         size_t stringLen;
         bool is;
-        
+
         /*status = napi_is_error(env, value, &is);
         if (is)
         {
@@ -223,11 +207,11 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
         }
         else*/
         {
-            status = napi_is_array(env, value, &is);
+            napi_is_array(env, value, &is);
             if (is)
             {
                 unsigned int arrayLength;
-                status = napi_get_array_length(env, value, &arrayLength);
+                napi_get_array_length(env, value, &arrayLength);
 
                 stringLen = 0;
 
@@ -236,8 +220,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
                     napi_value e;
                     size_t len;
 
-                    status = napi_get_element(env, value, i, &e);
-                    if (status != napi_ok)
+                    if (napi_get_element(env, value, i, &e) != napi_ok)
                     {
                         delete[] buffer;
                         napi_throw_error(env, nullptr, "ERROR 8");
@@ -261,18 +244,15 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
             }
             else
             {
-                status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
-                if (status != napi_ok)
+                if (napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen) != napi_ok)
                 {
-                    status = napi_coerce_to_string(env, value, &value);
-                    if (status != napi_ok)
+                    if (napi_coerce_to_string(env, value, &value) != napi_ok)
                     {
                         delete[] buffer;
                         napi_throw_error(env, nullptr, "ERROR 11");
                     }
 
-                    status = napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen);
-                    if (status != napi_ok)
+                    if (napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen) != napi_ok)
                     {
                         delete[] buffer;
                         napi_throw_error(env, nullptr, "ERROR 12");
@@ -284,8 +264,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
                     break;
                 }
 
-                status = napi_get_value_string_utf8(env, value, string + nameLen + 1, stringLen + 1, nullptr);
-                if (status != napi_ok)
+                if (napi_get_value_string_utf8(env, value, string + nameLen + 1, stringLen + 1, nullptr) != napi_ok)
                 {
                     strcpy(string + nameLen + 1, "?");
                     append += 1 + 1;
@@ -323,8 +302,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
     delete[] buffer;
 
     napi_value value;
-    status = napi_create_int32(env, res, &value);
-    if (status != napi_ok)
+    if (napi_create_int32(env, res, &value) != napi_ok)
         return nullptr;
 
     return value;
@@ -332,35 +310,26 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
 
 napi_value init(napi_env env, napi_value exports)
 {
-    napi_status status;
     napi_value value;
 
-    status = napi_create_int32(env, SD_LISTEN_FDS_START, &value);
-    if (status != napi_ok)
+    if (napi_create_int32(env, SD_LISTEN_FDS_START, &value) != napi_ok)
         return NULL;
-    status = napi_set_named_property(env, exports, "LISTEN_FDS_START", value);
-    if (status != napi_ok)
+    if (napi_set_named_property(env, exports, "LISTEN_FDS_START", value) != napi_ok)
         return NULL;
 
-    status = napi_create_function(env, NULL, 0, notify_with_fds, NULL, &value);
-    if (status != napi_ok)
+    if (napi_create_function(env, NULL, 0, notify_with_fds, NULL, &value) != napi_ok)
         return NULL;
-    status = napi_set_named_property(env, exports, "notify_with_fds", value);
-    if (status != napi_ok)
+    if (napi_set_named_property(env, exports, "notify_with_fds", value) != napi_ok)
         return NULL;
 
-    status = napi_create_function(env, NULL, 0, notify, NULL, &value);
-    if (status != napi_ok)
+    if (napi_create_function(env, NULL, 0, notify, NULL, &value) != napi_ok)
         return NULL;
-    status = napi_set_named_property(env, exports, "notify", value);
-    if (status != napi_ok)
+    if (napi_set_named_property(env, exports, "notify", value) != napi_ok)
         return NULL;
 
-    status = napi_create_function(env, NULL, 0, journal_print_object, NULL, &value);
-    if (status != napi_ok)
+    if (napi_create_function(env, NULL, 0, journal_print_object, NULL, &value) != napi_ok)
         return NULL;
-    status = napi_set_named_property(env, exports, "journal_print_object", value);
-    if (status != napi_ok)
+    if (napi_set_named_property(env, exports, "journal_print_object", value) != napi_ok)
         return NULL;
 
     return exports;
