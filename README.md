@@ -26,36 +26,30 @@ kronos systemd integration
 
 -   [JournalLogger](#journallogger)
 -   [SystemdConfig](#systemdconfig)
-    -   [Parameters](#parameters)
     -   [Properties](#properties)
-    -   [listeners](#listeners)
+    -   [listeningFileDescriptors](#listeningfiledescriptors)
 -   [ServiceSystemd](#servicesystemd)
 
 ## JournalLogger
 
 **Extends ServiceLogger**
 
-forward logs entries to the journal
+Forward logs entries to the journal
 
 ## SystemdConfig
 
 **Extends ServiceConfig**
 
-Provides config form CONFIGURATION_DIRECTORY
-Also injects listeners into the conifg
-
-### Parameters
-
--   `args` **...any** 
+Provides config from CONFIGURATION_DIRECTORY
+Also injects listeningFileDescriptors into the config
 
 ### Properties
 
--   `configurationDirectory` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** tken from CONFIGURATION_DIRECTORY
+-   `configurationDirectory` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** taken from CONFIGURATION_DIRECTORY
 
-### listeners
+### listeningFileDescriptors
 
-FDSTORE=1
-FDNAME
+listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES
 
 ## ServiceSystemd
 
@@ -63,11 +57,11 @@ FDNAME
 
 Kronos bridge to systemd
 
--   sync node state to systemd with notify (done)
--   propagate config into kronos world (done)
+-   sync node state to systemd with notify
+-   propagate config into kronos world
 -   propagate socket activations into kronos (partly)
 -   start / stop / restart / reload initiated from systemd
--   log into journal (done)
+-   log into journal
 
 # install
 
