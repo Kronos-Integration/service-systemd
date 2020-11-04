@@ -25,8 +25,10 @@ kronos systemd integration
 ### Table of Contents
 
 -   [JournalLogger](#journallogger)
--   [SystemdConfig](#systemdconfig)
+-   [FileDescriptor](#filedescriptor)
     -   [Properties](#properties)
+-   [SystemdConfig](#systemdconfig)
+    -   [Properties](#properties-1)
     -   [listeningFileDescriptors](#listeningfiledescriptors)
 -   [ServiceSystemd](#servicesystemd)
 
@@ -36,11 +38,20 @@ kronos systemd integration
 
 Forward logs entries to the journal
 
+## FileDescriptor
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+### Properties
+
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `fd` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+
 ## SystemdConfig
 
 **Extends ServiceConfig**
 
-Provides config from CONFIGURATION_DIRECTORY
+Provides config from CONFIGURATION_DIRECTORY.
 Also injects listeningFileDescriptors into the config
 
 ### Properties
@@ -50,6 +61,8 @@ Also injects listeningFileDescriptors into the config
 ### listeningFileDescriptors
 
 listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[FileDescriptor](#filedescriptor)>** 
 
 ## ServiceSystemd
 
