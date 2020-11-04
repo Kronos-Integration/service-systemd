@@ -20,6 +20,7 @@ test.before(async t => {
 
 test.after("cleanup", async t => {
   try {
+    await systemctl("stop", unitName);
     await systemctl("disable", unitName);
     await systemctl("clean", unitName);
   } catch (e) {}
@@ -38,6 +39,7 @@ test("logging", async t => {
   const all = [];
 
   for await (const entry of entries) {
+    t.log(entry);
     all.push(entry);
     if (entry.MESSAGE === "*** END ***") {
       break;
