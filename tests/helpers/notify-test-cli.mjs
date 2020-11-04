@@ -34,16 +34,13 @@ class TestService extends Service {
 const ssd = new ServiceSystemd();
 
 async function actions() {
-
   console.log("using stdout");
 
-  await ssd.declareService(
-    {
-      type: TestService,
-      loglevel: "trace",
-      autostart: true
-    }
-  );
+  await ssd.declareService({
+    type: TestService,
+    loglevel: "trace",
+    autostart: true
+  });
 
   await ssd.start();
 
@@ -70,13 +67,18 @@ async function actions() {
     boolean: false,
     bigInt: 77n,
     object: { a: 1 },
-    array: ["A","B","C"]
+    array: ["A", "B", "C"]
   });
 
   ssd.info("0123456789".repeat(5));
+
+  for (let i = 0; i < 100; i++) {
+    await wait(1000);
+    ssd.info(`waining ${i}...`);
+  }
+
   ssd.info("*** END ***");
 
-  await wait(10000);
   await ssd.stop();
 }
 
