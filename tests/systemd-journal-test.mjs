@@ -11,9 +11,11 @@ test.before(async t => {
   const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
   await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
   try {
+    t.log(`link ${unitDefinitionFileName}`);
     await systemctl("link", unitDefinitionFileName);
   } catch (e) {}
   try {
+    t.log(`link ${socketUnitDefinitionFileName}`);
     await systemctl("link", socketUnitDefinitionFileName);
   } catch (e) {}
 });
@@ -31,6 +33,7 @@ test("logging", async t => {
     systemctl("stop", unitName);
   }, 10000);
   */
+  t.log(`restart ${unitName}`);
 
   await systemctl("restart", unitName);
 
