@@ -8,7 +8,7 @@ async function jt(t, send, expect) {
 
   let i = await entries.next();
 
-  t.log(i.value);
+  //t.log(i.value);
 
   for (const key of Object.keys(expect)) {
     t.is(i.value[key], expect[key], key);

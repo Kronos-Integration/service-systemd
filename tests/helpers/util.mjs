@@ -1,6 +1,6 @@
 import execa from "execa";
 import fs from "fs";
-import { exec, spawn }  from 'child_process';
+import { exec, spawn } from 'child_process';
 
 export function monitorUnit(unitName, cb) {
   let status, active, pid;
