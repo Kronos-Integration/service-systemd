@@ -90,7 +90,6 @@ export function journalctl(unitName) {
     let buffer = "";
     for await (const chunk of j.stdout) {
       buffer += chunk.toString("utf8");
-      //console.log(buffer);
       do {
         const i = buffer.indexOf("\n");
         if (i < 0) {
@@ -100,16 +99,14 @@ export function journalctl(unitName) {
         const line = buffer.substr(0, i);
         buffer = buffer.substr(i + 1);
         const entry = JSON.parse(line);
-        if (entry.MESSAGE === "*** END ***") {
-          return;
-        }
+        //console.log(entry);
         yield entry;
       } while (true);
     }
   };
 
   return {
-    entries: entries(),
+    entries, // entries(),
     stop() {
       j.kill();
     }
@@ -117,7 +114,12 @@ export function journalctl(unitName) {
 }
 
 export function systemctl(...args) {
-  return execa("systemctl", ["--user", ...args]);
+  const r = execa("systemctl", ["--user", ...args]);
+
+  r.stdout.pipe(process.stdout);
+  r.stderr.pipe(process.stderr);
+
+  return r;
 }
 
 export async function wait(msecs = 1000) {

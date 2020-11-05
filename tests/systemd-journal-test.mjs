@@ -9,15 +9,20 @@ test.before(async t => {
   const wd = process.cwd();
 
   const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
+  const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
   await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
   try {
     t.log(`link ${unitDefinitionFileName}`);
     await systemctl("link", unitDefinitionFileName);
-  } catch (e) {}
+  }
+  catch(e) {
+  }
   try {
     t.log(`link ${socketUnitDefinitionFileName}`);
     await systemctl("link", socketUnitDefinitionFileName);
-  } catch (e) {}
+  }
+  catch(e) {
+  }
 });
 
 test.after("cleanup", async t => {
@@ -41,7 +46,8 @@ test("logging", async t => {
 
   const all = [];
 
-  for await (const entry of entries) {
+  for await (const entry of entries()) {
+    console.log(entry);
     t.log(entry);
     all.push(entry);
     if (entry.MESSAGE === "*** END ***") {
