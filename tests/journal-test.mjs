@@ -6,7 +6,7 @@ async function jt(t, send, expect) {
   const { entries, stop } = journalctl();
   journal_print_object(send);
 
-  let i = await entries.next();
+  let i = await entries().next();
 
   //t.log(i.value);
 
