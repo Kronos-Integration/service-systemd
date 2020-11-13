@@ -55,4 +55,3 @@ test.serial(
   { ERROR: "Error: the error message" }
 );
 
-
