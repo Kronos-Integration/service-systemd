@@ -23,11 +23,15 @@ const {
 export { notify, notify_with_fds, journal_print_object };
 
 /**
- * Forward logs entries to the journal
+ * Forward logs entries to the journal.
  */
 class JournalLogger extends ServiceLogger {
   static get name() {
     return "systemd-logger";
+  }
+
+  static get description() {
+    return "Forward log entries into systemd journal";
   }
 
   logEntry(entry) {
@@ -50,6 +54,10 @@ class JournalLogger extends ServiceLogger {
 class SystemdConfig extends ServiceConfig {
   static get name() {
     return "systemd-config";
+  }
+
+  static get description() {
+    return "Synchronize configuration with systemd";
   }
 
   configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
@@ -126,7 +134,7 @@ class SystemdConfig extends ServiceConfig {
 }
 
 /**
- * Kronos bridge to systemd
+ * Kronos bridge to systemd:
  * - sync node state to systemd with notify
  * - propagate config into kronos world
  * - propagate socket activations into kronos (partly)
@@ -140,6 +148,10 @@ export class ServiceSystemd extends ServiceProviderMixin(
 ) {
   static get name() {
     return "systemd";
+  }
+
+  static get description() {
+    return "Bridge to systemd";
   }
 
   get autostart() {
