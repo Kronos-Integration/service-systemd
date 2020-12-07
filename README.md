@@ -35,7 +35,7 @@ kronos systemd integration
 
 **Extends ServiceLogger**
 
-Forward logs entries to the journal
+Forward logs entries to the journal.
 
 ## FileDescriptor
 
@@ -67,7 +67,7 @@ Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Gl
 
 **Extends ServiceProviderMixin(Service, JournalLogger, SystemdConfig)**
 
-Kronos bridge to systemd
+Kronos bridge to systemd:
 
 -   sync node state to systemd with notify
 -   propagate config into kronos world
