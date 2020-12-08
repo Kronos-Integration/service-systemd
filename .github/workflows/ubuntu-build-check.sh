@@ -55,8 +55,6 @@ PACKAGES=(
     util-linux
     zstd
 )
-COMPILER="${COMPILER:?}"
-COMPILER_VERSION="${COMPILER_VERSION:?}"
 RELEASE="$(lsb_release -cs)"
 
 bash -c "echo 'deb-src http://archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse' >>/etc/apt/sources.list"
