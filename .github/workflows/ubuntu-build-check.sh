@@ -39,6 +39,7 @@ PACKAGES=(
     libxkbcommon-dev
     libxtables-dev
     libzstd-dev
+    libsystemd-dev
     mount
     net-tools
     perl
