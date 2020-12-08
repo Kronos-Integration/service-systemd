@@ -65,4 +65,3 @@ apt-get -y build-dep systemd
 apt-get -y install "${PACKAGES[@]}"
 export PATH="$HOME/.local/bin:$PATH"
 
-$CC --version
