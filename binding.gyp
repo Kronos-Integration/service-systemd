@@ -11,7 +11,7 @@
                 "<!(<(NODEJS) -p \"require('node-addon-api').include\")"
             ],
             "libraries": [
-                "<!@(['sh', '-c', 'pkg-config --silence-errors --libs-only-l libsystemd || pkg-config --silence-errors --libs-only-l libsystemd-systemd'])"
+                "<!@(['sh', '-c', 'pkg-config --libs-only-l libsystemd || pkg-config --libs-only-l libsystemd-systemd'])"
             ]
         },
         {
