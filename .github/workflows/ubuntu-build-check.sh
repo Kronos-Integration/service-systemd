@@ -27,7 +27,6 @@ PACKAGES=(
     libcap-dev
     libcurl4-gnutls-dev
     libfdisk-dev
-    libfido2-dev
     libgpg-error-dev
     liblz4-dev
     liblzma-dev
