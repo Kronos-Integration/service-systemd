@@ -99,16 +99,19 @@ export function journalctl(unitName) {
         const line = buffer.substr(0, i);
         buffer = buffer.substr(i + 1);
         const entry = JSON.parse(line);
-        //console.log(entry);
+//        console.log(entry);
         yield entry;
       } while (true);
     }
   };
 
   return {
-    entries, // entries(),
-    stop() {
+    entries,
+    async stop() {
+      return new Promise((resolve,reject)=>{
+      j.on('close', (code, signal) => resolve(code));
       j.kill();
+      });
     }
   };
 }
