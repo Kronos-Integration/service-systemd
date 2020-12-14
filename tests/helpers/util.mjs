@@ -56,8 +56,16 @@ export function monitorUnit(unitName) {
     }
   }
 
+  async *
+    function entries() {
+      while (!terminate) {
+        yield * getStatus();
+        wait(1000);
+      }
+    };
+
   return {
-    entries: getStatus(),
+    entries: entries(),
     async stop() {
       terminate = true;
       return new Promise((resolve, reject) => {
