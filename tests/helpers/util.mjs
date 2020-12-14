@@ -75,7 +75,7 @@ export function monitorUnit(unitName) {
           });
           sysctl.kill();
         } else {
-          reject();
+          resolve(-1);
         }
       });
     }
