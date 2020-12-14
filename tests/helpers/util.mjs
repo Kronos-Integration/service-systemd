@@ -7,67 +7,57 @@ import { homedir } from "os";
 export const unitName = "notify-test";
 export const port = 15765;
 
-export function monitorUnit(unitName, cb) {
+export function monitorUnit(unitName) {
   let status, active, pid;
 
   let sysctl;
   let terminate;
 
-  const handler = async () => {
-    try {
-      sysctl = execa("systemctl", ["--user", "-n", "0", "status", unitName]);
+  async function* getStatus() {
+    sysctl = execa("systemctl", ["--user", "-n", "0", "status", unitName]);
 
-      let changed = false;
-      let buffer = "";
-      for await (const chunk of sysctl.stdout) {
-        buffer += chunk.toString("utf8");
-        do {
-          const i = buffer.indexOf("\n");
-          if (i < 0) {
-            break;
-          }
-          const line = buffer.substr(0, i);
-          buffer = buffer.substr(i + 1);
+    let changed = false;
+    let buffer = "";
+    for await (const chunk of sysctl.stdout) {
+      buffer += chunk.toString("utf8");
+      do {
+        const i = buffer.indexOf("\n");
+        if (i < 0) {
+          break;
+        }
+        const line = buffer.substr(0, i);
+        buffer = buffer.substr(i + 1);
 
-          //console.log(line);
+        //console.log(line);
 
-          let m = line.match(/Status:\s*"([^"]+)/);
-          if (m && m[1] != status) {
-            changed = true;
-            status = m[1];
-          }
-          m = line.match(/Active:\s+(\w+)(\s+\((\w+)\))?/);
-          if (m && (m[1] != active || m[3] != status)) {
-            changed = true;
-            active = m[1];
-            status = m[3];
-          }
+        let m = line.match(/Status:\s*"([^"]+)/);
+        if (m && m[1] != status) {
+          changed = true;
+          status = m[1];
+        }
+        m = line.match(/Active:\s+(\w+)(\s+\((\w+)\))?/);
+        if (m && (m[1] != active || m[3] != status)) {
+          changed = true;
+          active = m[1];
+          status = m[3];
+        }
 
-          m = line.match(/Main\s+PID:\s*(\d+)/);
-          if (m && m[1] != pid) {
-            changed = true;
-            pid = parseInt(m[1]);
-          }
+        m = line.match(/Main\s+PID:\s*(\d+)/);
+        if (m && m[1] != pid) {
+          changed = true;
+          pid = parseInt(m[1]);
+        }
 
-          if (changed) {
-            cb({ name: unitName, status, active, pid });
-            changed = false;
-          }
-        } while (true);
-      }
-      const p = await status;
-
-      if (!terminate) {
-        setTimeout(handler, 800);
-      }
-    } catch (e) {
-      console.log(e);
+        if (changed) {
+          yield { name: unitName, status, active, pid };
+          changed = false;
+        }
+      } while (!terminate);
     }
-  };
-
-  handler();
+  }
 
   return {
+    entries: getStatus(),
     async stop() {
       terminate = true;
       return new Promise((resolve, reject) => {
