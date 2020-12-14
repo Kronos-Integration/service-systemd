@@ -6,6 +6,6 @@ doc
 .test
 .tmp
 .vscode
-binding.gyp
 src/*.cpp
 .github
+CMakeLists.txt
