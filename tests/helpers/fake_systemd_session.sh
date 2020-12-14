@@ -21,6 +21,7 @@ fi
 
 which systemd
 ls -l /usr/lib/systemd
+ls -l /lib/systemd
 
 ps -ef|grep -v grep|grep 'systemd --user'
 if [ $? -eq 1 ]
