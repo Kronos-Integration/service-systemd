@@ -56,13 +56,12 @@ export function monitorUnit(unitName) {
     }
   }
 
-  async *
-    function entries() {
-      while (!terminate) {
-        yield * getStatus();
-        wait(1000);
-      }
-    };
+  async function* entries() {
+    while (!terminate) {
+      yield* getStatus();
+      wait(1000);
+    }
+  }
 
   return {
     entries: entries(),
