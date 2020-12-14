@@ -27,6 +27,7 @@ test.before(async t => {
 test.after(afterUnits);
 
 test.serial("service states", async t => {
+  t.plan(2);
   systemctl("start", unitName);
 
   const { stop, entries } = monitorUnit(unitName);
@@ -42,11 +43,16 @@ test.serial("service states", async t => {
 
   await systemctl("stop", unitName);
 
-  await wait(2000);
+  for await (const entry of entries) {
+    console.log(entry.status, entry.active);
 
-  //t.is(active, "inactive");
+    if (entry.active === "inactive") {
+      t.pass();
+      break;
+    }
+  }
 
-  await stop();
+  //await stop();
 });
 
 test.serial.skip("service socket states", async t => {

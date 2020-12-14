@@ -14,6 +14,7 @@ export function monitorUnit(unitName) {
   let terminate;
 
   async function* getStatus() {
+    console.log("systemctl...");
     sysctl = execa("systemctl", ["--user", "-n", "0", "status", unitName]);
 
     let changed = false;
@@ -53,13 +54,14 @@ export function monitorUnit(unitName) {
           changed = false;
         }
       } while (!terminate);
+    console.log("systemctl EOF");
     }
   }
 
   async function* entries() {
     while (!terminate) {
       yield* getStatus();
-      wait(1000);
+      await wait(800);
     }
   }
 
@@ -69,12 +71,17 @@ export function monitorUnit(unitName) {
       terminate = true;
       return new Promise((resolve, reject) => {
         if (sysctl) {
+          console.log("stop sysctl still present -> kill");
           sysctl.on("close", (code, signal) => {
+            console.log("stop sysctl",code);
             sysctl = undefined;
             resolve(code);
           });
+          try {
           sysctl.kill();
+          } catch(e) { console.log(e); }
         } else {
+          console.log("stop sysctl alredy gone");
           resolve(-1);
         }
       });
