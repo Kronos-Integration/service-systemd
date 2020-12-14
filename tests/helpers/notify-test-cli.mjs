@@ -74,7 +74,7 @@ async function actions() {
 
   for (let i = 0; i < 100; i++) {
     await wait(1000);
-    ssd.info(`waining ${i}...`);
+    ssd.info(`waiting ${i}...`);
   }
 
   ssd.info("*** END ***");
