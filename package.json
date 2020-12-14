@@ -29,7 +29,7 @@
     "docs": "documentation readme ./src/service.mjs --section=API",
     "lint": "npm run lint:docs",
     "lint:docs": "documentation lint ./src/service.mjs",
-    "build": "cmake-js compile"
+    "install": "cmake-js compile"
   },
   "dependencies": {
     "@kronos-integration/service": "^10.0.7",
