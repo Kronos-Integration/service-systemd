@@ -25,10 +25,12 @@ ps -ef|grep -v grep|grep 'systemd --user'
 if [ $? -eq 1 ]
 then
   echo "start systemd --user"
+#XDG_RUNTIME_DIR=run/user/$UID /lib/systemd/systemd --user
 
   set -xv
-XDG_RUNTIME_DIR=run/user/$UID /lib/systemd/systemd --user
-  #/lib/systemd/systemd --user
+  /lib/systemd/systemd --user
+  journalctl -n 100
+
 else
   echo "systemd --user already running"
 fi
