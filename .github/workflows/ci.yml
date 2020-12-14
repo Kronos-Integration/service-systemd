@@ -30,6 +30,7 @@ jobs:
       - run: ps -ef|grep systemd
       - run: loginctl list-users
       - run: systemctl --user status
+      - run: tests/helpers/fake_systemd_session.sh
       - run: npm install
       - run: npm run cover --if-present
       - name: Coveralls Parallel
