@@ -1,6 +1,6 @@
 import execa from "execa";
-import fs from "fs";
-import { exec, spawn } from 'child_process';
+import { writeFile } from "fs/promises";
+import { spawn } from "child_process";
 
 export function monitorUnit(unitName, cb) {
   let status, active, pid;
@@ -63,15 +63,21 @@ export function monitorUnit(unitName, cb) {
   handler();
 
   return {
-    terminate: () => {
+    async stop() {
       terminate = true;
-      sysctl.kill();
+      return new Promise((resolve, reject) => {
+        if (sysctl) {
+          sysctl.on("close", (code, signal) => {
+            sysctl = undefined;
+            resolve(code);
+          });
+          sysctl.kill();
+        } else {
+          reject();
+        }
+      });
     }
   };
-}
-
-export function clearMonitorUnit(handle) {
-  handle.terminate();
 }
 
 export function journalctl(unitName) {
@@ -83,10 +89,10 @@ export function journalctl(unitName) {
 
   const j = spawn("journalctl", args, {
     timeout: 5000,
-    stdio: ['ignore', 'pipe', process.stderr]
+    stdio: ["ignore", "pipe", process.stderr]
   });
 
-  async function * entries() {
+  async function* entries() {
     let buffer = "";
     for await (const chunk of j.stdout) {
       buffer += chunk.toString("utf8");
@@ -99,18 +105,18 @@ export function journalctl(unitName) {
         const line = buffer.substr(0, i);
         buffer = buffer.substr(i + 1);
         const entry = JSON.parse(line);
-//        console.log(entry);
+        //        console.log(entry);
         yield entry;
       } while (true);
     }
-  };
+  }
 
   return {
     entries,
     async stop() {
-      return new Promise((resolve,reject)=>{
-      j.on('close', (code, signal) => resolve(code));
-      j.kill();
+      return new Promise((resolve, reject) => {
+        j.on("close", (code, signal) => resolve(code));
+        j.kill();
       });
     }
   };
@@ -137,7 +143,7 @@ export async function writeUnitDefinition(
   const which = await await execa("which", ["node"]);
   const node = which.stdout.trim();
 
-  return fs.promises.writeFile(
+  return writeFile(
     serviceDefinitionFileName,
     `[Unit]
 Description=notifying service test
@@ -163,7 +169,7 @@ export async function writeSocketUnitDefinition(
   fileDescriptorName,
   socket
 ) {
-  return fs.promises.writeFile(
+  return writeFile(
     serviceDefinitionFileName,
     `[Socket]
 ListenStream=${socket}

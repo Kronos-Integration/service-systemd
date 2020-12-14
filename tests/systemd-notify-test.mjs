@@ -4,7 +4,6 @@ import { join } from "path";
 import { createConnection } from "net";
 
 import {
-  clearMonitorUnit,
   monitorUnit,
   journalctl,
   systemctl,
@@ -69,7 +68,7 @@ test.serial("service states", async t => {
 
   t.is(active, "inactive");
 
-  clearMonitorUnit(m);
+  await m.stop();
 });
 
 test.serial.skip("service socket states", async t => {
@@ -102,7 +101,7 @@ test.serial.skip("service socket states", async t => {
 
   t.is(active, "inactive");
 
-  clearMonitorUnit(m);
+  await m.stop();
 });
 
 test.serial("service kill", async t => {
@@ -114,7 +113,7 @@ test.serial("service kill", async t => {
     active = unit.active;
     status = unit.status;
     pid = unit.pid;
-    t.log(active,status,pid);
+    t.log(active, status, pid);
   });
 
   await wait(1500);
@@ -126,7 +125,7 @@ test.serial("service kill", async t => {
   await wait(2000);
 
   t.is(active, "inactive");
-  clearMonitorUnit(m);
+  await m.stop();
 });
 
 test.serial.skip("service SIGHUP", async t => {
@@ -166,5 +165,5 @@ test.serial.skip("service SIGHUP", async t => {
   t.is(m1.MESSAGE, "config SERIAL 4711");
 
   t.is(unit.active, "inactive");
-  clearMonitorUnit(m);
+  await m.stop();
 });
