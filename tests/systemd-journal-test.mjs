@@ -6,12 +6,6 @@ test.before(beforeUnits);
 test.after(afterUnits);
 
 test("logging", async t => {
-  /*setTimeout(() => {
-    systemctl("stop", unitName);
-  }, 10000);
-  */
-  t.log(`restart ${unitName}`);
-
   await systemctl("restart", unitName);
 
   const { stop, entries } = journalctl(unitName);
@@ -70,6 +64,5 @@ test("logging", async t => {
   t.truthy(m);
   t.is(m.MESSAGE.length, 5 * 10);
 
-  stop();
-  await systemctl("stop", unitName);
+  await stop();
 });

@@ -193,7 +193,6 @@ export async function beforeUnits(t) {
     const wd = process.cwd();
     const fileName = join(wd, `build/${unitName}.${type}`);
     await writer(fileName, unitName, { wd, ...options });
-    t.log(`link ${fileName}`);
     await systemctl("link", fileName);
   }
 
