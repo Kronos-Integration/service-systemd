@@ -22,12 +22,13 @@ fi
 which systemd
 ls -l /usr/lib/systemd
 ls -l /lib/systemd
+ls -l /bin/systemd
 
 ps -ef|grep -v grep|grep 'systemd --user'
 if [ $? -eq 1 ]
 then
   echo "start systemd --user"
-  XDG_RUNTIME_DIR=run/user/$UID /usr/lib/systemd/systemd --user
+  XDG_RUNTIME_DIR=run/user/$UID /bin/systemd --user
 else
   echo "systemd --user already running"
 fi
