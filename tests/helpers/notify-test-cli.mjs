@@ -73,7 +73,7 @@ async function actions() {
   ssd.info("0123456789".repeat(5));
 
   for (let i = 0; i < 100; i++) {
-    await wait(1000);
+    await wait(500);
     ssd.info(`waiting ${i}...`);
   }
 
