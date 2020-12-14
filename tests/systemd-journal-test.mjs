@@ -1,5 +1,6 @@
 import test from "ava";
 import { join } from "path";
+import { rm } from "fs/promises";
 
 import { journalctl, systemctl, writeUnitDefinition } from "./helpers/util.mjs";
 
@@ -8,21 +9,24 @@ const unitName = "notify-test";
 test.before(async t => {
   const wd = process.cwd();
 
+  await rm(`${os.homedir}/.config/systemd/user/${unitName}.service`, {
+    force: true
+  });
+  await rm(`${os.homedir}/.config/systemd/user/${unitName}.socket`, {
+    force: true
+  });
+
   const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
   const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
   await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
   try {
     t.log(`link ${unitDefinitionFileName}`);
     await systemctl("link", unitDefinitionFileName);
-  }
-  catch(e) {
-  }
+  } catch {}
   try {
     t.log(`link ${socketUnitDefinitionFileName}`);
     await systemctl("link", socketUnitDefinitionFileName);
-  }
-  catch(e) {
-  }
+  } catch {}
 });
 
 test.after("cleanup", async t => {
