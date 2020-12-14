@@ -28,6 +28,7 @@ jobs:
           node-version: '${{ matrix.node-version }}'
       - run: sudo -E .github/workflows/ubuntu-install.sh
       - run: ps -ef|grep systemd
+      - run: loginctl list-users
       - run: systemctl --user status
       - run: npm install
       - run: npm run cover --if-present
