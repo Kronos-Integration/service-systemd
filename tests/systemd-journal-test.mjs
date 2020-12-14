@@ -1,7 +1,7 @@
 import test from "ava";
 import { join } from "path";
 import { rm } from "fs/promises";
-import { rmhomedir } from "os";
+import { homedir } from "os";
 
 import { journalctl, systemctl, writeUnitDefinition } from "./helpers/util.mjs";
 
