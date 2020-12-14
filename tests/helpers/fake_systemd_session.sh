@@ -19,6 +19,9 @@ else
   echo "XDG_SESSION_ID present"
 fi
 
+which systemd
+ls -l /usr/lib/systemd
+
 ps -ef|grep -v grep|grep 'systemd --user'
 if [ $? -eq 1 ]
 then
