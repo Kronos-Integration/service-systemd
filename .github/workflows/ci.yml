@@ -28,9 +28,9 @@ jobs:
           node-version: '${{ matrix.node-version }}'
       - run: sudo -E .github/workflows/ubuntu-install.sh
       - run: ps -ef|grep systemd
+      - run: tests/helpers/fake_systemd_session.sh
       - run: loginctl list-users
       - run: systemctl --user status
-      - run: tests/helpers/fake_systemd_session.sh
       - run: npm install
       - run: npm run cover --if-present
       - name: Coveralls Parallel
