@@ -1,51 +1,30 @@
 import test from "ava";
 import { writeFileSync } from "fs";
-import { join } from "path";
 import { createConnection } from "net";
+import { homedir } from "os";
 
 import {
   monitorUnit,
   journalctl,
   systemctl,
   wait,
-  writeUnitDefinition,
-  writeSocketUnitDefinition
+  unitName,
+  port,
+  beforeUnits,
+  afterUnits
 } from "./helpers/util.mjs";
 
-const unitName = "notify-test";
-const port = 8080;
-const configFile = `${process.env.HOME}/.config/notify-test/config.json`;
+const configFile = `${homedir()}/.config/${unitName}/config.json`;
 
 test.before(async t => {
   writeFileSync(configFile, '{"test": { "serial": 0 }}', {
     encoding: "utf8"
   });
 
-  const wd = process.cwd();
-
-  const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
-  await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
-  try {
-    await systemctl("link", unitDefinitionFileName);
-  } catch (e) {}
-
-  const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
-  await writeSocketUnitDefinition(
-    socketUnitDefinitionFileName,
-    unitName,
-    "test.socket",
-    port
-  );
-  try {
-    await systemctl("link", socketUnitDefinitionFileName);
-  } catch (e) {}
+  await beforeUnits(t);
 });
 
-test.after("cleanup", async t => {
-  try {
-    await systemctl("disable", unitName);
-  } catch (e) {}
-});
+test.after(afterUnits);
 
 test.serial("service states", async t => {
   systemctl("start", unitName);

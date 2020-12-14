@@ -1,6 +1,11 @@
 import execa from "execa";
-import { writeFile } from "fs/promises";
+import { writeFile, rm } from "fs/promises";
 import { spawn } from "child_process";
+import { join } from "path";
+import { homedir } from "os";
+
+export const unitName = "notify-test";
+export const port = 15765;
 
 export function monitorUnit(unitName, cb) {
   let status, active, pid;
@@ -135,12 +140,12 @@ export async function wait(msecs = 1000) {
   return new Promise(resolve => setTimeout(resolve, msecs));
 }
 
-export async function writeUnitDefinition(
+export async function writeServiceUnitDefinition(
   serviceDefinitionFileName,
   unitName,
-  wd
+  options
 ) {
-  const which = await await execa("which", ["node"]);
+  const which = await execa("which", ["node"]);
   const node = which.stdout.trim();
 
   return writeFile(
@@ -149,7 +154,7 @@ export async function writeUnitDefinition(
 Description=notifying service test
 [Service]
 Type=notify
-ExecStart=${node} --title notify-test ${wd}/tests/helpers/notify-test-cli.mjs
+ExecStart=${node} --title notify-test ${options.wd}/tests/helpers/notify-test-cli.mjs
 ExecReload=/bin/kill -HUP $MAINPID
 Environment=LOGLEVEL=trace
 NotifyAccess=all
@@ -166,17 +171,43 @@ ConfigurationDirectory=${unitName}
 export async function writeSocketUnitDefinition(
   serviceDefinitionFileName,
   unitName,
-  fileDescriptorName,
-  socket
+  options
 ) {
   return writeFile(
     serviceDefinitionFileName,
     `[Socket]
-ListenStream=${socket}
-FileDescriptorName=${fileDescriptorName}
+ListenStream=${options.ListenStream}
+FileDescriptorName=${options.FileDescriptorName}
 [Install]
 RequiredBy=${unitName}.service
 `,
     { encoding: "utf8" }
   );
+}
+
+export async function beforeUnits(t) {
+  async function u(type, writer, options) {
+    await rm(`${homedir()}/.config/systemd/user/${unitName}.${type}`, {
+      force: true
+    });
+    const wd = process.cwd();
+    const fileName = join(wd, `build/${unitName}.${type}`);
+    await writer(fileName, unitName, { wd, ...options });
+    t.log(`link ${fileName}`);
+    await systemctl("link", fileName);
+  }
+
+  await u("service", writeServiceUnitDefinition);
+  await u("socket", writeSocketUnitDefinition, {
+    FileDescriptorName: port,
+    ListenStream: "test.socket"
+  });
+}
+
+export async function afterUnits(t) {
+  try {
+    await systemctl("stop", unitName);
+    await systemctl("disable", unitName);
+    await systemctl("clean", unitName);
+  } catch {}
 }

@@ -1,42 +1,9 @@
 import test from "ava";
-import { join } from "path";
-import { rm } from "fs/promises";
-import { homedir } from "os";
 
-import { journalctl, systemctl, writeUnitDefinition } from "./helpers/util.mjs";
+import { journalctl, systemctl, beforeUnits, afterUnits, unitName } from "./helpers/util.mjs";
 
-const unitName = "notify-test";
-
-test.before(async t => {
-  const wd = process.cwd();
-
-  await rm(`${homedir()}/.config/systemd/user/${unitName}.service`, {
-    force: true
-  });
-  await rm(`${homedir()}/.config/systemd/user/${unitName}.socket`, {
-    force: true
-  });
-
-  const unitDefinitionFileName = join(wd, `build/${unitName}.service`);
-  const socketUnitDefinitionFileName = join(wd, `build/${unitName}.socket`);
-  await writeUnitDefinition(unitDefinitionFileName, unitName, wd);
-  try {
-    t.log(`link ${unitDefinitionFileName}`);
-    await systemctl("link", unitDefinitionFileName);
-  } catch {}
-  try {
-    t.log(`link ${socketUnitDefinitionFileName}`);
-    await systemctl("link", socketUnitDefinitionFileName);
-  } catch {}
-});
-
-test.after("cleanup", async t => {
-  try {
-    await systemctl("stop", unitName);
-    await systemctl("disable", unitName);
-    await systemctl("clean", unitName);
-  } catch (e) {}
-});
+test.before(beforeUnits);
+test.after(afterUnits);
 
 test("logging", async t => {
   /*setTimeout(() => {
