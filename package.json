@@ -41,7 +41,7 @@
     "cmake-js": "^6.1.0",
     "documentation": "github:arlac77/documentation",
     "execa": "^5.0.0",
-    "node-addon-api": "^3.0.0",
+    "node-addon-api": "^3.0.2",
     "semantic-release": "^17.3.0"
   },
   "engines": {
