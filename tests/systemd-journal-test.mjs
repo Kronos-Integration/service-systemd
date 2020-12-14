@@ -13,8 +13,7 @@ test("logging", async t => {
   const all = [];
 
   for await (const entry of entries()) {
-    //console.log(entry);
-    t.log(entry);
+    console.log(entry.MESSAGE);
     all.push(entry);
     if (entry.MESSAGE === "*** END ***") {
       break;
