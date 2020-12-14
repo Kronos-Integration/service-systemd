@@ -23,7 +23,7 @@ PACKAGES=(
 # PPA with some newer build dependencies (like zstd)
 #add-apt-repository -y ppa:upstream-systemd-ci/systemd-ci
 apt-get -y update
-apt-get -y systemd libsystemd-dev
+apt-get -y install systemd libsystemd-dev
 #apt-get -y install "${PACKAGES[@]}"
 #export PATH="$HOME/.local/bin:$PATH"
 
