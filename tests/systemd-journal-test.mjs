@@ -1,6 +1,7 @@
 import test from "ava";
 import { join } from "path";
 import { rm } from "fs/promises";
+import { rmhomedir } from "os";
 
 import { journalctl, systemctl, writeUnitDefinition } from "./helpers/util.mjs";
 
@@ -9,10 +10,10 @@ const unitName = "notify-test";
 test.before(async t => {
   const wd = process.cwd();
 
-  await rm(`${os.homedir}/.config/systemd/user/${unitName}.service`, {
+  await rm(`${homedir()}/.config/systemd/user/${unitName}.service`, {
     force: true
   });
-  await rm(`${os.homedir}/.config/systemd/user/${unitName}.socket`, {
+  await rm(`${homedir()}/.config/systemd/user/${unitName}.socket`, {
     force: true
   });
 
