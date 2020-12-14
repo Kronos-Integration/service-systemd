@@ -14,7 +14,7 @@ async function jt(t, send, expect) {
     t.is(i.value[key], expect[key], key);
   }
 
-  stop();
+  await stop();
 }
 
 jt.title = (providedTitle = "", send, expect) => {
