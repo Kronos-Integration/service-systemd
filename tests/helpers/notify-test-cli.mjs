@@ -43,6 +43,7 @@ async function actions() {
   });
 
   await ssd.start();
+  await wait(500);
 
   /*
   try {
