@@ -42,7 +42,7 @@ class JournalLogger extends ServiceLogger {
 /**
  * 
  * @typedef {Object} FileDescriptor
- * @property {string} name
+ * @property {string?} name
  * @property {number} fd
  */
 
@@ -113,7 +113,7 @@ class SystemdConfig extends ServiceConfig {
     );
 
     this.info(
-      `FDSTORE=1 ${this.listeningFileDescriptors
+      `FDSTORE=1${this.listeningFileDescriptors
         .map(l => ` FDNAME=${l.name}`)
         .join("")} (${rc})`
     );
