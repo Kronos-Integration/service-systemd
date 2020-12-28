@@ -4,6 +4,7 @@ import { journalctl, wait } from "./helpers/util.mjs";
 
 async function jt(t, send, expect) {
   const { entries, stop } = journalctl();
+  wait(100);
   journal_print_object(send);
 
   let i = await entries().next();
@@ -11,12 +12,6 @@ async function jt(t, send, expect) {
 //  t.log(i.value);
 
   t.like(i.value, expect);
-
-/*
-  for (const key of Object.keys(expect)) {
-    t.is(i.value[key], expect[key], key);
-  }
-*/
 
   await stop();
 }
@@ -29,8 +24,56 @@ jt.title = (providedTitle = "journal", send, expect) => {
 
 test.serial(
   jt,
-  { severity: "info", message: "a message" },
-  { PRIORITY: "6", MESSAGE: "a message" }
+  { severity: "trace", message: "trace message" },
+  { PRIORITY: "7", MESSAGE: "trace message" }
+);
+
+test.serial(
+  jt,
+  { severity: "debug", message: "debug message" },
+  { PRIORITY: "7", MESSAGE: "debug message" }
+);
+
+test.serial(
+  jt,
+  { severity: "info", message: "info message" },
+  { PRIORITY: "6", MESSAGE: "info message" }
+);
+
+test.serial(
+  jt,
+  { severity: "notice", message: "notice message" },
+  { PRIORITY: "5", MESSAGE: "notice message" }
+);
+
+test.serial(
+  jt,
+  { severity: "warn", message: "warn message" },
+  { PRIORITY: "4", MESSAGE: "warn message" }
+);
+
+test.serial(
+  jt,
+  { severity: "error", message: "error message" },
+  { PRIORITY: "3", MESSAGE: "error message" }
+);
+
+test.serial(
+  jt,
+  { severity: "crit", message: "crit message" },
+  { PRIORITY: "2", MESSAGE: "crit message" }
+);
+
+test.serial(
+  jt,
+  { severity: "alert", message: "alert message" },
+  { PRIORITY: "1", MESSAGE: "alert message" }
+);
+
+test.serial(
+  jt,
+  { severity: "emerg", message: "emerg message" },
+  { PRIORITY: "0", MESSAGE: "emerg message" }
 );
 
 test.serial(
