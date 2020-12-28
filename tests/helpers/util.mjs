@@ -89,8 +89,8 @@ export function monitorUnit(unitName) {
   };
 }
 
-export function journalctl(unitName) {
-  const args = ["--user", "-n", "1", "-f", "-o", "json"];
+export function journalctl(unitName,num=1) {
+  const args = ["--user", "-n", num, "-f", "-o", "json"];
 
   if (unitName !== undefined) {
     args.push("-u", unitName);

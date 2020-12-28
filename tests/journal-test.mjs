@@ -1,6 +1,6 @@
 import test from "ava";
 import { journal_print_object } from "@kronos-integration/service-systemd";
-import { journalctl } from "./helpers/util.mjs";
+import { journalctl, wait } from "./helpers/util.mjs";
 
 async function jt(t, send, expect) {
   const { entries, stop } = journalctl();
@@ -8,11 +8,15 @@ async function jt(t, send, expect) {
 
   let i = await entries().next();
 
-  //t.log(i.value);
+//  t.log(i.value);
 
+  t.like(i.value, expect);
+
+/*
   for (const key of Object.keys(expect)) {
     t.is(i.value[key], expect[key], key);
   }
+*/
 
   await stop();
 }
