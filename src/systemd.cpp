@@ -107,7 +107,9 @@ const static NamedPriority priorities[] = {
     {"warn", PRIORITY(LOG_WARNING)},
     {"error", PRIORITY(LOG_ERR)},
     {"crit", PRIORITY(LOG_CRIT)},
-    {"alert", PRIORITY(LOG_ALERT)}};
+    {"alert", PRIORITY(LOG_ALERT)},
+    {"emerg", PRIORITY(LOG_EMERG)}
+};
 
 const char *priorityForName(char *name)
 {
