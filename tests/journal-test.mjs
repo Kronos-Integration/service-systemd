@@ -17,10 +17,10 @@ async function jt(t, send, expect) {
   await stop();
 }
 
-jt.title = (providedTitle = "", send, expect) => {
+jt.title = (providedTitle = "journal", send, expect) => {
   const x = { ...send };
   delete x.bigInt;
-  return `journal ${providedTitle} ${JSON.stringify(x)}}`.trim();
+  return `${providedTitle} ${JSON.stringify(x)}}`.trim();
 };
 
 test.serial(
