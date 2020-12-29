@@ -63,7 +63,7 @@ class SystemdConfig extends ServiceConfig {
   configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
 
   /**
-   * listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES
+   * listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES.
    * @return {FileDescriptor[]}
    */
   get listeningFileDescriptors() {
@@ -82,6 +82,10 @@ class SystemdConfig extends ServiceConfig {
     return arr;
   }
 
+  /**
+   * Load config from configuration dir.
+   * Additionally pass listeninfFileDescriptions into config.
+   */
   async loadConfig() {
     notify("RELOADING=1");
     if (this.configurationDirectory) {
