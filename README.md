@@ -33,6 +33,7 @@ kronos systemd integration
 -   [SystemdConfig](#systemdconfig)
     -   [Properties](#properties-1)
     -   [listeningFileDescriptors](#listeningfiledescriptors)
+    -   [loadConfig](#loadconfig)
 -   [ServiceSystemd](#servicesystemd)
 
 ## JournalLogger
@@ -63,9 +64,14 @@ Also injects listeningFileDescriptors into the config
 
 ### listeningFileDescriptors
 
-listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES
+listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES.
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[FileDescriptor](#filedescriptor)>** 
+
+### loadConfig
+
+Load config from configuration dir.
+Additionally pass listeninfFileDescriptions into config.
 
 ## ServiceSystemd
 
