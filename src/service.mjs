@@ -110,8 +110,9 @@ class SystemdConfig extends ServiceConfig {
   }
 
   async _stop() {
-    const state = "FDSTORE=1" + this.listeningFileDescriptors.map(l => `\nFDNAME=${l.name}`).join("");
-    const rc = notify_with_fds(state, this.listeningFileDescriptors.map(l => l.fd));
+    const lfd = this.listeningFileDescriptors;
+    const state = "FDSTORE=1" + lfd.map(l => `\nFDNAME=${l.name}`).join("");
+    const rc = notify_with_fds(state, lfd.map(l => l.fd));
     this.info(`${state} (${rc})`);
 
     return super._stop();
