@@ -26,26 +26,26 @@
     "test": "npm run test:ava",
     "test:ava": "ava --timeout 2m tests/*.mjs",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava --timeout 2m tests/*.mjs && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
-    "docs": "documentation readme ./src/service.mjs --section=API",
+    "docs": "documentation readme --section=API ./src/**/*.mjs",
     "lint": "npm run lint:docs",
-    "lint:docs": "documentation lint ./src/service.mjs",
+    "lint:docs": "documentation lint ./src/**/*.mjs",
     "build": "cmake-js compile"
   },
   "dependencies": {
-    "@kronos-integration/service": "^10.3.10",
+    "@kronos-integration/service": "^10.3.14",
     "config-expander": "^12.0.1"
   },
   "devDependencies": {
     "ava": "^3.15.0",
-    "c8": "^7.4.0",
+    "c8": "^7.6.0",
     "cmake-js": "^6.1.0",
-    "documentation": "github:arlac77/documentation",
+    "documentation": "^13.2.0",
     "execa": "^5.0.0",
     "node-addon-api": "^3.0.2",
-    "semantic-release": "^17.3.1"
+    "semantic-release": "^17.4.2"
   },
   "engines": {
-    "node": ">=14.15.3"
+    "node": ">=14.16.0"
   },
   "os": [
     "linux"
