@@ -3,7 +3,7 @@
 [![minified size](https://badgen.net/bundlephobia/min/@kronos-integration/service-systemd)](https://bundlephobia.com/result?p=@kronos-integration/service-systemd)
 [![downloads](http://img.shields.io/npm/dm/@kronos-integration/service-systemd.svg?style=flat-square)](https://npmjs.org/package/@kronos-integration/service-systemd)
 [![GitHub Issues](https://img.shields.io/github/issues/Kronos-Integration/service-systemd.svg?style=flat-square)](https://github.com/Kronos-Integration/service-systemd/issues)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FKronos-Integration%2Fservice-systemd%2Fbadge&style=flat)](https://actions-badge.atrox.dev/Kronos-Integration/service-systemd/goto)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FKronos-Integration%2Fservice-systemd%2Fbadge\&style=flat)](https://actions-badge.atrox.dev/Kronos-Integration/service-systemd/goto)
 [![Styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![Known Vulnerabilities](https://snyk.io/test/github/Kronos-Integration/service-systemd/badge.svg)](https://snyk.io/test/github/Kronos-Integration/service-systemd)
@@ -13,11 +13,11 @@
 
 kronos systemd integration
 
--   sync node state to systemd with notify (done)
--   propagate config into kronos (done)
--   propagate socket activations into kronos (partly)
--   start / stop / restart / reload initiated from systemd (partly)
--   log into journal (done)
+*   sync node state to systemd with notify (done)
+*   propagate config into kronos (done)
+*   propagate socket activations into kronos (partly)
+*   start / stop / restart / reload initiated from systemd (partly)
+*   log into journal (done)
 
 # usage
 
@@ -27,14 +27,14 @@ kronos systemd integration
 
 ### Table of Contents
 
--   [JournalLogger](#journallogger)
--   [FileDescriptor](#filedescriptor)
-    -   [Properties](#properties)
--   [SystemdConfig](#systemdconfig)
-    -   [Properties](#properties-1)
-    -   [listeningFileDescriptors](#listeningfiledescriptors)
-    -   [loadConfig](#loadconfig)
--   [ServiceSystemd](#servicesystemd)
+*   [JournalLogger](#journallogger)
+*   [FileDescriptor](#filedescriptor)
+    *   [Properties](#properties)
+*   [SystemdConfig](#systemdconfig)
+    *   [Properties](#properties-1)
+    *   [listeningFileDescriptors](#listeningfiledescriptors)
+    *   [loadConfig](#loadconfig)
+*   [ServiceSystemd](#servicesystemd)
 
 ## JournalLogger
 
@@ -48,8 +48,8 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### Properties
 
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
--   `fd` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+*   `fd` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
 ## SystemdConfig
 
@@ -60,13 +60,13 @@ Also injects listeningFileDescriptors into the config
 
 ### Properties
 
--   `configurationDirectory` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** taken from CONFIGURATION_DIRECTORY
+*   `configurationDirectory` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** taken from CONFIGURATION_DIRECTORY
 
 ### listeningFileDescriptors
 
 listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES.
 
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[FileDescriptor](#filedescriptor)>** 
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[FileDescriptor](#filedescriptor)>** 
 
 ### loadConfig
 
@@ -79,11 +79,11 @@ Additionally pass listeninfFileDescriptions into config.
 
 Kronos bridge to systemd:
 
--   sync node state to systemd with notify
--   propagate config into kronos world
--   propagate socket activations into kronos (partly)
--   start / stop / restart / reload initiated from systemd
--   log into journal
+*   sync node state to systemd with notify
+*   propagate config into kronos world
+*   propagate socket activations into kronos (partly)
+*   start / stop / restart / reload initiated from systemd
+*   log into journal
 
 # install
 
