@@ -40,7 +40,7 @@
     "c8": "^7.7.2",
     "cmake-js": "^6.1.0",
     "documentation": "^13.2.5",
-    "execa": "^5.1.0",
+    "execa": "^5.1.1",
     "node-addon-api": "^3.0.2",
     "semantic-release": "^17.4.3"
   },
