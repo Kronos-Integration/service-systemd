@@ -36,7 +36,7 @@ test.serial("service states", async t => {
     console.log(entry.status, entry.active);
 
     if (entry.status === "running" && entry.active === "active") {
-      t.pass();
+      t.pass("active and running");
       break;
     }
   }
@@ -47,7 +47,7 @@ test.serial("service states", async t => {
     console.log(entry.status, entry.active);
 
     if (entry.active === "inactive") {
-      t.pass();
+      t.pass("inactive");
       break;
     }
   }
