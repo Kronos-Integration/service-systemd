@@ -14,7 +14,6 @@ export function monitorUnit(unitName) {
   let terminate;
 
   async function* getStatus() {
-    console.log("systemctl...");
     sysctl = execa("systemctl", ["--user", "-n", "0", "status", unitName]);
 
     let changed = false;
@@ -28,8 +27,6 @@ export function monitorUnit(unitName) {
         }
         const line = buffer.substr(0, i);
         buffer = buffer.substr(i + 1);
-
-        //console.log(line);
 
         let m = line.match(/Status:\s*"([^"]+)/);
         if (m && m[1] != status) {
@@ -54,7 +51,6 @@ export function monitorUnit(unitName) {
           changed = false;
         }
       } while (!terminate);
-    console.log("systemctl EOF");
     }
   }
 
@@ -71,15 +67,14 @@ export function monitorUnit(unitName) {
       terminate = true;
       return new Promise((resolve, reject) => {
         if (sysctl) {
-          console.log("stop sysctl still present -> kill");
           sysctl.on("close", (code, signal) => {
-            console.log("stop sysctl",code);
+            console.log("stop sysctl", code);
             sysctl = undefined;
             resolve(code);
           });
           try {
-          sysctl.kill();
-          } catch(e) { console.log(e); }
+            sysctl.kill();
+          } catch (e) { console.log(e); }
         } else {
           console.log("stop sysctl alredy gone");
           resolve(-1);
@@ -89,7 +84,7 @@ export function monitorUnit(unitName) {
   };
 }
 
-export function journalctl(unitName,num=1) {
+export function journalctl(unitName, num = 1) {
   const args = ["--user", "-n", num, "-f", "-o", "json"];
 
   if (unitName !== undefined) {
@@ -211,6 +206,7 @@ export async function afterUnits(t) {
   try {
     await systemctl("stop", unitName);
     await systemctl("disable", unitName);
-    await systemctl("clean", unitName);
-  } catch {}
+    //await systemctl("clean", unitName);
+  } catch {
+  }
 }

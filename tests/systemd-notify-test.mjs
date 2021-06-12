@@ -33,26 +33,17 @@ test.serial("service states", async t => {
   const { stop, entries } = monitorUnit(unitName);
 
   for await (const entry of entries) {
-    console.log(entry.status, entry.active);
-
     if (entry.status === "running" && entry.active === "active") {
       t.pass("active and running");
-      break;
+      await systemctl("stop", unitName);
     }
-  }
-
-  await systemctl("stop", unitName);
-
-  for await (const entry of entries) {
-    console.log(entry.status, entry.active);
-
     if (entry.active === "inactive") {
       t.pass("inactive");
       break;
     }
   }
 
-  //await stop();
+  await stop();
 });
 
 test.serial.skip("service socket states", async t => {
