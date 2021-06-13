@@ -47,9 +47,11 @@ test.serial("service states", async t => {
 });
 
 test.serial.skip("service socket states", async t => {
+  t.plan(1);
+
   await systemctl("start", unitName + ".socket");
 
-  await wait(2000);
+  await wait(100);
 
   const client = createConnection(
     {
@@ -60,23 +62,18 @@ test.serial.skip("service socket states", async t => {
   );
   client.on("data", data => console.log("Server", data));
 
-  let status, active;
-  const m = monitorUnit(unitName, unit => {
-    //t.log(unit);
-    active = unit.active;
-    status = unit.status;
-  });
+  const { stop, entries } = monitorUnit(unitName);
 
-  t.is(status, "running");
-  t.is(active, "active");
+  for await (const entry of entries) {
+    console.log(entry);
+    if (entry.status === "running" && entry.active === "active") {
+      t.pass("active and running");
+      await systemctl("stop", unitName);
+      break;
+    }
+  }
 
-  await systemctl("stop", unitName);
-
-  await wait(2000);
-
-  t.is(active, "inactive");
-
-  await m.stop();
+  await stop();
 });
 
 test.serial.skip("service kill", async t => {

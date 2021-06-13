@@ -197,8 +197,8 @@ export async function beforeUnits(t) {
 
   await u("service", writeServiceUnitDefinition);
   await u("socket", writeSocketUnitDefinition, {
-    FileDescriptorName: port,
-    ListenStream: "test.socket"
+    FileDescriptorName: "fd1",
+    ListenStream: `127.0.0.1:${port}`
   });
 }
 
