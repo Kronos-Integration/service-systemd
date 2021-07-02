@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.17.1
+          node-version: 14.17.2
       - name: Install dependencies
         run: sudo apt-get install -y libsystemd-dev
       - run: npm install
