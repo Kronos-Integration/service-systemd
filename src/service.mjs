@@ -204,7 +204,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
       includeRuntimeInfo: true,
       includeDefaults: true,
       includeName: true,
-      includeConfig: flase,
+      includeConfig: false,
       includePrivate: false
     });
   }

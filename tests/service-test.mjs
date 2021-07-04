@@ -1,6 +1,12 @@
 import test from "ava";
 import { ServiceSystemd, notify_with_fds } from "@kronos-integration/service-systemd";
 
+test("info endpoint", t => {
+  const ssd = new ServiceSystemd();
+  t.truthy(ssd.endpoints.info);
+  t.deepEqual(ssd.info().name,"systemd");
+});
+
 test("endpoints", t => {
   const ssd = new ServiceSystemd();
 
