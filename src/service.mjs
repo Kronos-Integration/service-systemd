@@ -59,7 +59,7 @@ class SystemdConfig extends ServiceConfig {
   static get description() {
     return "Synchronize configuration with systemd";
   }
-
+ 
   configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
 
   /**
@@ -155,6 +155,21 @@ export class ServiceSystemd extends ServiceProviderMixin(
     return true;
   }
 
+  /**
+   * Definition of the predefined endpoints.
+   * - info _in_
+   * @return {Object} predefined endpoints
+   */
+  static get endpoints() {
+    return {
+      ...super.endpoints,
+      info: {
+        in: true,
+        receive: "info"
+      }
+    };
+  }
+
   async _start() {
     process.on("warning", warning => this.warn(warning));
     process.on("SIGINT", () => {
@@ -181,6 +196,17 @@ export class ServiceSystemd extends ServiceProviderMixin(
         notify("STOPPING=1");
         break;
     }
+  }
+ 
+  info()
+  {
+    return this.toJSONWithOptions({
+      includeRuntimeInfo: true,
+      includeDefaults: true,
+      includeName: true,
+      includeConfig: flase,
+      includePrivate: false
+    });
   }
 }
 
