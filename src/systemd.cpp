@@ -185,7 +185,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
         if (napi_get_property(env, args[0], property_name, &value) != napi_ok)
         {
             delete[] buffer;
-            napi_throw_error(env, nullptr, "ERROR 4");
+            napi_throw_error(env, nullptr, "ERROR 2");
         }
 
         char *string = append;
@@ -201,7 +201,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
             if (status != napi_ok)
             {
                 delete[] buffer;
-                napi_throw_error(env, nullptr, "ERROR 5");
+                napi_throw_error(env, nullptr, "ERROR 3");
             }
 
             get_string(env, value, append, last - append, &stringLen);
@@ -225,7 +225,7 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
                     if (napi_get_element(env, value, i, &e) != napi_ok)
                     {
                         delete[] buffer;
-                        napi_throw_error(env, nullptr, "ERROR 8");
+                        napi_throw_error(env, nullptr, "ERROR 4");
                     }
 
                     napi_coerce_to_string(env, e, &e);
@@ -251,13 +251,13 @@ napi_value journal_print_object(napi_env env, napi_callback_info info)
                     if (napi_coerce_to_string(env, value, &value) != napi_ok)
                     {
                         delete[] buffer;
-                        napi_throw_error(env, nullptr, "ERROR 11");
+                        napi_throw_error(env, nullptr, "ERROR 5");
                     }
 
                     if (napi_get_value_string_utf8(env, value, nullptr, 0, &stringLen) != napi_ok)
                     {
                         delete[] buffer;
-                        napi_throw_error(env, nullptr, "ERROR 12");
+                        napi_throw_error(env, nullptr, "ERROR 6");
                     }
                 }
 
