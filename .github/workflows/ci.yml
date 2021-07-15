@@ -26,6 +26,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+          cache: npm
       - run: sudo -E .github/workflows/ubuntu-install.sh
       - run: tests/helpers/fake_systemd_session.sh
       - run: systemctl --user status
@@ -49,6 +50,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.17.3
+          cache: npm
       - run: npm install
       - run: npx semantic-release
         env:
