@@ -38,7 +38,7 @@
   "devDependencies": {
     "ava": "^3.15.0",
     "c8": "^7.7.3",
-    "cmake-js": "^6.1.0",
+    "cmake-js": "^6.2.1",
     "documentation": "^13.2.5",
     "execa": "^5.1.1",
     "node-addon-api": "^4.0.0",
@@ -62,6 +62,7 @@
   "template": {
     "inheritFrom": [
       "arlac77/template-arlac77-github",
+      "arlac77/template-cmake",
       "arlac77/template-kronos-component"
     ]
   }
