@@ -1,5 +1,5 @@
 import { execa } from "execa";
-import { writeFile, rm } from "fs/promises";
+import { writeFile, rm, mkdir } from "fs/promises";
 import { spawn } from "child_process";
 import { join } from "path";
 import { homedir } from "os";
@@ -190,6 +190,7 @@ export async function beforeUnits(t) {
       force: true
     });
     const wd = process.cwd();
+    await mkdir(join( wd, 'build'), { recursive:true });
     const fileName = join(wd, `build/${unitName}.${type}`);
     await writer(fileName, unitName, { wd, ...options });
     await systemctl("link", fileName);
