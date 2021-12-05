@@ -39,6 +39,8 @@ test("logging", async t => {
   t.truthy(m.STACK.startsWith("Error: this is an Error\nat actions (/"));
 */
 
+  //console.log(all.map(m=>m.MESSAGE));
+  
   m = all.find(m => m.MESSAGE === "error test after start");
   t.truthy(m);
   t.is(m.PRIORITY, "3");

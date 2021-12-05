@@ -4,7 +4,7 @@ import { journalctl, wait } from "./helpers/util.mjs";
 
 async function jt(t, send, expect) {
   const { entries, stop } = journalctl();
-  wait(100);
+  wait(150);
   journal_print_object(send);
 
   let i = await entries().next();
