@@ -1,4 +1,4 @@
-import execa from "execa";
+import { execa } from "execa";
 import { writeFile, rm } from "fs/promises";
 import { spawn } from "child_process";
 import { join } from "path";
