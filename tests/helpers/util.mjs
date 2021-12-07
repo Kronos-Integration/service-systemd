@@ -76,7 +76,7 @@ export function monitorUnit(unitName) {
             sysctl.kill();
           } catch (e) { console.log(e); }
         } else {
-          console.log("stop sysctl alredy gone");
+          console.log("stop sysctl already gone");
           resolve(-1);
         }
       });
@@ -191,7 +191,7 @@ export async function beforeUnits(t) {
     });
     const wd = process.cwd();
     await mkdir(join( wd, 'build'), { recursive:true });
-    const fileName = join(wd, `build/${unitName}.${type}`);
+    const fileName = join( wd, 'build', `${unitName}.${type}`);
     await writer(fileName, unitName, { wd, ...options });
     await systemctl("link", fileName);
   }

@@ -6,7 +6,7 @@ test.before(beforeUnits);
 test.after(afterUnits);
 
 test("logging", async t => {
-  await systemctl("restart", unitName);
+  await systemctl("start", unitName);
 
   const { stop, entries } = journalctl(unitName);
 
