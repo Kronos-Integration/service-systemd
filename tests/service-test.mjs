@@ -4,7 +4,7 @@ import { ServiceSystemd, notify_with_fds } from "@kronos-integration/service-sys
 test("info endpoint", t => {
   const ssd = new ServiceSystemd();
   t.truthy(ssd.endpoints.info);
-  t.deepEqual(ssd.info().name,"systemd");
+  t.deepEqual(ssd.details().name, "systemd");
 });
 
 test("endpoints", t => {

@@ -165,7 +165,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
       ...super.endpoints,
       info: {
         in: true,
-        receive: "info"
+        receive: "details"
       }
     };
   }
@@ -198,7 +198,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
     }
   }
  
-  info()
+  details()
   {
     return this.toJSONWithOptions({
       includeRuntimeInfo: true,
