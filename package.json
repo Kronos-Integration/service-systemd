@@ -60,6 +60,11 @@
   "homepage": "https://github.com/Kronos-Integration/service-systemd#readme",
   "native": "${dirname}/${basename}-${os}-${arch}.node",
   "template": {
+    "properties": {
+      "ava": {
+        "options": "-s --timeout 2m"
+      }
+    },
     "inheritFrom": [
       "arlac77/template-arlac77-github",
       "arlac77/template-cmake",
