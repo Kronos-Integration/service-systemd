@@ -1,6 +1,6 @@
 prebuilds
-node_modules
 build
+/node_modules/**
 *.log
 *.dump
 *.node
