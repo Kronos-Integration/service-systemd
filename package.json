@@ -41,7 +41,7 @@
     "cmake-js": "^6.2.1",
     "documentation": "^13.2.5",
     "execa": "^6.1.0",
-    "node-addon-api": "^4.0.0",
+    "node-addon-api": "^4.3.0",
     "semantic-release": "^19.0.2"
   },
   "engines": {
