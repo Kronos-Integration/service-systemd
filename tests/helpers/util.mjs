@@ -93,7 +93,7 @@ export function journalctl(unitName, num = 1) {
 
   const j = spawn("journalctl", args, {
     timeout: 5000,
-    stdio: ["ignore", "pipe", process.stderr]
+   // stdio: ["ignore", "pipe", process.stderr]
   });
 
   async function* entries() {
