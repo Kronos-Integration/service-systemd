@@ -9,6 +9,7 @@ jobs:
           - ubuntu-latest
         node-version:
           - 16.14.2
+          - 18.0.0
     steps:
       - uses: actions/checkout@v3
       - name: Build / Test Node ${{ matrix.node-version }}
