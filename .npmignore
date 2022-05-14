@@ -9,4 +9,3 @@ doc
 src/*.cpp
 .github
 CMakeLists.txt
-jsconfig.json
