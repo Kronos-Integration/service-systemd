@@ -1,4 +1,4 @@
-#define NAPI_VERSION 7
+#define NAPI_VERSION 8
 #define SD_JOURNAL_SUPPRESS_LOCATION
 
 #include <node_api.h>
