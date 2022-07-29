@@ -185,8 +185,8 @@ export class ServiceSystemd extends ServiceProviderMixin(
     return super._start();
   }
 
-  stateChanged(oldState, newState) {
-    super.stateChanged(oldState, newState);
+  stateChanged(origin, oldState, newState) {
+    super.stateChanged(origin, oldState, newState);
     switch (newState) {
       case "running":
         notify("READY=1");
