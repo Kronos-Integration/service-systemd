@@ -49,25 +49,25 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 
 ### Properties
 
-*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
-*   `fd` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+*   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?**&#x20;
+*   `fd` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)**&#x20;
 
 ## SystemdConfig
 
 **Extends ServiceConfig**
 
-Provides config from CONFIGURATION_DIRECTORY.
+Provides config from CONFIGURATION\_DIRECTORY.
 Also injects listeningFileDescriptors into the config
 
 ### Properties
 
-*   `configurationDirectory` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** taken from CONFIGURATION_DIRECTORY
+*   `configurationDirectory` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** taken from CONFIGURATION\_DIRECTORY
 
 ### listeningFileDescriptors
 
-listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES.
+listeningFileDescriptors as passed in LISTEN\_FDS and LISTEN\_FDNAMES.
 
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[FileDescriptor](#filedescriptor)>** 
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[FileDescriptor](#filedescriptor)>**&#x20;
 
 ### loadConfig
 
