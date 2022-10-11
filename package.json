@@ -47,11 +47,6 @@
   "engines": {
     "node": ">=18.7.0"
   },
-  "binary": {
-    "napi_versions": [
-      8
-    ]
-  },
   "os": [
     "linux"
   ],
@@ -74,6 +69,11 @@
       "arlac77/template-arlac77-github",
       "arlac77/template-cmake",
       "arlac77/template-kronos-component"
+    ]
+  },
+  "binary": {
+    "napi_versions": [
+      8
     ]
   }
 }
