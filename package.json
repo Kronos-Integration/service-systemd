@@ -47,6 +47,11 @@
   "engines": {
     "node": ">=18.7.0"
   },
+  "binary": {
+    "napi_versions": [
+      8
+    ]
+  },
   "os": [
     "linux"
   ],
