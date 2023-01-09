@@ -42,7 +42,7 @@
     "documentation": "^14.0.1",
     "execa": "^6.1.0",
     "node-addon-api": "^5.0.0",
-    "semantic-release": "^20.0.0"
+    "semantic-release": "^20.0.2"
   },
   "engines": {
     "node": ">=18.13.0"
