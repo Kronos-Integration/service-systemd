@@ -1,6 +1,6 @@
 import { Service } from "@kronos-integration/service";
 import ServiceSystemd from "@kronos-integration/service-systemd";
-import { createServer } from "net";
+import { createServer } from "node:net";
 
 class TestService extends Service {
   static get name() {

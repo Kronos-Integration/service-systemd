@@ -1,8 +1,8 @@
+import { writeFile, rm, mkdir } from "node:fs/promises";
+import { spawn } from "node:child_process";
+import { join } from "node:path";
+import { homedir } from "node:os";
 import { execa } from "execa";
-import { writeFile, rm, mkdir } from "fs/promises";
-import { spawn } from "child_process";
-import { join } from "path";
-import { homedir } from "os";
 
 export const unitName = "notify-test";
 export const port = 15765;

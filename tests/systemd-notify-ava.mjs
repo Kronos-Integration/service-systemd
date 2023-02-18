@@ -1,7 +1,7 @@
 import test from "ava";
-import { writeFileSync } from "fs";
-import { createConnection } from "net";
-import { homedir } from "os";
+import { writeFileSync } from "node:fs";
+import { createConnection } from "node:net";
+import { homedir } from "node:os";
 
 import {
   monitorUnit,
