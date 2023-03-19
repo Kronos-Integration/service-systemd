@@ -1,3 +1,5 @@
+import { arch, constants } from "node:os";
+import { Module } from "node:module";
 import { expand } from "config-expander";
 import {
   ServiceProviderMixin,
@@ -5,8 +7,6 @@ import {
   ServiceLogger,
   ServiceConfig
 } from "@kronos-integration/service";
-import { Module } from "module";
-import { arch, constants } from "os";
 
 const filename = new URL(`../systemd-linux-${arch()}.node`, import.meta.url)
   .pathname;
