@@ -42,10 +42,10 @@
     "documentation": "^14.0.2",
     "execa": "^8.0.1",
     "node-addon-api": "^7.0.0",
-    "semantic-release": "^21.0.9"
+    "semantic-release": "^21.1.0"
   },
   "engines": {
-    "node": ">=20.5.0"
+    "node": ">=20.5.1"
   },
   "os": [
     "linux"
