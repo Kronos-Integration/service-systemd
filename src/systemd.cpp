@@ -91,8 +91,8 @@ napi_value notify(napi_env env, napi_callback_info info)
 
 typedef struct
 {
-    const char *name;
-    const char *priority;
+    const char name[8];
+    const char priority[21];
 } NamedPriority;
 
 #define STR(num) #num
