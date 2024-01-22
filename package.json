@@ -35,7 +35,7 @@
     "config-expander": "^13.0.8"
   },
   "devDependencies": {
-    "ava": "^6.0.1",
+    "ava": "^6.1.0",
     "c8": "^9.1.0",
     "cmake-js": "^7.3.0",
     "documentation": "^14.0.2",
