@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@kronos-integration/service": "^10.5.0",
-    "config-expander": "^14.0.2"
+    "config-expander": "^14.0.3"
   },
   "devDependencies": {
     "ava": "^6.1.2",
