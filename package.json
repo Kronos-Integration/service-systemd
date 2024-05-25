@@ -8,6 +8,12 @@
   "exports": {
     ".": "./src/service.mjs"
   },
+  "files": [
+    "src/service.mjs",
+    "systemd-linux-arm7h.node",
+    "systemd-linux-arm64.node",
+    "systemd-linux-x86.node"
+  ],
   "description": "kronos systemd integration",
   "keywords": [
     "journal",
