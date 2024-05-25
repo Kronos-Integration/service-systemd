@@ -5,12 +5,6 @@
     "access": "public",
     "provenance": true
   },
-  "files": [
-    "src/service.mjs",
-    "systemd-linux-arm64.node",
-    "systemd-linux-arm7h.node",
-    "systemd-linux-x86.node"
-  ],
   "exports": {
     ".": "./src/service.mjs"
   },
