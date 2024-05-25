@@ -1,9 +1,9 @@
 {
   "name": "@kronos-integration/service-systemd",
-  "version": "0.0.0-semantic-release",
+  "version": "2.6.1",
   "publishConfig": {
     "access": "public",
-    "provenance": true
+    "provenance": false
   },
   "exports": {
     ".": "./src/service.mjs"
