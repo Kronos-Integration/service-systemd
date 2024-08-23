@@ -9,9 +9,8 @@ export const port = 15765;
 
 export function monitorUnit(unitName) {
   let status, active, pid;
-
   let sysctl;
-  let terminate;
+  let terminate = false;
 
   async function* getStatus() {
     sysctl = execa("systemctl", ["--user", "-n", "0", "status", unitName]);
@@ -25,8 +24,8 @@ export function monitorUnit(unitName) {
         if (i < 0) {
           break;
         }
-        const line = buffer.substr(0, i);
-        buffer = buffer.substr(i + 1);
+        const line = buffer.substring(0, i);
+        buffer = buffer.substring(i + 1);
 
         let m = line.match(/Status:\s*"([^"]+)/);
         if (m && m[1] != status) {
@@ -74,7 +73,10 @@ export function monitorUnit(unitName) {
           });
           try {
             sysctl.kill();
-          } catch (e) { console.log(e); }
+          } catch (e) {
+            console.error(e);
+            resolve(-1);
+          }
         } else {
           console.log("stop sysctl already gone");
           resolve(-1);
@@ -92,8 +94,8 @@ export function journalctl(unitName, num = 1) {
   }
 
   const j = spawn("journalctl", args, {
-    timeout: 5000,
-   // stdio: ["ignore", "pipe", process.stderr]
+    timeout: 5000
+    // stdio: ["ignore", "pipe", process.stderr]
   });
 
   async function* entries() {
@@ -190,8 +192,8 @@ export async function beforeUnits(t) {
       force: true
     });
     const wd = process.cwd();
-    await mkdir(join( wd, 'build'), { recursive:true });
-    const fileName = join( wd, 'build', `${unitName}.${type}`);
+    await mkdir(join(wd, "build"), { recursive: true });
+    const fileName = join(wd, "build", `${unitName}.${type}`);
     await writer(fileName, unitName, { wd, ...options });
     await systemctl("link", fileName);
   }
@@ -208,6 +210,5 @@ export async function afterUnits(t) {
     await systemctl("stop", unitName);
     await systemctl("disable", unitName);
     //await systemctl("clean", unitName);
-  } catch {
-  }
+  } catch {}
 }
