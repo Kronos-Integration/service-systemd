@@ -17,9 +17,7 @@ import {
 const configFile = `${homedir()}/.config/${unitName}/config.json`;
 
 test.before(async t => {
-  writeFileSync(configFile, '{"test": { "serial": 0 }}', {
-    encoding: "utf8"
-  });
+  writeFileSync(configFile, '{"test": { "serial": 0 }}', "utf8");
 
   await beforeUnits(t);
 });
@@ -113,9 +111,7 @@ test.serial.skip("service SIGHUP", async t => {
 
   await wait(1500);
 
-  writeFileSync(configFile, '{"test": { "serial": 4711 }}', {
-    encoding: "utf8"
-  });
+  writeFileSync(configFile, '{"test": { "serial": 4711 }}', "utf8");
 
   process.kill(pid, "SIGHUP");
 
