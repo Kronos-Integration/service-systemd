@@ -1,7 +1,4 @@
-[![npm](https://img.shields.io/npm/v/@kronos-integration/service-systemd.svg)](https://www.npmjs.com/package/@kronos-integration/service-systemd)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![bundlejs](https://deno.bundlejs.com/?q=@kronos-integration/service-systemd\&badge=detailed)](https://bundlejs.com/?q=@kronos-integration/service-systemd)
-[![downloads](http://img.shields.io/npm/dm/@kronos-integration/service-systemd.svg?style=flat-square)](https://npmjs.org/package/@kronos-integration/service-systemd)
 [![GitHub Issues](https://img.shields.io/github/issues/Kronos-Integration/service-systemd.svg?style=flat-square)](https://github.com/Kronos-Integration/service-systemd/issues)
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FKronos-Integration%2Fservice-systemd%2Fbadge\&style=flat)](https://actions-badge.atrox.dev/Kronos-Integration/service-systemd/goto)
 [![Styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
