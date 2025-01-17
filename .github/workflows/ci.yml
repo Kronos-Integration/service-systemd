@@ -12,7 +12,7 @@ permissions:
   contents: read
 jobs:
   test-node:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version:
