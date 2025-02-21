@@ -7,13 +7,24 @@ async function jt(t, send, expect) {
   wait(150);
   journal_print_object(send);
 
-  const i = await entries().next();
+  let i = 0;
+  for await (const entry of entries()) {
+    if (
+      (expect.ERROR && entry.ERROR) ||
+      (expect.MESSAGE && entry.MESSAGE && !entry.MESSAGE?.match(/Disconnect/))
+    ) {
+      t.like(entry, expect);
+      break;
+    }
 
-//  t.log(i.value);
-
-  t.like(i.value, expect);
+    if (i++ >= 10) {
+      break;
+    }
+  }
 
   await stop();
+
+  wait(150);
 }
 
 jt.title = (providedTitle = "journal", send, expect) => {
@@ -93,12 +104,18 @@ test.serial(
     object: { a: 1 },
     array: ["A", "B", "C"]
   },
-  { MESSAGE: "some values", BIGINT: "77", NUMBER: "42", FALSE: "false", TRUE: "true", ARRAY: "A\nB\nC" }
+  {
+    MESSAGE: "some values",
+    BIGINT: "77",
+    NUMBER: "42",
+    FALSE: "false",
+    TRUE: "true",
+    ARRAY: "A\nB\nC"
+  }
 );
 
 test.serial(
   jt,
-  { error: new Error('the error message') },
+  { error: new Error("the error message") },
   { ERROR: "Error: the error message" }
 );
-
