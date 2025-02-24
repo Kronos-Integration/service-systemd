@@ -4,7 +4,6 @@ import { journalctl, wait } from "./helpers/util.mjs";
 
 async function jt(t, send, expect) {
   const { entries, stop } = journalctl();
-  //wait(100);
   journal_print_object(send);
   wait(100);
 
@@ -12,7 +11,7 @@ async function jt(t, send, expect) {
   for await (const entry of entries()) {
     if (
       (expect.ERROR && expect.ERROR == entry.ERROR) ||
-      (expect.MESSAGE && expect.MESSAGE == entry.MESSAGE /*&& !entry.MESSAGE?.match(/Disconnect|Reloading/)*/)
+      (expect.MESSAGE && expect.MESSAGE == entry.MESSAGE)
     ) {
       t.like(entry, expect);
       break;
