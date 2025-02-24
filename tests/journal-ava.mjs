@@ -4,7 +4,7 @@ import { journalctl, wait } from "./helpers/util.mjs";
 
 async function jt(t, send, expect) {
   const { entries, stop } = journalctl();
-  wait(150);
+  wait(300);
   journal_print_object(send);
 
   let i = 0;
@@ -24,7 +24,7 @@ async function jt(t, send, expect) {
 
   await stop();
 
-  wait(150);
+  wait(300);
 }
 
 jt.title = (providedTitle = "journal", send, expect) => {
