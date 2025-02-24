@@ -111,7 +111,7 @@ export function journalctl(unitName, num = 1) {
         const line = buffer.substring(0, i);
         buffer = buffer.substring(i + 1);
         const entry = JSON.parse(line);
-        console.log("ENTRY", entry);
+        console.log("ENTRY", entry.MESSAGE, entry.PRIORITY);
         yield entry;
       } while (true);
     }
