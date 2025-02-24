@@ -32,7 +32,7 @@ jobs:
       - name: install
         run: npm ci
       - name: build
-        run: npm build
+        run: npm run build
       - name: test and coverage
         run: npm run cover --if-present
       - name: coveralls
