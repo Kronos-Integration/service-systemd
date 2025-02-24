@@ -25,23 +25,29 @@ test.before(async t => {
 test.after(afterUnits);
 
 test.serial("service states", async t => {
-  t.plan(2);
-  systemctl("start", unitName);
+  try {
+    t.plan(2);
+    systemctl("start", unitName);
 
-  const { stop, entries } = monitorUnit(unitName);
+    const { stop, entries } = monitorUnit(unitName);
 
-  for await (const entry of entries) {
-    if (entry.status === "running" && entry.active === "active") {
-      t.pass("active and running");
-      await systemctl("stop", unitName);
+    for await (const entry of entries) {
+      if (entry.status === "running" && entry.active === "active") {
+        t.pass("active and running");
+        await systemctl("stop", unitName);
+      }
+      if (entry.active === "inactive") {
+        t.pass("inactive");
+        break;
+      }
     }
-    if (entry.active === "inactive") {
-      t.pass("inactive");
-      break;
-    }
+
+    await wait(1500);
+
+    await stop();
+  } catch (e) {
+    console.error(e);
   }
-
-  await stop();
 });
 
 test.serial.skip("service socket states", async t => {

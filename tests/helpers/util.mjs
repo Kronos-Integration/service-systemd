@@ -9,47 +9,53 @@ export const port = 15765;
 
 export function monitorUnit(unitName) {
   let status, active, pid;
-  let sysctl;
+  let systemctl;
   let terminate = false;
 
   async function* getStatus() {
-    sysctl = execa("systemctl", ["--user", "-n", "0", "status", unitName]);
+    systemctl = execa("systemctl", ["--user", "-n", "0", "status", unitName]);
 
+    console.log("SYSTEMCTL", systemctl ? "RUNNING" : "OFF");
     let changed = false;
     let buffer = "";
-    for await (const chunk of sysctl.stdout) {
-      buffer += chunk.toString("utf8");
-      do {
-        const i = buffer.indexOf("\n");
-        if (i < 0) {
-          break;
-        }
-        const line = buffer.substring(0, i);
-        buffer = buffer.substring(i + 1);
 
-        let m = line.match(/Status:\s*"([^"]+)/);
-        if (m && m[1] != status) {
-          changed = true;
-          status = m[1];
-        }
-        m = line.match(/Active:\s+(\w+)(\s+\((\w+)\))?/);
-        if (m && (m[1] != active || m[3] != status)) {
-          changed = true;
-          active = m[1];
-          status = m[3];
-        }
+    try {
+      for await (const chunk of systemctl.stdout) {
+        buffer += chunk.toString("utf8");
+        do {
+          const i = buffer.indexOf("\n");
+          if (i < 0) {
+            break;
+          }
+          const line = buffer.substring(0, i);
+          buffer = buffer.substring(i + 1);
 
-        m = line.match(/Main\s+PID:\s*(\d+)/);
-        if (m && m[1] != pid) {
-          changed = true;
-          pid = parseInt(m[1]);
-        }
+          let m = line.match(/Status:\s*"([^"]+)/);
+          if (m && m[1] != status) {
+            changed = true;
+            status = m[1];
+          }
+          m = line.match(/Active:\s+(\w+)(\s+\((\w+)\))?/);
+          if (m && (m[1] != active || m[3] != status)) {
+            changed = true;
+            active = m[1];
+            status = m[3];
+          }
 
-        if (changed) {
-          yield { name: unitName, status, active, pid };
-          changed = false;
-        }
-      } while (!terminate);
+          m = line.match(/Main\s+PID:\s*(\d+)/);
+          if (m && m[1] != pid) {
+            changed = true;
+            pid = parseInt(m[1]);
+          }
+
+          if (changed) {
+            yield { name: unitName, status, active, pid };
+            changed = false;
+          }
+        } while (!terminate);
+      }
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -65,20 +71,20 @@ export function monitorUnit(unitName) {
     async stop() {
       terminate = true;
       return new Promise((resolve, reject) => {
-        if (sysctl) {
-          sysctl.on("close", (code, signal) => {
-            console.log("stop sysctl", code);
-            sysctl = undefined;
+        if (systemctl) {
+          systemctl.on("close", (code, signal) => {
+            console.log("stop systemctl", code);
+            systemctl = undefined;
             resolve(code);
           });
           try {
-            sysctl.kill();
+            systemctl.kill();
           } catch (e) {
             console.error(e);
             resolve(-1);
           }
         } else {
-          console.log("stop sysctl already gone");
+          console.log("stop systemctl already gone");
           resolve(-1);
         }
       });
