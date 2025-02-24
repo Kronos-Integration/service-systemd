@@ -11,7 +11,7 @@ async function jt(t, send, expect) {
   for await (const entry of entries()) {
     if (
       (expect.ERROR && entry.ERROR) ||
-      (expect.MESSAGE && entry.MESSAGE && !entry.MESSAGE?.match(/Disconnect/))
+      (expect.MESSAGE && entry.MESSAGE && !entry.MESSAGE?.match(/Disconnect|Reloading/))
     ) {
       t.like(entry, expect);
       break;
