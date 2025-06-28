@@ -1,4 +1,6 @@
 import { arch, constants } from "node:os";
+import { join } from "node:path";
+import { readFile } from "node:fs/promises";
 import { Module } from "node:module";
 import { expand } from "config-expander";
 import {
@@ -13,12 +15,8 @@ const filename = new URL(`../systemd-linux-${arch()}.node`, import.meta.url)
 const m = new Module(filename);
 m.filename = filename;
 process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
-const {
-  LISTEN_FDS_START,
-  notify_with_fds,
-  notify,
-  journal_print_object
-} = m.exports;
+const { LISTEN_FDS_START, notify_with_fds, notify, journal_print_object } =
+  m.exports;
 
 export { notify, notify_with_fds, journal_print_object };
 
@@ -40,11 +38,14 @@ class JournalLogger extends ServiceLogger {
 }
 
 /**
- * 
+ *
  * @typedef {Object} FileDescriptor
  * @property {string?} name
  * @property {number} fd
  */
+
+const configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
+const credentialsDirectory = process.env.CREDENTIALS_DIRECTORY;
 
 /**
  * Provides config from CONFIGURATION_DIRECTORY.
@@ -59,8 +60,6 @@ class SystemdConfig extends ServiceConfig {
   static get description() {
     return "Synchronize configuration with systemd";
   }
- 
-  configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
 
   /**
    * listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES.
@@ -88,12 +87,12 @@ class SystemdConfig extends ServiceConfig {
    */
   async loadConfig() {
     notify("RELOADING=1");
-    if (this.configurationDirectory) {
-      this.trace(`load: ${this.configurationDirectory}/config.json`);
+    if (configurationDirectory) {
+      this.trace(`load: ${configurationDirectory}/config.json`);
       await this.configure(
         await expand("${include('config.json')}", {
           constants: {
-            basedir: this.configurationDirectory
+            basedir: configurationDirectory
           },
           default: {}
         })
@@ -112,7 +111,10 @@ class SystemdConfig extends ServiceConfig {
   async _stop() {
     const lfd = this.listeningFileDescriptors;
     const state = "FDSTORE=1" + lfd.map(l => `\nFDNAME=${l.name}`).join("");
-    const rc = notify_with_fds(state, lfd.map(l => l.fd));
+    const rc = notify_with_fds(
+      state,
+      lfd.map(l => l.fd)
+    );
     this.info(`${state} (${rc})`);
 
     return super._stop();
@@ -153,6 +155,10 @@ export class ServiceSystemd extends ServiceProviderMixin(
 
   get autostart() {
     return true;
+  }
+
+  async getCredential(key) {
+    return readFile(join(credentialsDirectory, key));
   }
 
   /**
@@ -197,9 +203,8 @@ export class ServiceSystemd extends ServiceProviderMixin(
         break;
     }
   }
- 
-  details()
-  {
+
+  details() {
     return this.toJSONWithOptions({
       includeRuntimeInfo: true,
       includeDefaults: true,
