@@ -164,7 +164,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
    * @return {Promise<UInt8Array|string>}
    */
   async getCredential(key, options) {
-    return readFile(join(credentialsDirectory, key, options));
+    return readFile(join(credentialsDirectory, key), options);
   }
 
   /**
