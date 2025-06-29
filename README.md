@@ -32,6 +32,8 @@ kronos systemd integration
     *   [listeningFileDescriptors](#listeningfiledescriptors)
     *   [loadConfig](#loadconfig)
 *   [ServiceSystemd](#servicesystemd)
+    *   [getCredential](#getcredential)
+        *   [Parameters](#parameters)
     *   [endpoints](#endpoints)
 
 ## JournalLogger
@@ -82,6 +84,17 @@ Kronos bridge to systemd:
 *   propagate socket activations into kronos (partly)
 *   start / stop / restart / reload initiated from systemd
 *   log into journal
+
+### getCredential
+
+Deliver credentials as provided by systemd.
+
+#### Parameters
+
+*   `key` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)**&#x20;
+*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<([UInt8Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) | [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String))>**&#x20;
 
 ### endpoints
 
