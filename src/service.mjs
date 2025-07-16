@@ -45,7 +45,8 @@ class JournalLogger extends ServiceLogger {
  */
 
 const configurationDirectory = process.env.CONFIGURATION_DIRECTORY;
-const credentialsDirectory = process.env.CREDENTIALS_DIRECTORY;
+const /** @typedef {string} */ credentialsDirectory =
+    process.env.CREDENTIALS_DIRECTORY;
 
 /**
  * Provides config from CONFIGURATION_DIRECTORY.
@@ -158,13 +159,23 @@ export class ServiceSystemd extends ServiceProviderMixin(
   }
 
   /**
-   * Deliver credentials as provided by systemd. 
+   * Deliver credential as provided by systemd.
    * @param {string} key
-   * @param {Object} options
-   * @return {Promise<UInt8Array|string>}
+   * @param {Object?} options
+   * @return {Promise<Uint8Array|string>}
    */
   async getCredential(key, options) {
     return readFile(join(credentialsDirectory, key), options);
+  }
+
+  /**
+   * Deliver credentials as provided by systemd.
+   * @param {string[]} keys
+   * @param {Object?} options
+   * @return {Promise<(Uint8Array|string)[]>}
+   */
+  async getCredentials(keys, options) {
+    return Promise.all(keys.map(key => this.getCredential(key, options)));
   }
 
   /**
