@@ -5,6 +5,7 @@ build
 *.log
 *.dump
 *.node
+*.0*
 .DS_Store
 .test
 .tmp
