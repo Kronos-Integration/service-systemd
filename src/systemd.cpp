@@ -53,10 +53,7 @@ napi_value notify_with_fds(napi_env env, napi_callback_info info)
     delete[] fds;
 
     napi_value value;
-    if (napi_create_int32(env, res, &value) != napi_ok)
-        return nullptr;
-
-    return value;
+    return napi_create_int32(env, res, &value) == napi_ok ? value : nullptr;
 }
 
 napi_value notify(napi_env env, napi_callback_info info)
@@ -83,10 +80,7 @@ napi_value notify(napi_env env, napi_callback_info info)
     delete[] state;
 
     napi_value value;
-    if (napi_create_int32(env, res, &value) != napi_ok)
-        return nullptr;
-
-    return value;
+    return napi_create_int32(env, res, &value) == napi_ok ? value : nullptr;
 }
 
 #define STR(num) #num
