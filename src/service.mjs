@@ -32,7 +32,7 @@ class JournalLogger extends ServiceLogger {
     return "Forward log entries into systemd journal";
   }
 
-  logEntry(entry) {
+  async logEntry(entry) {
     journal_print_object(entry);
   }
 }
