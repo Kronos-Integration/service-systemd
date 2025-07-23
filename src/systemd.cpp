@@ -89,15 +89,15 @@ napi_value notify(napi_env env, napi_callback_info info)
     return value;
 }
 
-typedef struct
-{
-    const char name[8];
-    const char priority[21];
-} NamedPriority;
-
 #define STR(num) #num
 #define PRIORITY(x) "PRIORITY=" STR(x)
 #define NUMBER_OF_ENTRIES(a) sizeof(a) / sizeof(a[0])
+
+typedef struct
+{
+    const char name[8];
+    const char priority[sizeof(PRIORITY(LOG_NOTICE))];
+} NamedPriority;
 
 const static NamedPriority priorities[] = {
     {"trace", PRIORITY(LOG_DEBUG)},
