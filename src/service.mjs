@@ -116,7 +116,7 @@ class SystemdConfig extends ServiceConfig {
       state,
       lfd.map(l => l.fd)
     );
-    this.info(`${state} (${rc})`);
+    this.trace(`${state} (${rc})`);
 
     return super._stop();
   }
