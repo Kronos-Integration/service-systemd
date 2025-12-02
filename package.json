@@ -32,7 +32,7 @@
     "build": "cmake-js compile"
   },
   "dependencies": {
-    "@kronos-integration/service": "^14.0.4",
+    "@kronos-integration/service": "^14.0.5",
     "config-expander": "^14.0.9"
   },
   "devDependencies": {
