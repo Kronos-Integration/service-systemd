@@ -62,15 +62,6 @@ class SystemdConfig extends ServiceConfig {
     return "Synchronize configuration with systemd";
   }
 
-    constructor(config, ic) {
-      super(config,ic);
-      if (process.env.LOGLEVEL) {
-      this.logLevel = config.logLevel = process.env.LOGLEVEL;
-    } else if (process.env.DEBUG) {
-      this.logLevel = config.logLevel = "debug";
-    }
-  }
-
   /**
    * listeningFileDescriptors as passed in LISTEN_FDS and LISTEN_FDNAMES.
    * @return {FileDescriptor[]}
@@ -161,6 +152,15 @@ export class ServiceSystemd extends ServiceProviderMixin(
 
   static get description() {
     return "Bridge to systemd";
+  }
+
+  constructor(config, ic) {
+    if (process.env.LOGLEVEL) {
+      config.logLevel = process.env.LOGLEVEL;
+    } else if (process.env.DEBUG) {
+      config.logLevel = "debug";
+    }
+    super(config, ic);
   }
 
   get autostart() {
