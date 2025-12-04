@@ -7,6 +7,46 @@ test("info endpoint", t => {
   t.deepEqual(ssd.details().name, "systemd");
 });
 
+test("service create with DEBUG=1", t => {
+  process.env.DEBUG = 1;
+
+  const s1 = new ServiceSystemd(
+    {
+      key1: "value1"
+    },
+    ic
+  );
+
+  t.is(s1.logLevel, "debug");
+
+  const s2 = new ServiceSystemd(
+    {
+      key1: "value1",
+      logLevel: "warn"
+    },
+    ic
+  );
+
+  t.is(s2.logLevel, "debug");
+
+  delete process.env.DEBUG;
+});
+
+test("service create with LOGLEVEL=trace", t => {
+  process.env.LOGLEVEL = "trace";
+
+  const s1 = new ServiceSystemd(
+    {
+      key1: "value1"
+    },
+    ic
+  );
+
+  t.is(s1.logLevel, "trace");
+
+  delete process.env.LOGLEVEL;
+});
+
 test("endpoints", t => {
   const ssd = new ServiceSystemd();
 
