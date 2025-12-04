@@ -34,6 +34,7 @@ kronos systemd integration
     *   [listeningFileDescriptors](#listeningfiledescriptors)
     *   [loadConfig](#loadconfig)
 *   [ServiceSystemd](#servicesystemd)
+    *   [Parameters](#parameters)
     *   [getCredential](#getcredential)
         *   [Parameters](#parameters-1)
     *   [getCredentials](#getcredentials)
@@ -97,6 +98,11 @@ Kronos bridge to systemd:
 *   propagate socket activations into kronos (partly)
 *   start / stop / restart / reload initiated from systemd
 *   log into journal
+
+### Parameters
+
+*   `config` &#x20;
+*   `ic` &#x20;
 
 ### getCredential
 
