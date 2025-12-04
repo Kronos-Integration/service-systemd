@@ -154,7 +154,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
     return "Bridge to systemd";
   }
 
-  constructor(config, ic) {
+  constructor(config={}, ic) {
     if (process.env.LOGLEVEL) {
       config.logLevel = process.env.LOGLEVEL;
     } else if (process.env.DEBUG) {
