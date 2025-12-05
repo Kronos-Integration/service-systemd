@@ -70,6 +70,17 @@ test("notify_with_fds", t => {
   t.is(notify_with_fds("FDSTORE=1\nFDNAME=fd1\nFDNAME=fd2", "hello"), undefined);
 });
 
+test("listeningFileDescriptors", t => {
+    const ssd = new ServiceSystemd();
+    const sc = ssd.services.config;
+
+    t.deepEqual(sc.listeningFileDescriptors,[]);
+
+    process.env.LISTEN_FDS = "2";
+    process.env.LISTEN_FDNAMES = "a:b";
+    t.deepEqual(sc.listeningFileDescriptors,[{fd:3,name:"a"},{fd:4,name:"b"}]);
+});
+
 test("service start stop plain", async t => {
   const ssd = new ServiceSystemd();
 

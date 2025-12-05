@@ -67,8 +67,9 @@ class SystemdConfig extends ServiceConfig {
    * @return {FileDescriptor[]}
    */
   get listeningFileDescriptors() {
-    const count = Number.isInteger(process.env.LISTEN_FDS) ? Number(process.env.LISTEN_FDS) : 0;
+    const count = process.env.LISTEN_FDS ? parseInt(process.env.LISTEN_FDS) : 0;
     const fdNames = (process.env.LISTEN_FDNAMES || "").split(":");
+
     const arr = new Array(count);
     for (let i = 0; i < count; i++) {
       arr[i] = {
