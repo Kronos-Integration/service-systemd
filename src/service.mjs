@@ -163,6 +163,13 @@ export class ServiceSystemd extends ServiceProviderMixin(
     super(config, ic);
   }
 
+  async registerService(service) {
+    if(process.env.DEBUG) {
+      service.logLevel = this.logLevel;
+    }
+    return super.registerService(service);
+  }
+
   get autostart() {
     return true;
   }
