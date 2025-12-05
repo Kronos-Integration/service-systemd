@@ -29,7 +29,6 @@ kronos systemd integration
     *   [Properties](#properties)
 *   [credentialsDirectory](#credentialsdirectory)
 *   [SystemdConfig](#systemdconfig)
-    *   [Parameters](#parameters)
     *   [Properties](#properties-1)
     *   [listeningFileDescriptors](#listeningfiledescriptors)
     *   [loadConfig](#loadconfig)
@@ -67,11 +66,6 @@ Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 Provides config from CONFIGURATION\_DIRECTORY.
 Also injects listeningFileDescriptors into the config
 
-### Parameters
-
-*   `config` &#x20;
-*   `ic` &#x20;
-
 ### Properties
 
 *   `configurationDirectory` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** taken from CONFIGURATION\_DIRECTORY
@@ -101,7 +95,7 @@ Kronos bridge to systemd:
 
 ### Parameters
 
-*   `config` &#x20;
+*   `config`   (optional, default `{}`)
 *   `ic` &#x20;
 
 ### getCredential
