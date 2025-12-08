@@ -25,9 +25,12 @@ jobs:
         uses: actions/setup-node@v6.1.0
         with:
           node-version: ${{ matrix.node-version }}
-      - run: sudo -E .github/workflows/ubuntu-install.sh
-      - run: tests/helpers/fake_systemd_session.sh
-      - run: systemctl --user status
+      - name: prepare systemd 1
+        run: sudo -E .github/workflows/ubuntu-install.sh
+      - name: prepare systemd 2
+        run: tests/helpers/fake_systemd_session.sh
+      - name: prepare systemd 3
+        run: systemctl --user status
       - name: install
         run: npm ci
       - name: build
