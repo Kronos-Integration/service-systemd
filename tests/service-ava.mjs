@@ -13,8 +13,7 @@ test("service create with DEBUG=1", t => {
   const s1 = new ServiceSystemd(
     {
       key1: "value1"
-    },
-    ic
+    }
   );
 
   t.is(s1.logLevel, "debug");
@@ -23,8 +22,7 @@ test("service create with DEBUG=1", t => {
     {
       key1: "value1",
       logLevel: "warn"
-    },
-    ic
+    }
   );
 
   t.is(s2.logLevel, "debug");
@@ -38,8 +36,7 @@ test("service create with LOGLEVEL=trace", t => {
   const s1 = new ServiceSystemd(
     {
       key1: "value1"
-    },
-    ic
+    }
   );
 
   t.is(s1.logLevel, "trace");
