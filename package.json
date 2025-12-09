@@ -25,8 +25,8 @@
   "license": "0BSD",
   "scripts": {
     "test": "node --run test:ava",
-    "test:ava": "ava-s --timeout 2m tests/*-ava.mjs tests/*-ava-node.mjs",
-    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava-s --timeout 2m tests/*-ava.mjs tests/*-ava-node.mjs && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
+    "test:ava": "ava -s --timeout 2m tests/*-ava.mjs tests/*-ava-node.mjs",
+    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava -s --timeout 2m tests/*-ava.mjs tests/*-ava-node.mjs && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "docs": "documentation readme --section=API ./src**/*.mjs",
     "lint": "node --run lint:docs",
     "lint:docs": "documentation lint ./src**/*.mjs",
@@ -63,7 +63,7 @@
   "template": {
     "properties": {
       "ava": {
-        "options": "-s --timeout 2m"
+        "options": " -s --timeout 2m"
       }
     },
     "inheritFrom": [
