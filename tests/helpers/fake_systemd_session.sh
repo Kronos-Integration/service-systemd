@@ -38,4 +38,3 @@ fi
 export
 
 ps -ef|grep systemd
-
