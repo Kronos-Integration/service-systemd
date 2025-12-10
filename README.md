@@ -27,6 +27,8 @@ kronos systemd integration
 ### Table of Contents
 
 *   [JournalLogger](#journallogger)
+    *   [logEntry](#logentry)
+        *   [Parameters](#parameters)
 *   [FileDescriptor](#filedescriptor)
     *   [Properties](#properties)
 *   [credentialsDirectory](#credentialsdirectory)
@@ -35,11 +37,13 @@ kronos systemd integration
     *   [listeningFileDescriptors](#listeningfiledescriptors)
     *   [loadConfig](#loadconfig)
 *   [ServiceSystemd](#servicesystemd)
-    *   [Parameters](#parameters)
-    *   [getCredential](#getcredential)
-        *   [Parameters](#parameters-1)
-    *   [getCredentials](#getcredentials)
+    *   [Parameters](#parameters-1)
+    *   [registerService](#registerservice)
         *   [Parameters](#parameters-2)
+    *   [getCredential](#getcredential)
+        *   [Parameters](#parameters-3)
+    *   [getCredentials](#getcredentials)
+        *   [Parameters](#parameters-4)
     *   [endpoints](#endpoints)
 
 ## JournalLogger
@@ -47,6 +51,14 @@ kronos systemd integration
 **Extends ServiceLogger**
 
 Forward logs entries to the journal.
+
+### logEntry
+
+Pass to systemd journal.
+
+#### Parameters
+
+*   `entry` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**&#x20;
 
 ## FileDescriptor
 
@@ -99,6 +111,14 @@ Kronos bridge to systemd:
 
 *   `config`   (optional, default `{}`)
 *   `ic` &#x20;
+
+### registerService
+
+When in debug mode; every sevice gets the logLevel of the service provider.
+
+#### Parameters
+
+*   `service` **Service**&#x20;
 
 ### getCredential
 
