@@ -32,6 +32,10 @@ class JournalLogger extends ServiceLogger {
     return "Forward log entries into systemd journal";
   }
 
+  /**
+   * Pass to systemd journal.
+   * @param {Object} entry
+   */
   async logEntry(entry) {
     journal_print_object(entry);
   }
@@ -164,6 +168,11 @@ export class ServiceSystemd extends ServiceProviderMixin(
     super(config, ic);
   }
 
+  /**
+   * When in debug mode; every sevice gets the logLevel of the service provider.
+   * @param {Service} service 
+   * @returns 
+   */
   async registerService(service) {
     if(process.env.DEBUG) {
       service.logLevel = this.logLevel;
