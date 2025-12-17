@@ -3,8 +3,11 @@ import { ServiceSystemd, notify_with_fds } from "@kronos-integration/service-sys
 
 test("info endpoint", t => {
   const ssd = new ServiceSystemd();
+  ssd.version = "1.2.3";
   t.truthy(ssd.endpoints.info);
-  t.deepEqual(ssd.details().name, "systemd");
+  t.truthy(ssd.autostart);
+  t.deepEqual(ssd.info().name, "systemd");
+  t.deepEqual(ssd.info().version, "1.2.3");
 });
 
 test("service create with DEBUG=1", t => {

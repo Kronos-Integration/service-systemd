@@ -180,10 +180,6 @@ export class ServiceSystemd extends ServiceProviderMixin(
     return super.registerService(service);
   }
 
-  get autostart() {
-    return true;
-  }
-
   /**
    * Deliver credential as provided by systemd.
    * @param {string} key
@@ -202,21 +198,6 @@ export class ServiceSystemd extends ServiceProviderMixin(
    */
   async getCredentials(keys, options) {
     return Promise.all(keys.map(key => this.getCredential(key, options)));
-  }
-
-  /**
-   * Definition of the predefined endpoints.
-   * - info _in_
-   * @return {Object} predefined endpoints
-   */
-  static get endpoints() {
-    return {
-      ...super.endpoints,
-      info: {
-        in: true,
-        receive: "details"
-      }
-    };
   }
 
   async _start() {
@@ -245,16 +226,6 @@ export class ServiceSystemd extends ServiceProviderMixin(
         notify("STOPPING=1");
         break;
     }
-  }
-
-  details() {
-    return this.toJSONWithOptions({
-      includeRuntimeInfo: true,
-      includeDefaults: true,
-      includeName: true,
-      includeConfig: false,
-      includePrivate: false
-    });
   }
 }
 
