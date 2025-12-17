@@ -44,7 +44,6 @@ kronos systemd integration
         *   [Parameters](#parameters-3)
     *   [getCredentials](#getcredentials)
         *   [Parameters](#parameters-4)
-    *   [endpoints](#endpoints)
 
 ## JournalLogger
 
@@ -141,14 +140,6 @@ Deliver credentials as provided by systemd.
 *   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?**&#x20;
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)<[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<([Uint8Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) | [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String))>>**&#x20;
-
-### endpoints
-
-Definition of the predefined endpoints.
-
-*   info *in*
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** predefined endpoints
 
 # install
 
