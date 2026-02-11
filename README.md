@@ -92,7 +92,7 @@ Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Gl
 ### loadConfig
 
 Load config from configuration dir.
-Additionally pass listeninfFileDescriptions into config.
+Additionally pass listeningFileDescriptions into config.
 
 ## ServiceSystemd
 
@@ -113,7 +113,7 @@ Kronos bridge to systemd:
 
 ### registerService
 
-When in debug mode; every sevice gets the logLevel of the service provider.
+When in debug mode; every service gets the logLevel of the service provider.
 
 #### Parameters
 
