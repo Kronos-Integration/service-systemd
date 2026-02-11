@@ -227,6 +227,11 @@ export class ServiceSystemd extends ServiceProviderMixin(
         break;
     }
   }
+
+  propagateState(text)
+  {
+    notify("STATE=" + text);
+  }
 }
 
 export default ServiceSystemd;
