@@ -89,7 +89,7 @@ class SystemdConfig extends ServiceConfig {
 
   /**
    * Load config from configuration dir.
-   * Additionally pass listeninfFileDescriptions into config.
+   * Additionally pass listeningFileDescriptions into config.
    */
   async loadConfig() {
     notify("RELOADING=1");
@@ -169,7 +169,7 @@ export class ServiceSystemd extends ServiceProviderMixin(
   }
 
   /**
-   * When in debug mode; every sevice gets the logLevel of the service provider.
+   * When in debug mode; every service gets the logLevel of the service provider.
    * @param {Service} service 
    * @returns 
    */
